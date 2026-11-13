@@ -18,10 +18,10 @@ export function Sidebar({ role, name }: { role: AppRole; name: string }) {
   const items = NAV_ITEMS.filter((i) => can(role, i.key));
   return (
     <aside className="no-print sticky top-4 hidden h-[calc(100dvh-2rem)] w-72 shrink-0 flex-col rounded-[2.5rem] bg-ink p-5 text-white shadow-soft lg:flex">
-      <Link href="/" className="mb-6 block rounded-[1.75rem] bg-white p-3 transition hover:scale-[1.02]" aria-label="Sizzling Aroma home">
-        <Image src="/logo.png" alt="Sizzling Aroma — Fried Chicken & Crispy Pata Restaurant" width={900} height={600} className="h-auto w-full" priority />
+      <Link href="/" className="mb-4 block rounded-[1.75rem] bg-white px-4 py-2 transition hover:scale-[1.02]" aria-label="Sizzling Aroma home">
+        <Image src="/logo.png" alt="Sizzling Aroma — Fried Chicken & Crispy Pata Restaurant" width={900} height={600} className="mx-auto h-auto w-40" priority />
       </Link>
-      <nav aria-label="Main" className="-mx-1 flex-1 space-y-1 overflow-y-auto px-1">
+      <nav aria-label="Main" className="-mx-1 flex-1 space-y-0.5 overflow-y-auto px-1">
         {items.map(({ href, label, icon: Icon }) => {
           const active = isActive(pathname, href);
           return (
@@ -30,7 +30,7 @@ export function Sidebar({ role, name }: { role: AppRole; name: string }) {
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200",
+                "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition duration-200",
                 active ? "bg-primary text-white shadow-lift" : "text-white/65 hover:bg-white/10 hover:text-white",
               )}
             >

@@ -60,3 +60,11 @@ export function expiryBucket(dateISO: string | null): ExpiryBucket {
 export const STOCK_LABEL: Record<StockStatus, string> = { ok: "OK", low: "Low", out: "Out" };
 
 export const isISODate = (s: string | undefined | null): s is string => !!s && /^\d{4}-\d{2}-\d{2}$/.test(s);
+
+/** Short peso for chart axes: ₱950, ₱1.2k, ₱3.4M */
+export function pesoCompact(n: number): string {
+  const v = Math.abs(n);
+  if (v >= 1_000_000) return `₱${(n / 1_000_000).toFixed(v >= 10_000_000 ? 0 : 1)}M`;
+  if (v >= 1_000) return `₱${(n / 1_000).toFixed(v >= 10_000 ? 0 : 1)}k`;
+  return `₱${Math.round(n)}`;
+}

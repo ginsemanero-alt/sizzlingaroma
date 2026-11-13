@@ -1,5 +1,5 @@
 import {
-  Boxes, CalendarClock, ChefHat, FileChartColumn, History, LayoutDashboard, Package, Receipt,
+  Boxes, CalendarClock, ChartColumn, ChefHat, FileChartColumn, History, LayoutDashboard, Package, Receipt,
   ScanBarcode, Tag, Trophy, Users, type LucideIcon,
 } from "lucide-react";
 import type { NavKey } from "@/lib/permissions";
@@ -19,6 +19,7 @@ export const NAV_ITEMS: NavItem[] = [
   { key: "scan", href: "/scan", label: "Scan In / Out", short: "Scan", icon: ScanBarcode },
   { key: "sale", href: "/sales/new", label: "Record Sale", short: "Sale", icon: Receipt },
   { key: "expiry", href: "/expiry", label: "Expiry Tracking", short: "Expiry", icon: CalendarClock },
+  { key: "analytics", href: "/analytics", label: "Analytics & Graphs", short: "Graphs", icon: ChartColumn },
   { key: "bestSellers", href: "/best-sellers", label: "Best Sellers", short: "Best", icon: Trophy },
   { key: "movements", href: "/movements", label: "Stock Movement Log", short: "Log", icon: History },
   { key: "labels", href: "/labels", label: "Barcode Labels", short: "Labels", icon: Tag },

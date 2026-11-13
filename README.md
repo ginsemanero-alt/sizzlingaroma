@@ -89,7 +89,7 @@ Permissions are enforced **in the database** (Row Level Security plus `SECURITY 
 | Products: add, edit, delete | ✅ | | | |
 | Inventory, Scan In/Out, Expiry | ✅ | ✅ | own location | own location |
 | Stock Movement Log | ✅ all | own entries (DB) | own location | own location |
-| Record Sale, Best Sellers, Barcode Labels | ✅ | ✅ | | |
+| Record Sale, Best Sellers, Analytics & Graphs, Barcode Labels | ✅ | ✅ | | |
 | Reports, Menu & Recipes, Users | ✅ | | | |
 
 \*Phase 2 roles, already working: Kitchen users only see and change Kitchen stock, and Dine-in users only see and change Front stock.
@@ -165,6 +165,7 @@ src/components/                   UI kit, navigation, scanners, dialogs
 - Stock Movement Log with product/user/type/method/date filters, pagination and per-product added/deducted totals
 - Expiry tracking (expired, ≤3, ≤7, ≤14 days)
 - Record Sale (tap or scan, running total, DB-priced) with **automatic recipe deduction** (Phase 2 feature, already live)
+- **Analytics & Graphs** (Owner + Staff): sales per day, top 10 menu items, sales by category, Stock In vs Stock Out (₱ value per day, including automatic sale deductions), inventory health and stock value by category; 7/30/90-day filter, % change vs previous period, hover tooltips and a "View as table" option on every chart. The Dashboard also shows a 14-day sales graph and inventory health.
 - Best Sellers (this week / this month / last 30 days)
 - Reports (Owner): sales, inventory, expiry, movements, with date range, preview, PDF, CSV and print
 - Menu & Recipes editor and Users management (create, role, enable/disable, reset password)

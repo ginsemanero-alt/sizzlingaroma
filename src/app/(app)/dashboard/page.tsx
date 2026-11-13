@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarClock, ChevronRight, Package, Receipt, ScanBarcode, Trophy, TriangleAlert } from "lucide-react";
+import { CalendarClock, ChartColumn, ChevronRight, Package, Receipt, ScanBarcode, Trophy, TriangleAlert } from "lucide-react";
 import { requireAccess } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
 import type { BestSellerRow, DashboardStats, ProductRow } from "@/lib/types";
 import { addDaysISO, formatPeso, formatQty, manilaDayStart, todayISO } from "@/lib/utils";
 import { SearchBar } from "@/components/search-bar";
+import { getSalesDaily } from "@/lib/analytics";
+import { SalesChart } from "../analytics/charts";
+import { StatusBar } from "@/components/charts/status-bar";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ExpiryBadge, StockBadge } from "@/components/ui/badges";
@@ -18,13 +21,20 @@ export default async function DashboardPage() {
   const supabase = await createClient();
   const today = todayISO();
 
-  const [statsRes, bestRes, lowRes, expRes] = await Promise.all([
+  const [statsRes, bestRes, lowRes, expRes, daily, statusRes] = await Promise.all([
     supabase.rpc("dashboard_stats"),
     supabase.rpc("best_sellers", { p_from: manilaDayStart(addDaysISO(today, -6)), p_to: manilaDayStart(addDaysISO(today, 1)), p_limit: 5 }),
     supabase.from("product_inventory").select("*").in("stock_status", ["low", "out"]).order("quantity").limit(6),
     supabase.from("product_inventory").select("*").not("expiry_date", "is", null).gt("quantity", 0)
       .lte("expiry_date", addDaysISO(today, 7)).order("expiry_date").limit(6),
+    getSalesDaily(14),
+    supabase.from("product_inventory").select("stock_status"),
   ]);
+  const status = { ok: 0, low: 0, out: 0 };
+  for (const r of (statusRes.data ?? []) as { stock_status: "ok" | "low" | "out" }[]) status[r.stock_status] += 1;
+  const week = daily.slice(-7).reduce((s, d) => s + d.revenue, 0);
+  const prevWeek = daily.slice(0, 7).reduce((s, d) => s + d.revenue, 0);
+  const weekChange = prevWeek ? Math.round(((week - prevWeek) / prevWeek) * 100) : null;
   if (statsRes.error) throw new Error(statsRes.error.message);
 
   const stats = statsRes.data as DashboardStats;
@@ -75,6 +85,35 @@ export default async function DashboardPage() {
           tone="primary"
         />
       </section>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <section className="card p-6 xl:col-span-2">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="grid size-10 place-items-center rounded-2xl bg-primary-soft text-primary"><ChartColumn className="size-5" /></span>
+              <div>
+                <h2 className="font-black">Sales — last 14 days</h2>
+                <p className="text-xs text-muted">
+                  This week {formatPeso(week)}
+                  {weekChange !== null && <span className={weekChange >= 0 ? "font-bold text-ok" : "font-bold text-bad"}> ({weekChange >= 0 ? "+" : ""}{weekChange}% vs last week)</span>}
+                </p>
+              </div>
+            </div>
+            <Link href="/analytics" className="btn-ghost !px-3 !py-2 text-xs" aria-label="Open analytics and graphs">More graphs <ChevronRight className="size-4" /></Link>
+          </div>
+          <SalesChart data={daily} height={220} />
+        </section>
+        <section className="card p-6">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="grid size-10 place-items-center rounded-2xl bg-primary-soft text-primary"><Package className="size-5" /></span>
+            <div>
+              <h2 className="font-black">Inventory health</h2>
+              <p className="text-xs text-muted">Products by stock status</p>
+            </div>
+          </div>
+          <StatusBar {...status} />
+        </section>
+      </div>
 
       <div className="grid gap-6 xl:grid-cols-3">
         <Panel title="Best-Selling Foods" subtitle="Last 7 days" href="/best-sellers" icon={<Trophy className="size-5" />}>
