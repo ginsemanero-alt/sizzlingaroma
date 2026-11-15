@@ -176,8 +176,9 @@ export function PlayerController() {
     rig.stillTime = rig.speed < 0.2 ? rig.stillTime + dt : 0;
 
     // floors / stairs / gravity
+    rig.settle = Math.max(0, rig.settle - dt);
     const floor = world.floorAt(rig.pos.x, rig.pos.z, rig.pos.y);
-    if (floor !== null) {
+    if (floor !== null && rig.settle <= 0) {
       if (floor > rig.pos.y) {
         rig.pos.y += (floor - rig.pos.y) * Math.min(1, dt * 18);
         b.fallV = 0;

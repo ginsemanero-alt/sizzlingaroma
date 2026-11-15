@@ -867,7 +867,7 @@ button {
   perspective: 1200px;
   cursor: pointer;
   position: relative;
-  min-height: 380px;
+  min-height: min(380px, 66vh);
 }
 .photo-front,
 .photo-back {
@@ -888,7 +888,7 @@ button {
   transform: rotateY(360deg);
 }
 .photo-img {
-  height: 270px;
+  height: min(270px, 42vh);
   background: linear-gradient(180deg, color-mix(in srgb, var(--tint) 70%, #fff) 0%, var(--tint) 60%, color-mix(in srgb, var(--tint) 50%, #000) 100%);
   filter: sepia(0.5) contrast(0.9);
   position: relative;
@@ -1195,8 +1195,10 @@ button {
   animation: fadein 2s both;
 }
 .ending-line.light {
-  color: #2a2016;
+  color: #24180c;
   text-shadow: none;
+  background: rgba(255, 244, 222, 0.62);
+  padding: 0.3em 0.8em;
 }
 .ending-card {
   pointer-events: auto;
@@ -1269,4 +1271,8 @@ button {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.pause .menu-list {
+  animation: fadein 0.25s both;
 }

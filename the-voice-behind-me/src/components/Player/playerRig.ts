@@ -42,6 +42,8 @@ export const rig = {
   speedScale: 1,
   /** time the player has been standing still */
   stillTime: 0,
+  /** seconds to hold height after a teleport, while new floors register */
+  settle: 0,
 };
 
 function shortestAngle(a: number, b: number) {
@@ -54,6 +56,7 @@ function shortestAngle(a: number, b: number) {
 export function teleport(x: number, z: number, yaw?: number, y = 0) {
   rig.pos.set(x, y, z);
   rig.vel.set(0, 0, 0);
+  rig.settle = 0.4;
   if (yaw !== undefined) rig.yaw = yaw;
   rig.pitch = 0;
   rig.look = null;

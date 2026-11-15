@@ -26,6 +26,9 @@ export function installDebugApi() {
     completeChapter,
     triggerEnding,
     interactables: () => [...interactions.all()].map((e) => ({ id: e.id, pos: e.pos.toArray(), prompt: e.prompt() })),
-    interact: (id: string) => interactions.get(id)?.onInteract(),
+    interact: (id: string) => {
+      void interactions.get(id)?.onInteract();
+      return true;
+    },
   };
 }
