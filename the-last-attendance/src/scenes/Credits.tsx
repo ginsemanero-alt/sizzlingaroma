@@ -41,6 +41,27 @@ export function Credits() {
         <p>"Classroom" by Pino_156 — CC BY 4.0</p>
         <p>"Old abandoned classroom" by Rixael — CC BY 4.0</p>
         <p>"Abandoned classroom" by Pasha — Sketchfab Standard licence</p>
+        <p>"Building Hallway" by jimbogies — CC BY 4.0</p>
+        <p>"Cafetery" by Lucia — CC BY 4.0</p>
+        <p>"Construction school" by Stas — CC BY 4.0</p>
+        <p>"Crenshaw High School - Main Building exterior" by lavarwebb — CC BY 4.0</p>
+        <p>"library" by Pasha — CC BY 4.0</p>
+        <p>"Low Poly Chemistry Lab" by gabrielmendesm — CC BY 4.0</p>
+        <p>"Private Detective's Office" by Zeps3D — CC BY 4.0</p>
+        <p>"Old Staircase - MTSU Animation, VFX & VP" by MTSU — CC BY 4.0</p>
+        <p>"Exit Door" by barbodoji — CC BY 4.0</p>
+        <p>"Filing Cabinets" by TooManyDemons — CC BY 4.0</p>
+        <p>"Fire Animation" by 3DHaupt — CC BY 4.0</p>
+        <p>"Rusty Steel Door Lock" by Incg5764 — CC BY 4.0</p>
+        <p>"SCHOOL LOCKER" by Lee — CC BY 4.0</p>
+        <p>"Small Fuse Box" by big — CC BY 4.0</p>
+        <p>"Stereo Cassette Deck" by Tom — CC BY 4.0</p>
+        <p>"Stylized Chemistry Set" by hayley.morris1 — CC BY 4.0</p>
+        <p>"Philippines Flag" by mljsantos — Sketchfab Standard licence</p>
+        <p>"Low-Poly Laboratory" by Yahor — CC BY 4.0</p>
+        <p>"low-poly office" by DarianDS — CC BY 4.0</p>
+        <p>"office is old abandoned FREE" by dasy444 — CC BY 4.0</p>
+        <p>"Science Lab Table" by Skecthfab — CC BY 4.0</p>
         <p style={{ color: 'var(--muted)', fontSize: 12 }}>Models are re-posed, tinted and rendered as ghosts at runtime.</p>
         <h3>ASSETS</h3>
         <p>The rest of the school, textures, props and all sounds are generated procedurally at runtime.</p>

@@ -228,6 +228,30 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 - "Old abandoned classroom" by Rixael: https://sketchfab.com/3d-models/old-abandoned-classroom-9651b7c7d1e546d6b279231d6cf3d1ca (CC BY 4.0)
 - "Abandoned classroom" by Pasha: https://sketchfab.com/3d-models/abandoned-classroom-1ee5639dc207421c9f428ac6b380f263 (**Sketchfab Standard licence**: may be used inside the game, but the model file itself must not be redistributed on its own. If this repository is public, confirm that is acceptable or keep `public/models/env_abandoned_classroom.glb` out of it.)
 
+- "Building Hallway" by jimbogies: https://sketchfab.com/3d-models/building-hallway-ac43a501050149f396729bdaa4a308fb (CC BY 4.0) — main menu
+- "Cafetery" by Lucia: https://sketchfab.com/3d-models/cafetery-f019c964444d442f8999ab5f9c0f10fb (CC BY 4.0) — Chapter 2 canteen tables
+- "Construction school" by Stas: https://sketchfab.com/3d-models/construction-school-eb4b7a91e0ad4106a2fe787ac74b0598 (CC BY 4.0) — Chapter 1 campus backdrop
+- "Crenshaw High School - Main Building exterior" by lavarwebb: https://sketchfab.com/3d-models/crenshaw-high-school-main-building-exterior-3775b24251fe405fa1d85b3824dc3d93 (CC BY 4.0) — ABSENT ending
+- "library" by Pasha: https://sketchfab.com/3d-models/library-7fc61f0d65ee49d0b2904e85d1fa520e (CC BY 4.0) — Chapter 1 campus backdrop
+- "Low Poly Chemistry Lab" by gabrielmendesm: https://sketchfab.com/3d-models/low-poly-chemistry-lab-e0d270dbef88448d8a191e95a7c31d46 (CC BY 4.0) — Chapter 4 science lab
+- "Private Detective's Office" by Zeps3D: https://sketchfab.com/3d-models/private-detectives-office-2afb913100ac4ca4bb4708fe8183c5b8 (CC BY 4.0) — Chapter 5 principal's office
+- "Old Staircase - MTSU Animation, VFX & VP" by MTSU: https://sketchfab.com/3d-models/old-staircase-mtsu-animation-vfx-vp-9e06f0f2e8c842098417c91d84d39f37 (CC BY 4.0) — stairs, Chapters 1 and 4
+- "Exit Door" by barbodoji: https://sketchfab.com/3d-models/exit-door-c1d5f41dfb8a4213b65363307dcf1eed (CC BY 4.0) — Chapter 4 emergency exit
+- "Filing Cabinets" by TooManyDemons: https://sketchfab.com/3d-models/filing-cabinets-7ef1ca295ff14af2abcbe0ae0168a241 (CC BY 4.0) — cabinets, Chapters 1, 2, 3, 5
+- "Fire Animation" by 3DHaupt: https://sketchfab.com/3d-models/fire-animation-ba6315fe80d34b5ba7ff912f5ec71b19 (CC BY 4.0) — Chapter 4 fire
+- "Rusty Steel Door Lock" by Incg5764: https://sketchfab.com/3d-models/rusty-steel-door-lock-a36ce37e97c843a78a48b08adbf322e8 (CC BY 4.0) — Chapter 4 chained exit
+- "SCHOOL LOCKER" by Lee: https://sketchfab.com/3d-models/school-locker-1ea07e4cb6dc404fa5fa597a0211474d (CC BY 4.0) — Chapter 2 lockers
+- "Small Fuse Box" by big: https://sketchfab.com/3d-models/small-fuse-box-1818361dc6554d17bef8c0400959f93f (CC BY 4.0) — Chapter 1 breaker panel
+- "Stereo Cassette Deck" by Tom: https://sketchfab.com/3d-models/stereo-cassette-deck-624e0a2e69ed475d85f0492f4341f3ea (CC BY 4.0) — Chapter 5 tape player
+- "Stylized Chemistry Set" by hayley.morris1: https://sketchfab.com/3d-models/stylized-chemistry-set-41e5f46a588649658d579069d00f8bbc (CC BY 4.0) — Chapter 4 lab
+- "Philippines Flag" by mljsantos: https://sketchfab.com/3d-models/philippines-flag-b0de5302fca04e55bd3efa2d4d602b00 (**Sketchfab Standard licence**) — Chapter 1 courtyard
+- "Low-Poly Laboratory" by Yahor: https://sketchfab.com/3d-models/low-poly-laboratory-fedc3b5df4724997ac003f7f1b9c8cca (CC BY 4.0) — included, not placed yet
+- "low-poly office" by DarianDS: https://sketchfab.com/3d-models/low-poly-office-c924672f29df4fd68c3e3b9fd70741fe (CC BY 4.0) — included, not placed yet
+- "office is old abandoned FREE" by dasy444: https://sketchfab.com/3d-models/office-is-old-abandoned-free-3977a108b2304b85a698f3dda1777015 (CC BY 4.0) — included, not placed yet
+- "Science Lab Table" by Skecthfab: https://sketchfab.com/3d-models/science-lab-table-5ef0a834474b41c4bb3f26b6986a404c (CC BY 4.0) — included, not placed yet
+
+Both Sketchfab Standard models ("Abandoned classroom" and "Philippines Flag") may be used inside the game but must not be redistributed as files on their own; keep them out of a public repository if that matters to you.
+
 The models are re-posed, tinted and rendered translucent at runtime. The two CC BY-SA models (and any changes to them) stay under CC BY-SA 4.0.
 
 Built with React 18, TypeScript, Vite, Three.js, React Three Fiber, Drei, @react-three/postprocessing, Zustand, Howler.js and React Router. Fonts: Special Elite, IBM Plex Mono and Cormorant Garamond (Google Fonts, OFL). Everything except the Sketchfab models is generated procedurally by the game.
