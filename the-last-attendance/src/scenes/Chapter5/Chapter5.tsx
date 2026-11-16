@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { PropModel } from '@/components/Environment/PropModel';
+import { EnvModel } from '@/components/Environment/EnvModel';
 import { GlbCabinet } from '@/scenes/shared/props';
 import { Atmosphere, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, HidingSpot, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
@@ -24,6 +25,12 @@ import { HIDDEN_CLUES, SECRET_RECORDS } from '@/data/items';
 
 const D = DIALOGUE.c5;
 
+/** Principal's office furniture: the detective-office model without its own walls, floor and ceiling. */
+const OFFICE: [number, number, number] = [9, 0, -6];
+const OFFICE_SHELL = /^walls|^door|^ceiling|window/;
+const OFFICE_CLEAR: [number, number, number, number][] = [[8.2, -3.4, 9.8, -1.8], [12.6, -8.3, 14.2, -6.7]];
+const DESK_TOP = 0.82;
+
 const TEACHER_CFG: TeacherConfig = {
   bounds: [-1, -11, 31, 13],
   waypoints: [[3, 0], [15, 0], [27, 0], [12, 5], [20, 9.5], [16, 4], [9, -6]],
@@ -43,13 +50,10 @@ function buildLevel(): LevelBuilder {
   b.wall(0, 2, 30, 2, { openings: [{ at: 16, w: 2.2, h: 2.4 }] });
   // principal's office
   b.room(4, -10, 14, -2, { skip: ['s'], floor: 'floorWood', upper: 'plaster', w: [{ at: 4, w: 1.6, h: 1.3, y: 1.0 }], e: [{ at: 2.5, w: 1.2, h: 2.2 }] });
-  b.teacherDesk(9, -7.2, 0);
-  b.chair(9, -8, 2);
-  b.chair(8.4, -5.8, 0); b.chair(9.6, -5.8, 0);
+  // furniture comes from the detective-office model (see OFFICE below)
   b.cabinet(4.4, -4, 3, 0.9, 1.9, 0.5, 'darkwood', false);
   b.cabinet(12.5, -9.65, 2, 0.9, 1.6, 0.5, 'darkwood', false);
   b.box(9, 2.1, -9.88, 1.4, 0.9, 0.05, 'darkwood'); // diploma frame
-  b.table(6, -9.2, 1.2, 0.6, 0.6, 'darkwood');
   // hidden storage (behind the bookshelf, east of the office)
   b.room(14, -10, 18, -5, { floor: 'concrete', lower: null, upper: 'concrete', skip: ['w'] });
   b.box(16, 0.3, -9.4, 1.0, 0.6, 0.6, 'paper', '#8a7552');
@@ -146,6 +150,9 @@ export default function Chapter5() {
     >
       <Atmosphere fog="#0b0b12" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      <Suspense fallback={null}>
+        <EnvModel model="env_detective_office" position={OFFICE} hide={OFFICE_SHELL} tint="#c8b8a8" collide clear={OFFICE_CLEAR} />
+      </Suspense>
       <GlbCabinet x={4.4} z={-4} r={3} tint="#b08a6a" />
       <GlbCabinet x={12.5} z={-9.65} r={2} h={1.6} tint="#b08a6a" />
       <Dust />
@@ -153,8 +160,7 @@ export default function Chapter5() {
       <FluoroLight position={[4, 3.18, 0]} flicker="subtle" />
       <FluoroLight position={[15, 3.18, 0]} flicker="broken" />
       <FluoroLight position={[26, 3.18, 0]} flicker="subtle" intensity={4} />
-      <pointLight position={[9.6, 1.25, -7.4]} intensity={4} distance={7} color="#ffb860" />
-      <mesh position={[9.6, 1.05, -7.4]}><coneGeometry args={[0.12, 0.16, 12, 1, true]} /><meshStandardMaterial color="#2a4a2a" emissive="#ffb860" emissiveIntensity={0.6} side={THREE.DoubleSide} /></mesh>
+      <pointLight position={[10.3, 1.3, -6.9]} intensity={4} distance={7} color="#ffb860" />
       <FluoroLight position={[16, 3.18, 5]} flicker="broken" intensity={4} />
       <FluoroLight position={[16, 3.18, 10]} flicker="subtle" intensity={3} color="#fff0d0" />
       <EmergencyLight position={[16, 2.8, -9.8]} color="#ff5a3a" intensity={shelfOpen ? 1.6 : 0} distance={5} />
@@ -171,13 +177,13 @@ export default function Chapter5() {
       <Clock position={[8.12, 2.5, 8]} rotation={[0, Math.PI / 2, 0]} />
 
       {/* principal's office */}
-      <Pickup item="principal_memo" position={[8.6, 0.8, -7.3]} verb="Read" onCollect={checkDocs} />
-      <Hotspot id="desk_drawer" position={[9, 0.6, -6.75]} size={[1.2, 0.4, 0.3]} prompt={collected.includes('draft_report') ? null : 'Search the desk drawers'} onInteract={() => {
+      <Pickup item="principal_memo" position={[10.2, DESK_TOP, -6.6]} verb="Read" onCollect={checkDocs} />
+      <Hotspot id="desk_drawer" position={[9.65, 0.55, -6.0]} size={[0.3, 0.4, 1.2]} prompt={collected.includes('draft_report') ? null : 'Search the desk drawers'} onInteract={() => {
         AudioSystem.play('locker', { volume: 0.5 });
         game().collect('draft_report', { open: true });
         checkDocs();
       }} />
-      <Interactable id="tape_player" position={[9.9, 0.86, -7.4]} radius={0.2} prompt={confession ? 'Play side A again' : 'Play the cassette'} onInteract={() => {
+      <Interactable id="tape_player" position={[10.25, DESK_TOP + 0.06, -5.3]} radius={0.2} prompt={confession ? 'Play side A again' : 'Play the cassette'} onInteract={() => {
         game().collect('confession_a');
         ctx.run('confession', async (c) => {
           await playRecording(c, ITEMS.confession_a.recording!);
@@ -202,7 +208,7 @@ export default function Chapter5() {
       }} />
       <mesh position={[4.12, 1.6, -7.5]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[0.55, 0.75]} /><meshStandardMaterial color="#8d9aa6" metalness={1} roughness={0.12} /></mesh>
       <BatteryPickup id="c5_office" position={[6, 0.62, -9.2]} />
-      <HidingSpot id="office_desk" position={[9, 0.4, -7.6]} view={[9, 0.55, -7.2]} exit={[10.4, 0, -6.2]} yaw={0} label="Hide under the desk" />
+      <HidingSpot id="office_desk" position={[10.2, 0.4, -6.0]} view={[10.2, 0.5, -6.0]} exit={[9.2, 0, -6.0]} yaw={Math.PI / 2} label="Hide under the desk" />
       <SecretShelf open={shelfOpen} onPush={() => {
         game().setFlag('c5_shelf', true);
         AudioSystem.play('chair', { pos: [13.8, 1, -7.5], rate: 0.6 });
