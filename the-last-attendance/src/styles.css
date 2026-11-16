@@ -184,3 +184,46 @@ canvas { display: block; }
 .ending-gallery div.locked { color: var(--dim); }
 .ending-gallery strong { display: block; font-family: var(--font-type); font-weight: 400; font-size: 15px; }
 .evid-count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+
+/* ───────── chapter loading screen ───────── */
+.loadscreen { position: fixed; inset: 0; z-index: 60; background: radial-gradient(ellipse at 50% 40%, #12090a 0%, #050304 60%, #000 100%); overflow: hidden; display: grid; place-items: center; animation: lsIn 0.6s ease-out; }
+@keyframes lsIn { from { opacity: 0; } }
+.ls-grain { position: absolute; inset: -50%; opacity: 0.09; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.5s steps(4) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(1%, 3%); } }
+.ls-pulse { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 35%, rgba(110, 0, 0, 0.55) 100%); animation: lsPulse 1.15s ease-in-out infinite; }
+@keyframes lsPulse { 0%, 100% { opacity: 0.35; } 12% { opacity: 0.8; } 24% { opacity: 0.45; } 34% { opacity: 0.75; } }
+.ls-figure { position: absolute; right: 9vw; bottom: 0; height: 78vh; opacity: 0; transition: opacity 0.12s; pointer-events: none; }
+.ls-figure.on { opacity: 0.55; }
+.ls-whisper { position: absolute; font-family: var(--font-type); color: rgba(210, 160, 150, 0.0); font-size: 15px; letter-spacing: 0.2em; pointer-events: none; animation: whisper 2.2s ease-in-out forwards; filter: blur(0.4px); }
+@keyframes whisper { 0% { color: rgba(210,160,150,0); transform: translateY(6px); } 40% { color: rgba(210,160,150,0.35); } 100% { color: rgba(210,160,150,0); transform: translateY(-10px); } }
+.ls-content { position: relative; width: min(560px, 92vw); text-align: center; }
+.ls-sub { color: #7d6d6a; letter-spacing: 0.55em; font-size: 11px; }
+.ls-title { position: relative; font-family: var(--font-title); font-weight: 500; font-size: clamp(34px, 6vw, 58px); letter-spacing: 0.08em; margin: 10px 0 26px; color: #e7ddd2; animation: titleFlicker 4.5s infinite; }
+.ls-title::before, .ls-title::after { content: attr(data-text); position: absolute; inset: 0; pointer-events: none; }
+.ls-title::before { color: rgba(200, 20, 20, 0.55); transform: translate(2px, 0); animation: glitchA 3.1s infinite steps(1); }
+.ls-title::after { color: rgba(80, 140, 255, 0.35); transform: translate(-2px, 0); animation: glitchB 2.7s infinite steps(1); }
+@keyframes titleFlicker { 0%, 18%, 22%, 61%, 63%, 100% { opacity: 1; } 20%, 62% { opacity: 0.35; } }
+@keyframes glitchA { 0%, 90%, 100% { clip-path: inset(0 0 100% 0); } 91% { clip-path: inset(20% 0 55% 0); transform: translate(4px, -1px); } 94% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 1px); } }
+@keyframes glitchB { 0%, 85%, 100% { clip-path: inset(0 0 100% 0); } 86% { clip-path: inset(40% 0 35% 0); transform: translate(-4px, 0); } 89% { clip-path: inset(5% 0 80% 0); transform: translate(3px, 0); } }
+.ls-sheet { position: relative; text-align: left; background: #cfc3a4; color: #2b241a; font-family: var(--font-type); padding: 18px 24px 16px; transform: rotate(-1.6deg); box-shadow: 0 18px 60px rgba(0,0,0,0.85), inset 0 0 60px rgba(70, 45, 15, 0.45);
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(120,80,30,0.25), transparent 55%), radial-gradient(ellipse at 85% 90%, rgba(90,50,20,0.35), transparent 50%), repeating-linear-gradient(transparent 0 25px, rgba(60,80,140,0.18) 25px 26px); }
+.ls-sheet-head { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.15em; border-bottom: 2px solid rgba(40,30,20,0.6); padding-bottom: 6px; margin-bottom: 6px; }
+.ls-row { display: flex; align-items: baseline; gap: 8px; height: 26px; font-size: 15px; opacity: 0; transform: translateX(-6px); transition: opacity 0.35s, transform 0.35s; }
+.ls-row.in { opacity: 1; transform: none; }
+.ls-dots { flex: 1; border-bottom: 2px dotted rgba(40,30,20,0.45); transform: translateY(-4px); }
+.ls-stamp { color: #8c1610; font-weight: bold; letter-spacing: 0.12em; border: 2px solid #8c1610; padding: 0 6px; font-size: 12px; transform: rotate(-6deg); opacity: 0; }
+.ls-row.in .ls-stamp { animation: stamp 0.25s 0.25s ease-out forwards; }
+@keyframes stamp { from { opacity: 0; transform: rotate(-6deg) scale(1.8); } to { opacity: 0.85; transform: rotate(-6deg) scale(1); } }
+.ls-row.last .ls-name { color: #5a0d0a; }
+.ls-q { color: #8c1610; font-size: 18px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.ls-stain { position: absolute; right: 18px; bottom: 10px; width: 90px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, rgba(110,10,10,0.35), rgba(110,10,10,0.0) 70%); pointer-events: none; }
+.ls-progress { margin-top: 30px; }
+.ls-progress-label { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.3em; color: #8d7d78; text-transform: uppercase; }
+.ls-bar { height: 2px; background: rgba(255,255,255,0.08); margin-top: 8px; overflow: hidden; }
+.ls-bar > div { height: 100%; background: linear-gradient(90deg, #4a0a08, #b5352b); box-shadow: 0 0 10px rgba(181,53,43,0.8); transition: width 0.4s ease; }
+.ls-tip { color: #5a5250; font-size: 12px; line-height: 1.6; margin-top: 22px; }
+.loadscreen.calm .ls-grain, .loadscreen.calm .ls-title, .loadscreen.calm .ls-title::before, .loadscreen.calm .ls-title::after { animation: none; }
+.loadscreen.calm .ls-pulse { animation: none; opacity: 0.4; }

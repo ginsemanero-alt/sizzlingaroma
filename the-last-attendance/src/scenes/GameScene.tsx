@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useState, type ComponentType } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { useProgress } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '@/store/gameStore';
 import type { ChapterId } from '@/types';
@@ -49,15 +50,20 @@ export function GameScene() {
 
   useEffect(() => { if (!inGame) navigate('/'); }, [inGame, navigate]);
   useEffect(() => { if (ending) { AudioSystem.stopAllLoops(400); navigate(`/ending/${ending}`); } }, [ending, navigate]);
-  useEffect(() => { installDebugApi(); preloadCharacterModels(); }, []);
+  useEffect(() => { if (runtime.debug) installDebugApi(); preloadCharacterModels(); }, []);
 
-  // minimum loading screen per chapter load
+  // loading screen per chapter load: at least 3 s, then until the chapter's models are loaded
+  const { progress, active } = useProgress();
+  const [minDone, setMinDone] = useState(false);
   useEffect(() => {
     setLoading(true);
+    setMinDone(false);
     AudioSystem.preload(['step1', 'step2', 'step3', 'step4', 'door_open', 'pickup', 'paper', 'click', 'whisper', 'stinger', 'creak', 'breath']);
-    const t = window.setTimeout(() => setLoading(false), 1600);
-    return () => window.clearTimeout(t);
+    const t = window.setTimeout(() => setMinDone(true), 3000);
+    const cap = window.setTimeout(() => setLoading(false), 25000); // never get stuck on a slow asset
+    return () => { window.clearTimeout(t); window.clearTimeout(cap); };
   }, [chapter, nonce]);
+  useEffect(() => { if (minDone && (!active || progress >= 100)) setLoading(false); }, [minDone, active, progress]);
 
   // chapter transitions: end card, then load the next chapter
   useEffect(() => {
@@ -89,7 +95,7 @@ export function GameScene() {
         <PostFX />
       </Canvas>
       <GameUI />
-      {loading && <LoadingScreen title={CHAPTERS[chapter].title} subtitle={CHAPTERS[chapter].subtitle} tip={CHAPTERS[chapter].tip} />}
+      {loading && <LoadingScreen title={CHAPTERS[chapter].title} subtitle={CHAPTERS[chapter].subtitle} tip={CHAPTERS[chapter].tip} progress={active ? progress : minDone ? 100 : Math.min(95, progress || 60)} />}
     </div>
   );
 }

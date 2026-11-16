@@ -16,8 +16,10 @@ export function Credits() {
       <div className="credits-roll">
         <h1>THE LAST ATTENDANCE</h1>
         <p>"Every name has a story. Every absence has a reason."</p>
+        <h3>MADE BY</h3>
+        <p style={{ fontSize: 26, fontFamily: 'var(--font-title)', letterSpacing: '0.12em' }}>Gin Semanero</p>
         <h3>A BROWSER HORROR GAME</h3>
-        <p>Design, story, code, procedural art and procedural audio</p>
+        <p>Story, code, procedural art and procedural audio</p>
         <p>built with React, TypeScript, Three.js, React Three Fiber, Drei, Zustand and Howler.js</p>
         <h3>CAST</h3>
         <p>Jasmine Semanero — the class monitor</p>

@@ -35,6 +35,8 @@ Open the URL Vite prints (usually http://localhost:5173), then click once to ena
 
 ### Deployment
 
+**Netlify (drag and drop):** run `npm run build`, zip the *contents* of `dist/` (so `index.html` is at the top of the zip), and drop the zip on https://app.netlify.com/drop. **Netlify (from GitHub):** set the base directory to `the-last-attendance`; `netlify.toml` supplies the build command and publish folder. `public/_headers` adds long-lived caching for the models.
+
 `npm run build` writes a fully static site to `dist/`. Vite uses `base: './'` and the app uses `HashRouter`, so you can host `dist/` from any static host (Netlify, Vercel, GitHub Pages, S3, itch.io HTML upload) under any sub-path without rewrite rules.
 
 ---
@@ -253,6 +255,8 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 Both Sketchfab Standard models ("Abandoned classroom" and "Philippines Flag") may be used inside the game but must not be redistributed as files on their own; keep them out of a public repository if that matters to you.
 
 The models are re-posed, tinted and rendered translucent at runtime. The two CC BY-SA models (and any changes to them) stay under CC BY-SA 4.0.
+
+Made by **Gin Semanero**.
 
 Built with React 18, TypeScript, Vite, Three.js, React Three Fiber, Drei, @react-three/postprocessing, Zustand, Howler.js and React Router. Fonts: Special Elite, IBM Plex Mono and Cormorant Garamond (Google Fonts, OFL). Everything except the Sketchfab models is generated procedurally by the game.
 
