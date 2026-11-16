@@ -4,6 +4,7 @@ import { MainMenu } from '@/scenes/MainMenu/MainMenu';
 import { GameScene } from '@/scenes/GameScene';
 import { EndingScreen } from '@/scenes/Ending/EndingScreen';
 import { Credits } from '@/scenes/Credits';
+import { ModelViewer } from '@/scenes/ModelViewer';
 import { useGame } from '@/store/gameStore';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/play" element={entered ? <GameScene /> : <Navigate to="/" replace />} />
         <Route path="/ending/:id" element={entered ? <EndingScreen /> : <Navigate to="/" replace />} />
         <Route path="/credits" element={<Credits />} />
+        <Route path="/viewer" element={<ModelViewer />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>

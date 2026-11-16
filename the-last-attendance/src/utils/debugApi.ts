@@ -2,6 +2,8 @@ import { useGame } from '@/store/gameStore';
 import { runtime } from '@/systems/runtime';
 import { InteractionSystem } from '@/systems/InteractionSystem/InteractionSystem';
 import { teacherControl } from '@/systems/EnemyAISystem/TeacherBrain';
+import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
+import { NavGrid } from '@/systems/EnemyAISystem/NavGrid';
 import { scriptHost } from '@/systems/DialogueSystem/DialogueSystem';
 import type { ChapterId, EndingId, PuzzleId } from '@/types';
 
@@ -34,6 +36,16 @@ export function installDebugApi(): void {
     chapter: (n: ChapterId) => useGame.getState().beginChapter(n),
     ending: (id: EndingId) => useGame.getState().triggerEnding(id),
     teacherMode: (m: 'off' | 'stalker' | 'hunter') => teacherControl.brain?.setMode(m),
+    /** Walkable path length for a player-sized body (null = blocked). */
+    path: (x0: number, z0: number, x1: number, z1: number, cell = 0.1) => {
+      const g = new NavGrid(Math.min(x0, x1) - 4, Math.min(z0, z1) - 4, Math.max(x0, x1) + 4, Math.max(z0, z1) + 4, 0.3, cell);
+      const p = g.findPath(x0, z0, x1, z1, 400000);
+      return p ? p.length : null;
+    },
+    colliderCount: () => [...CollisionSystem.all()].length,
+    collidersAt: (x: number, z: number) => [...CollisionSystem.all()].filter((b) => x >= b.minX - 0.3 && x <= b.maxX + 0.3 && z >= b.minZ - 0.3 && z <= b.maxZ + 0.3 && b.maxY > 0.25 && b.minY < 1.7)
+      .map((b) => [b.minX, b.maxX, b.minZ, b.maxZ, b.minY, b.maxY].map((v) => +v.toFixed(2))),
+    blockedAt: (x: number, z: number) => CollisionSystem.overlaps(x, z, 0.3),
     key: (code: string, down: boolean) => { if (down) runtime.keys.add(code); else runtime.keys.delete(code); },
   };
   (window as unknown as { __tla: typeof api }).__tla = api;

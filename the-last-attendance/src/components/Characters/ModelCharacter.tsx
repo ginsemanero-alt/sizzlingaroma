@@ -16,11 +16,13 @@ export const CHARACTER_MODELS = {
   girl_ponytail: { url: 'models/girl_ponytail.glb', height: 1.58, idleAnim: false },
   boy_rigged: { url: 'models/boy_rigged.glb', height: 1.7, idleAnim: false },
   boy_stylized: { url: 'models/boy_stylized.glb', height: 1.68, idleAnim: false },
+  boy_stylized6: { url: 'models/boy_stylized6.glb', height: 1.7, idleAnim: false },
+  boy_animated: { url: 'models/boy_animated.glb', height: 1.68, idleAnim: true },
 } as const;
 export type ModelId = keyof typeof CHARACTER_MODELS;
 
 export const GIRL_MODELS: ModelId[] = ['girl_ponytail', 'girl_bob'];
-export const BOY_MODELS: ModelId[] = ['boy_stylized', 'student', 'boy_rigged'];
+export const BOY_MODELS: ModelId[] = ['boy_stylized', 'student', 'boy_stylized6', 'boy_rigged'];
 
 /** Pick a model for a seat/index so a class looks varied. */
 export function studentModel(isGirl: boolean, index: number): ModelId {
@@ -28,8 +30,11 @@ export function studentModel(isGirl: boolean, index: number): ModelId {
   return list[index % list.length];
 }
 
+/** Self-hosted Draco decoder (models are Draco-compressed with WebP textures). */
+export const DRACO_PATH = 'draco/';
+
 export function preloadCharacterModels(ids: ModelId[] = Object.keys(CHARACTER_MODELS) as ModelId[]): void {
-  ids.forEach((id) => useGLTF.preload(CHARACTER_MODELS[id].url));
+  ids.forEach((id) => useGLTF.preload(CHARACTER_MODELS[id].url, DRACO_PATH));
 }
 
 export interface ModelLook {
@@ -59,7 +64,7 @@ const ModelBody = forwardRef<HumanoidHandle, Props>(function ModelBody(
   ref,
 ) {
   const def = CHARACTER_MODELS[model];
-  const gltf = useGLTF(def.url);
+  const gltf = useGLTF(def.url, DRACO_PATH);
   const group = useRef<THREE.Group>(null);
   const head = useRef<THREE.Group>(null);
   const walkSpeed = useRef(0);

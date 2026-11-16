@@ -8,7 +8,7 @@ import { Teacher } from '@/components/Enemies/Teacher';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS } from '@/components/Characters/Humanoid';
 import { ChapterBase, useFlag, useScript } from '@/scenes/ChapterBase';
-import { addRoom13, room13Seats } from '@/scenes/shared/schoolParts';
+import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { DIALOGUE } from '@/data/dialogue';
 import { ROLL_CALL } from '@/data/characters';
 import { game } from '@/store/gameStore';
@@ -20,7 +20,14 @@ import { resolveEnding, summarizeEvidence, type FinalDecision } from '@/systems/
 import type { ScriptContext } from '@/systems/DialogueSystem/DialogueSystem';
 
 const D = DIALOGUE.c6;
-const R13X = 34, R13Z = -2.5;
+/** Room 13 (abandoned-classroom model) at the east end, north of the corridor. */
+const RS = ROOM_ABANDONED;
+const R = roomAt(RS, 44 - RS.half[1], -2.5 - RS.half[0]);
+/** Corridor-side face of the wall in front of Room 13 (just outside the model's own wall). */
+const H13 = -2.22;
+const TEACHER = R.xz(RS.teacher);
+/** Keep the doorway approach walkable (the model is cluttered just inside the door). */
+const R13_CLEAR: [number, number, number, number][] = [[R.doorX - 0.4, R.southZ - 2.0, R.doorX + 1.4, R.southZ]];
 
 const TEACHER_CFG: TeacherConfig = {
   bounds: [-1, -12, 45, 3],
@@ -37,15 +44,16 @@ function buildLevel(): LevelBuilder {
   b.ceil(-4, -2.5, 44, 2.5, 3.6);
   b.wall(-4, -2.5, -4, 2.5, { h: 3.6, openings: [{ at: 2.5, w: 3, h: 2.8 }] });
   b.wall(44, -2.5, 44, 2.5, { h: 3.6 });
-  b.wall(-4, -2.5, 44, -2.5, { h: 3.6, openings: [{ at: R13X + 8.6 + 4, w: 1.1, h: 2.2 }, { at: 14, w: 1.1, h: 2.2 }, { at: 26, w: 1.1, h: 2.2 }] });
+  b.wall(-4, -2.5, R.min[0], -2.5, { h: 3.6, openings: [{ at: 14, w: 1.1, h: 2.2 }, { at: 26, w: 1.1, h: 2.2 }] });
+  b.wall(R.min[0], H13, 44, H13, { h: 3.6, openings: [{ at: R.doorX - R.min[0], w: RS.door.width, h: 2.2 }] });
+  b.box((R.min[0] + 44) / 2, 1.8, -2.4, 44 - R.min[0], 3.6, 0.05, 'black');
   b.wall(-4, 2.5, 44, 2.5, { h: 3.6, openings: [{ at: 20, w: 1.1, h: 2.2 }, { at: 32, w: 1.1, h: 2.2 }] });
   b.block(-8, -3, -7, 3); b.floor(-8, -2.5, -4, 2.5, 'concrete');
-  addRoom13(b, R13X, R13Z, { skipSouth: true, extraDesk: true });
   // distorted corridor dressing: hiding alcoves, floating furniture, piles of desks
   b.cabinet(8, -2.2, 2, 0.9, 1.9, 0.5);
   b.lockers(15, 2.2, 0, 4);
   b.cabinet(21, 2.2, 0, 0.9, 1.9, 0.5);
-  b.cabinet(29, -2.2, 2, 0.9, 1.9, 0.5);
+  b.cabinet(29, -2.2, 2, 0.9, 1.9, 0.5); // must stay west of the Room 13 wall stretch
   b.desk(12, -1.6, 1); b.desk(18, 1.6, 3); b.desk(33, 1.7, 3); b.desk(25, -1.7, 1, true);
   b.lockers(38, 2.2, 0, 5);
   for (let i = 0; i < 9; i++) b.box(4 + i * 4.3, 2.4 + (i % 3) * 0.3, (i % 2 ? 1 : -1) * 1.4, 0.55, 0.05, 0.45, 'wood', undefined, i * 0.7);
@@ -63,19 +71,19 @@ export default function Chapter6() {
   const rollDone = useFlag('c6_roll');
   const [ghosts, setGhosts] = useState(0); // number of students visible
   const [final, setFinal] = useState(false);
-  const seats = useMemo(() => room13Seats(R13X, R13Z), []);
+  const seats = useMemo(() => RS.seats.map((l) => R.xz(l)), []);
   // seat index → student; seat 11 (back row, window) is Alex's
-  const studentSeats = useMemo(() => seats.filter((_, i) => i !== 11).slice(0, 11), [seats]);
+  const studentSeats = useMemo(() => seats.slice(0, 11), [seats]);
 
   const enterRoom = () => ctx.run('enter', async (c) => {
     game().setFlag('c6_reached', true);
     teacherControl.brain?.setMode('stalker');
-    teacherControl.brain?.place(R13X + 5, R13Z - 7.4, Math.PI);
+    teacherControl.brain?.place(TEACHER[0], TEACHER[1], R.teacherYaw);
     runtime.fear = 0;
     AudioSystem.loop('tension', 0, 1500);
     bus.emit('door:r13', 'slam');
     c.lock(true);
-    c.lookAt(R13X + 5, 1.5, R13Z - 7.4);
+    c.lookAt(TEACHER[0], 1.5, TEACHER[1]);
     await c.wait(1200);
     await c.say(D.enter);
     for (let i = 0; i < ROLL_CALL.length; i++) {
@@ -83,19 +91,19 @@ export default function Chapter6() {
       await c.line('reyes', `${r.surname}, ${r.first}.`, undefined, undefined, 1700);
       setGhosts(i + 1);
       const s = studentSeats[i];
-      AudioSystem.play('whisper', { pos: [s.x, 1.1, s.z], volume: 0.5 });
+      AudioSystem.play('whisper', { pos: [s[0], 1.1, s[1]], volume: 0.5 });
       await c.line('student', 'Present.', 'Present po.', undefined, 1000);
     }
     await c.wait(600);
     await c.say(D.roll);
     c.lock(false);
     game().setFlag('c6_roll', true);
-    game().saveCheckpoint('room13', [R13X + 7.5, 0, R13Z - 1.4], Math.PI * 0.9);
+    game().saveCheckpoint('room13', R.p(RS.entry), R.studentYaw);
   });
 
   const finalSequence = (c: ScriptContext) => c.run('final', async (s) => {
     s.lock(true);
-    s.lookAt(R13X + 5, 1.5, R13Z - 7.4);
+    s.lookAt(TEACHER[0], 1.5, TEACHER[1]);
     const ev = summarizeEvidence(game().collected, game().flags);
     const canRestore = game().has('altered_attendance') && game().has('attendance_reconstructed');
     await s.line('reyes', 'This is the book they said was never recovered.', 'Ito ang librong sinabi nilang hindi na nakita.', 'fil');
@@ -180,8 +188,10 @@ export default function Chapter6() {
       {[2, 12, 22, 32, 42].map((x, i) => <EmergencyLight key={x} position={[x, 3.4, i % 2 ? 2.3 : -2.3]} intensity={2.2} distance={10} />)}
       <FluoroLight position={[7, 3.58, 0]} flicker="broken" intensity={3} />
       <FluoroLight position={[27, 3.58, 0]} flicker="broken" intensity={3} />
-      <FluoroLight position={[R13X + 3, 3.18, R13Z - 4.5]} flicker={final ? 'none' : 'subtle'} on={reached} />
-      <FluoroLight position={[R13X + 7, 3.18, R13Z - 4.5]} flicker="subtle" on={reached && !final} />
+      <Room13Model room={R} tint="#c9a0a0" lift={0.03} clearExtra={R13_CLEAR} />
+      <FluoroLight position={R.p([0, -2.5], 2.82)} rotY={R.studentYaw} flicker={final ? 'none' : 'subtle'} on={reached} color="#ffd6d6" distance={8} />
+      <FluoroLight position={R.p([0, 2.5], 2.82)} rotY={R.studentYaw} flicker="subtle" on={reached && !final} color="#ffd6d6" distance={8} />
+      {!reached && <pointLight position={R.p([0, 0], 2.4)} color="#ff3030" intensity={2.5} distance={9} />}
       <pointLight position={[-6, 3, 0]} intensity={4} distance={10} color="#9fb6ff" />
 
       {/* writing on the walls */}
@@ -190,13 +200,12 @@ export default function Chapter6() {
       <ChalkText position={[24, 2.2, -2.38]} size={[3.4, 1]} lines={['WHO TOOK THE ATTENDANCE?']} color="#ffd0d0" glow={0.4} />
       <ChalkText position={[35, 1.7, 2.38]} rotation={[0, Math.PI, 0]} size={[3.4, 1.2]} lines={['TRANSFERRED', 'TRANSFERRED', 'TRANSFERRED']} color="#ffd0d0" glow={0.4} />
       <ChalkText position={[43.88, 1.8, 0]} rotation={[0, -Math.PI / 2, 0]} size={[3.6, 1.2]} lines={['ROOM 13 ←', 'KUMPLETO NA BA TAYO?']} color="#ffe0e0" glow={0.6} />
-      <ChalkText position={[R13X + 5, 1.65, R13Z - 8.33]} lines={final ? ['MERCADO, ALEX', '?'] : ['THE LAST ATTENDANCE', 'MARCH 9']} glow={0.3} />
-      <Sign position={[R13X + 8.6, 2.45, -2.38]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#3a0d0d" color="#ffd0d0" />
-      <Clock position={[R13X + 5, 2.65, R13Z - 8.37]} />
+      <ChalkText position={R.boardFront(1.6)} rotation={[0, R.boardRotY, 0]} size={[RS.boardWidth, 0.9]} lines={final ? ['MERCADO, ALEX', '?'] : ['THE LAST ATTENDANCE', 'MARCH 9']} glow={0.3} />
+      <Sign position={[R.doorX, 2.45, H13 + 0.12]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#3a0d0d" color="#ffd0d0" />
       <Clock position={[20, 2.7, -2.38]} />
 
       {/* doors */}
-      <Door id="r13" position={[R13X + 8.6, 0, -2.5]} axis="x" startOpen locked={reached} lockedText="It won't open" />
+      <Door id="r13" position={[R.doorX, 0, H13]} axis="x" width={RS.door.width} startOpen locked={reached} lockedText="It won't open" />
       <Door id="d1" position={[10, 0, -2.5]} axis="x" locked lockedText="Locked" />
       <Door id="d2" position={[22, 0, -2.5]} axis="x" locked lockedText="Locked" />
       <Door id="d3" position={[16, 0, 2.5]} axis="x" locked lockedText="Someone is holding it shut" />
@@ -231,12 +240,12 @@ export default function Chapter6() {
       <GhostStudent position={[31, 0, -1.0]} rotationY={-Math.PI / 2} pose="stand" look={STUDENT_LOOKS.boy} vanishDistance={3} />
 
       {/* Room 13 */}
-      <Trigger id="c6_enter" min={[R13X + 0.5, R13Z - 8]} max={[R13X + 9.5, R13Z - 1.2]} onEnter={enterRoom} />
+      <Trigger id="c6_enter" min={R.min} max={[R.max[0], R.southZ - 1.2]} onEnter={enterRoom} />
       {studentSeats.map((s, i) => (
-        <GhostStudent key={i} position={[s.x, 0, s.z + 0.15]} look={SEAT_LOOKS[i]} visible={reached && (ghosts > i || rollDone)} color="#9fb0ff" />
+        <GhostStudent key={i} position={[s[0], 0, s[1]]} rotationY={R.studentYaw} pose="stand" look={SEAT_LOOKS[i]} visible={reached && (ghosts > i || rollDone)} color="#9fb0ff" />
       ))}
-      <GhostStudent position={[R13X + 9.1, 0, R13Z - 0.75]} look={{ ...STUDENT_LOOKS.girl, hairStyle: 'long' }} visible={final} color="#c0c8ff" />
-      <Interactable id="attendance_book" position={[R13X + 5, 0.86, R13Z - 6.25]} radius={0.3} prompt={rollDone && !bookTaken ? 'Take the attendance book' : null} onInteract={() => {
+      <GhostStudent position={R.p(RS.extraSeat)} rotationY={R.studentYaw} pose="stand" model="girl_bob" look={{ ...STUDENT_LOOKS.girl, hairStyle: 'long' }} visible={final} color="#c0c8ff" />
+      <Interactable id="attendance_book" position={R.deskFront(RS.deskTop + 0.04)} radius={0.3} prompt={rollDone && !bookTaken ? 'Take the attendance book' : null} onInteract={() => {
         game().setFlag('c6_book', true);
         AudioSystem.play('paper');
         finalSequence(ctx);

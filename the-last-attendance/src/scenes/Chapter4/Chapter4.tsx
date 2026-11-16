@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
-import { Atmosphere, ChalkText, Clock, Dust, EmergencyLight, Fire, Sign, Smoke } from '@/components/Environment/Props';
+import { Atmosphere, ChalkText, Dust, EmergencyLight, Fire, Sign, Smoke } from '@/components/Environment/Props';
 import { Door, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot, Interactable } from '@/components/Interactions/Interactable';
 import { GhostStudent, MemoryFigure } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS } from '@/components/Characters/Humanoid';
 import { ChapterBase, useFlag, useFlagEffect, useHas, useScript } from '@/scenes/ChapterBase';
-import { addRoom13 } from '@/scenes/shared/schoolParts';
+import { ROOM_2018, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { DIALOGUE } from '@/data/dialogue';
 import { ITEMS } from '@/data/items';
 import { game } from '@/store/gameStore';
@@ -19,7 +19,12 @@ import { playRecording, type ScriptContext } from '@/systems/DialogueSystem/Dial
 import type { DialogueLine } from '@/types';
 
 const D = DIALOGUE.c4;
-const R13X = 24, R13Z = 2;
+/** Room 13 as it was in 2018 (classroom model), north of the hallway. */
+const RS = ROOM_2018;
+const R = roomAt(RS, 29, 2 - RS.half[1]);
+/** Hallway-side face of the wall in front of Room 13. */
+const H13 = 2.28;
+const R13_CLEAR: [number, number, number, number][] = [[R.doorX - 0.9, R.southZ - 1.6, R.doorX + 0.9, R.southZ]];
 
 interface SmokeZone { min: [number, number]; max: [number, number]; rate: number }
 const SMOKE: SmokeZone[] = [
@@ -52,7 +57,7 @@ const FRAGMENTS: { id: string; pos: [number, number, number]; figure: [number, n
     ],
   },
   {
-    id: 'f4', pos: [29, 1.2, -1.5], figure: [29, 0, -2.2], yaw: Math.PI,
+    id: 'f4', pos: [28.9, 1.2, -5.2], figure: [28.93, 0, -7.2], yaw: Math.PI,
     lines: [
       { s: 'reyes', en: 'Aquino. Bautista. Flores. Garcia... where are Cruz and Mercado?', fil: 'Aquino. Bautista. Flores. Garcia... nasaan sina Cruz at Mercado?', lang: 'fil' },
       { s: 'reyes', en: 'Everyone, hold hands. We are not leaving anyone behind.', fil: 'Lahat, maghawak-kamay. Walang maiiwan.', lang: 'fil' },
@@ -67,7 +72,10 @@ function buildLevel(): LevelBuilder {
   b.ceil(0, 2, 44, 6);
   b.wall(0, 2, 0, 6, {});
   b.wall(44, 2, 44, 6, { openings: [{ at: 2, w: 1.6, h: 2.3 }] });
-  b.wall(0, 2, 44, 2, { openings: [{ at: 7, w: 1.1, h: 2.2 }, { at: 18, w: 1.1, h: 2.2 }, { at: R13X + 8.6, w: 1.1, h: 2.2 }] });
+  b.wall(0, 2, R.min[0], 2, { openings: [{ at: 7, w: 1.1, h: 2.2 }, { at: 18, w: 1.1, h: 2.2 }] });
+  b.wall(R.min[0], H13, R.max[0], H13, { openings: [{ at: R.doorX - R.min[0], w: RS.door.width, h: 2.2 }] });
+  b.box((R.min[0] + R.max[0]) / 2, 1.6, 2.13, R.max[0] - R.min[0], 3.2, 0.05, 'black');
+  b.wall(R.max[0], 2, 44, 2, {});
   b.wall(0, 6, 44, 6, { openings: [{ at: 19, w: 4, h: 2.8 }] });
   // science lab
   b.room(2, -8, 12, 2, { skip: ['s'], floor: 'tile', w: [{ at: 3, w: 1.6, h: 1.4, y: 1 }] });
@@ -81,7 +89,6 @@ function buildLevel(): LevelBuilder {
   for (let i = 0; i < 6; i++) b.desk(15.8 + (i % 3) * 2.2, -3.4 + Math.floor(i / 3) * 1.6, 0, i % 2 === 0);
   b.blackboard(18, -6.37, 0, 3);
   // room 13
-  addRoom13(b, R13X, R13Z, { skipSouth: true, toppled: true });
   // main stairs (blocked)
   b.room(16, 6, 22, 12, { skip: ['n'], floor: 'concrete' });
   b.stairs(19, 11.6, 0, 3, 8);
@@ -182,15 +189,16 @@ export default function Chapter4() {
 
       <Door id="lab" position={[7, 0, 2]} axis="x" startOpen />
       <Door id="r12" position={[18, 0, 2]} axis="x" startOpen />
-      <Door id="r13" position={[R13X + 8.6, 0, 2]} axis="x" startOpen />
+      <Door id="r13" position={[R.doorX, 0, H13]} axis="x" width={RS.door.width} startOpen />
+      <Room13Model room={R} tint="#c09070" hideExtra={/godray/} clearExtra={R13_CLEAR} />
+      <pointLight position={R.p([0, 0], 2.6)} color="#ff7a3a" intensity={3} distance={10} />
       <Door id="exit" position={[44, 0, 4]} axis="z" width={1.6} height={2.3} metal double color="#7a1e1a" locked lockedText="" noInteract />
 
       <Sign position={[7, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[1.3, 0.2]} lines={['SCIENCE LAB']} bg="#2b3a2b" color="#ddd" />
-      <Sign position={[R13X + 8.6, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#2b3a2b" color="#ddd" />
+      <Sign position={[R.doorX, 2.45, H13 + 0.12]} rotation={[0, 0, 0]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#2b3a2b" color="#ddd" />
       <Sign position={[43.88, 2.6, 4]} rotation={[0, -Math.PI / 2, 0]} size={[1.8, 0.3]} lines={['EMERGENCY EXIT']} bg="#1d6a2a" color="#e8ffe8" emissive={0.6} />
       <Sign position={[19, 2.5, 5.88]} rotation={[0, Math.PI, 0]} size={[2.2, 0.3]} lines={['MAIN STAIRS ↓']} bg="#2b3a2b" color="#ddd" />
-      <Clock position={[R13X + 5, 2.65, R13Z - 8.37]} />
-      <ChalkText position={[R13X + 5, 1.65, R13Z - 8.33]} lines={evac ? ['13 → STAIRS ✗ → EAST HALL → EXIT'] : ['EVACUATION: ?', 'BILANGIN ANG LAHAT (COUNT EVERYONE)']} />
+      <ChalkText position={R.boardFront(1.55)} rotation={[0, R.boardRotY, 0]} size={[RS.boardWidth, 1.0]} lines={evac ? ['13 → STAIRS ✗ → EAST HALL → EXIT'] : ['EVACUATION: ?', 'BILANGIN ANG LAHAT (COUNT EVERYONE)']} />
 
       {/* memory fragments */}
       {FRAGMENTS.map((f) => (
@@ -216,8 +224,8 @@ export default function Chapter4() {
       </Interactable>
 
       {/* Room 13 evacuation board */}
-      <Hotspot id="evac_board" position={[R13X + 5, 1.6, R13Z - 8.2]} size={[3.5, 1.2, 0.3]} prompt={evac ? null : 'Reconstruct the evacuation'} onInteract={() => game().openPuzzle('evacuation')} />
-      <Trigger id="c4_voices" min={[24.5, -6]} max={[33.5, 1.5]} onEnter={() => ctx.run('voices', async (c) => {
+      <Hotspot id="evac_board" position={R.boardFront(1.5)} size={[3.5, 1.2, 0.4]} prompt={evac ? null : 'Reconstruct the evacuation'} onInteract={() => game().openPuzzle('evacuation')} />
+      <Trigger id="c4_voices" min={R.min} max={[R.max[0], R.southZ - 1.0]} onEnter={() => ctx.run('voices', async (c) => {
         AudioSystem.play('whisper', { pos: [40, 1.5, 4], volume: 1 });
         await c.say(D.voices);
       })} />

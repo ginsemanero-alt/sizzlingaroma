@@ -2,13 +2,12 @@ import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 
 /** Grid-based A* navigation built from the collision system. Rebuilt lazily when colliders change. */
 export class NavGrid {
-  private cell = 0.4;
   private w = 0;
   private h = 0;
   private blocked: Uint8Array = new Uint8Array(0);
   private builtVersion = -1;
 
-  constructor(private minX: number, private minZ: number, private maxX: number, private maxZ: number, private radius = 0.32) {}
+  constructor(private minX: number, private minZ: number, private maxX: number, private maxZ: number, private radius = 0.32, private cell = 0.4) {}
 
   private ensure(): void {
     if (this.builtVersion === CollisionSystem.version) return;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ENDINGS } from '@/data/endings';
@@ -8,7 +8,8 @@ import { useGame } from '@/store/gameStore';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment/Props';
-import { addRoom13, room13Seats } from '@/scenes/shared/schoolParts';
+import { ROOM_2018, roomAt } from '@/scenes/shared/room13Sets';
+import { EnvModel } from '@/components/Environment/EnvModel';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
 import { ModelCharacter } from '@/components/Characters/ModelCharacter';
@@ -30,42 +31,53 @@ function CameraRig({ from, to, look, duration = 30 }: { from: [number, number, n
   return null;
 }
 
-function Room13Scene({ morning, ghosts, teacherWalk }: { morning: boolean; ghosts: boolean; teacherWalk: boolean }) {
-  const b = useMemo(() => { const lb = new LevelBuilder(); addRoom13(lb, 0, 0, { extraDesk: true }); return lb; }, []);
-  const seats = room13Seats(0, 0);
+/** PRESENT: the 2018 classroom model in morning light; the class fades away. */
+const ROOM_MORNING = roomAt(ROOM_2018, 0, 0);
+function MorningRoom() {
+  const [ghostsOn, setGhostsOn] = useState(true);
+  useEffect(() => { const t = window.setTimeout(() => setGhostsOn(false), 9000); return () => window.clearTimeout(t); }, []);
+  return (
+    <>
+      <Suspense fallback={null}><EnvModel model="env_classroom" position={[0, 0, 0]} rotationY={ROOM_2018.rotationY} /></Suspense>
+      <ambientLight intensity={0.8} color="#ffe6c4" />
+      <hemisphereLight args={['#fff2dc', '#6a5a40', 0.6]} />
+      <directionalLight position={[-14, 7, -2]} intensity={3.2} color="#ffd9a0" castShadow />
+      <color attach="background" args={['#e2d2b0']} />
+      <fogExp2 attach="fog" args={['#e2d2b0', 0.015]} />
+      <Dust count={300} color="#fff2d0" size={0.03} />
+      <ChalkText position={ROOM_MORNING.boardFront(1.55)} rotation={[0, ROOM_MORNING.boardRotY, 0]} size={[3.4, 1.0]} lines={['PRESENT: 12', 'ABSENT: 0']} color="#f4f4ee" />
+      {ROOM_2018.seats.slice(0, 11).map((l, i) => (
+        <GhostStudent key={i} position={ROOM_MORNING.p(l)} rotationY={ROOM_MORNING.studentYaw} pose="stand" look={i % 2 ? STUDENT_LOOKS.girl : STUDENT_LOOKS.boy} visible={ghostsOn} color="#ffe2b0" />
+      ))}
+    </>
+  );
+}
+
+/** THE NEW STUDENT: the crumbling classroom; Ms. Reyes walks to your desk and leaves an ID. */
+function NewStudentRoom() {
   const teacher = useRef<HumanoidHandle>(null);
-  const [ghostsOn, setGhostsOn] = useState(ghosts);
-  const tz = useRef(-6.6);
-  useEffect(() => { if (morning && ghosts) { const t = window.setTimeout(() => setGhostsOn(false), 9000); return () => window.clearTimeout(t); } }, [morning, ghosts]);
+  const tz = useRef(-4.5);
   useFrame((_, dt) => {
-    if (!teacherWalk || !teacher.current?.group) return;
-    tz.current = Math.min(-3.9, tz.current + dt * 0.35);
-    teacher.current.group.position.set(8.9 - (tz.current + 6.6) * 0.05, 0, tz.current);
-    teacher.current.walk(tz.current < -3.95 ? 0.5 : 0);
+    if (!teacher.current?.group) return;
+    tz.current = Math.min(1.6, tz.current + dt * 0.4);
+    teacher.current.group.position.set(0.15, 0, tz.current);
+    teacher.current.walk(tz.current < 1.55 ? 0.6 : 0);
   });
   return (
     <>
-      <StaticLevel builder={b} />
-      {morning ? (
-        <>
-          <ambientLight intensity={0.9} color="#ffe6c4" />
-          <directionalLight position={[20, 8, -4]} intensity={3.2} color="#ffd9a0" castShadow />
-          <color attach="background" args={['#d9c7a4']} />
-          <fogExp2 attach="fog" args={['#d9c7a4', 0.02]} />
-          <Dust count={300} color="#fff2d0" size={0.03} />
-        </>
-      ) : (
-        <Atmosphere fog="#05060a" density={0.08} ambientIntensity={0.18} hemiIntensity={0.2} />
-      )}
-      <ChalkText position={[5, 1.65, -8.33]} lines={morning ? ['PRESENT: 12', 'ABSENT: 0'] : ['WELCOME, NEW STUDENT']} />
-      {ghostsOn && seats.slice(0, 11).map((s, i) => (
-        <GhostStudent key={i} position={[s.x, 0, s.z + 0.15]} look={i % 2 ? STUDENT_LOOKS.girl : STUDENT_LOOKS.boy} visible={ghostsOn} color={morning ? '#ffe2b0' : '#7f9cff'} />
+      <Suspense fallback={null}><EnvModel model="env_old_classroom" position={[0, 0, 0]} tint="#7d8494" /></Suspense>
+      <Atmosphere fog="#05060a" density={0.07} ambientIntensity={0.22} hemiIntensity={0.22} />
+      <pointLight position={[0, 2.4, 0.5]} intensity={4} distance={8} color="#9fb6ff" />
+      {[[-2.2, -1.2], [2.0, -1.4], [-2.4, 0.9], [2.3, 0.6], [-0.9, -2.6], [1.1, -2.9]].map(([x, z], i) => (
+        <GhostStudent key={i} position={[x, 0, z]} rotationY={0} pose="stand" look={i % 2 ? STUDENT_LOOKS.girl : STUDENT_LOOKS.boy} color="#7f9cff" />
       ))}
-      {!morning && (
-        <ModelCharacter ref={teacher} model="teacher" position={[8.9, 0, -6.6]} rotationY={Math.PI} tint="#cfcac4" />
-      )}
-      {!morning && <pointLight position={[9, 2.2, -2.5]} intensity={3} distance={6} color="#9fb6ff" />}
-      {!morning && <IdCard position={[9.15, 0.735, -1.0]} />}
+      <ModelCharacter ref={teacher} model="teacher" position={[0.15, 0, -4.5]} rotationY={Math.PI} tint="#cfcac4" />
+      {/* your desk */}
+      <mesh position={[0, 0.72, 2.85]} castShadow><boxGeometry args={[0.6, 0.04, 0.45]} /><meshStandardMaterial color="#5a4030" /></mesh>
+      {[[-0.26, 2.66], [0.26, 2.66], [-0.26, 3.04], [0.26, 3.04]].map(([x, z], i) => (
+        <mesh key={i} position={[x, 0.36, z]}><boxGeometry args={[0.03, 0.72, 0.03]} /><meshStandardMaterial color="#333" /></mesh>
+      ))}
+      <IdCard position={[0.05, 0.745, 2.8]} />
     </>
   );
 }
@@ -170,9 +182,9 @@ export function EndingScreen() {
 
   const line = lineIdx >= 0 ? ending.lines[lineIdx] : null;
   const scene = ending.id === 'present' ? (
-    <><Room13Scene morning ghosts teacherWalk={false} /><CameraRig from={[2, 1.6, -0.6]} to={[5, 1.7, -2]} look={[5, 1.4, -8]} /></>
+    <><MorningRoom /><CameraRig from={[0.5, 1.6, 4.4]} to={[0.2, 1.7, 2.2]} look={[0, 1.4, -5]} /></>
   ) : ending.id === 'new_student' ? (
-    <><Room13Scene morning={false} ghosts teacherWalk /><CameraRig from={[9.1, 1.15, -0.55]} to={[9.1, 1.1, -0.6]} look={[9.0, 0.7, -2.0]} duration={20} /></>
+    <><NewStudentRoom /><CameraRig from={[0, 1.15, 3.35]} to={[0, 1.1, 3.3]} look={[0, 0.75, 1.6]} duration={20} /></>
   ) : ending.id === 'absent' ? (
     <><GateScene /><CameraRig from={[0, 1.7, 14]} to={[0, 1.8, 24]} look={[0, 2.5, -10]} duration={40} /></>
   ) : (
@@ -181,7 +193,7 @@ export function EndingScreen() {
 
   return (
     <div className="screen">
-      <Canvas dpr={graphics === 'high' ? [1, 2] : [1, 1.5]} camera={{ fov: 60, position: [0, 1.6, 0] }} shadows={graphics !== 'low'}>
+      <Canvas dpr={graphics === 'high' ? [1, 2] : [1, 1.5]} camera={{ fov: 60, position: [0, 1.6, 0] }} shadows={graphics !== 'low'} onCreated={({ gl }) => { gl.localClippingEnabled = true; }}>
         <Exposure />
         {scene}
         <PostFX />

@@ -29,7 +29,7 @@ export function GhostStudent({
   useEffect(() => { if (visible) gone.current = false; }, [visible]);
   const id = model ?? studentModel(!!look.skirt, Math.abs(Math.round(position[0] * 3 + position[2] * 7)));
   // The models are standing-posed: "seated" ghosts stand at their desk, just behind the seat.
-  const pos: V3 = pose === 'sit' ? [position[0], 0, position[2] + 0.42] : position;
+  const pos: V3 = pose === 'sit' ? [position[0] + Math.sin(rotationY) * 0.42, 0, position[2] + Math.cos(rotationY) * 0.42] : position;
   return <ModelCharacter ref={ref} model={id} position={pos} rotationY={rotationY} pose={pose} ghost ghostColor={color} opacity={0} fallback={{ ...look, eyes: 'glow' }} />;
 }
 
