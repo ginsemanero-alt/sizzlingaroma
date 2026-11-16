@@ -1,0 +1,95 @@
+import type { ChapterId, ChapterMeta } from '@/types';
+
+export const CHAPTERS: Record<ChapterId, ChapterMeta> = {
+  1: {
+    id: 1,
+    title: 'After School',
+    subtitle: 'Chapter One',
+    location: 'San Aurelio High School — Main Building',
+    time: 'March 9, 2028 — 7:00 PM',
+    tip: 'Hold SHIFT to run, CTRL or C to crouch. Interact with E. Your flashlight battery drains while it is on.',
+    objectives: [
+      { id: 'enter', text: 'Enter the abandoned school', flag: 'c1_entered' },
+      { id: 'power', text: 'Find the electricity switch', flag: 'c1_power' },
+      { id: 'room13', text: 'Investigate Room 13', flag: 'c1_room13' },
+      { id: 'listen', text: 'Listen to the attendance', flag: 'c1_rollcall' },
+      { id: 'id', text: 'Find the old student ID', flag: 'c1_id' },
+      { id: 'unlock', text: 'Unlock the classroom wing (east end of the hallway)', flag: 'c1_done' },
+    ],
+  },
+  2: {
+    id: 2,
+    title: 'Present',
+    subtitle: 'Chapter Two',
+    location: 'Classroom Wing — Lockers, Canteen, Faculty Room',
+    time: '7:41 PM',
+    tip: 'Ms. Reyes reacts to noise. Walk or crouch when she is near. Press E at desks or cabinets to hide.',
+    objectives: [
+      { id: 'belongings', text: "Find the missing students' belongings in the lockers (0/4)", flag: 'c2_belongings' },
+      { id: 'photos', text: 'Discover the old photographs in the faculty room', flag: 'c2_photos' },
+      { id: 'identify', text: 'Identify the students in the photographs', flag: 'c2_identified' },
+      { id: 'seating', text: 'Solve the seating plan in the Sampaguita homeroom (Room 9)', flag: 'c2_seating' },
+      { id: 'exit', text: 'Unlock the records wing door', flag: 'c2_done' },
+    ],
+  },
+  3: {
+    id: 3,
+    title: 'The Missing Names',
+    subtitle: 'Chapter Three',
+    location: 'Library, Computer Room, Records Office',
+    time: '8:20 PM',
+    tip: 'Documents can be re-read anytime with TAB. Some puzzles need information from several records.',
+    objectives: [
+      { id: 'records', text: 'Search the old school records (computer room)', flag: 'c3_records' },
+      { id: 'original', text: 'Find the original attendance sheet', flag: 'c3_original' },
+      { id: 'compare', text: 'Compare it with the official report — reconstruct the attendance', flag: 'c3_compare' },
+      { id: 'file', text: "Find the missing student's file in the records office", flag: 'c3_file' },
+      { id: 'archive', text: 'Unlock the archive room', flag: 'c3_done' },
+    ],
+  },
+  4: {
+    id: 4,
+    title: 'The Night of the Fire',
+    subtitle: 'Chapter Four',
+    location: 'San Aurelio High School — March 9, 2018',
+    time: '7:38 PM',
+    tip: 'Smoke rises. Crouch to breathe. Follow the memory fragments.',
+    objectives: [
+      { id: 'fragments', text: "Follow the fragments of Daniel's memory (0/4)", flag: 'c4_fragments' },
+      { id: 'source', text: 'Find the source of the fire', flag: 'c4_source' },
+      { id: 'evac', text: 'Reconstruct the evacuation on the Room 13 blackboard', flag: 'c4_evac' },
+      { id: 'truth', text: 'Discover what happened to the missing students (east exit)', flag: 'c4_done' },
+    ],
+  },
+  5: {
+    id: 5,
+    title: 'The False Report',
+    subtitle: 'Chapter Five',
+    location: "Principal's Office, Records Archive",
+    time: '9:05 PM',
+    tip: 'Use the timeline board after you have gathered the records. Evidence descriptions contain the exact times.',
+    objectives: [
+      { id: 'docs', text: "Find the principal's documents (0/2)", flag: 'c5_docs' },
+      { id: 'confession', text: 'Listen to the old confession recording', flag: 'c5_confession' },
+      { id: 'altered', text: 'Discover the altered attendance in the archive', flag: 'c5_altered' },
+      { id: 'daniel', text: "Find Daniel's final message", flag: 'c5_daniel' },
+      { id: 'timeline', text: 'Reconstruct the incident timeline on the archive board', flag: 'c5_timeline' },
+      { id: 'purpose', text: "Understand the teacher's true purpose", flag: 'c5_done' },
+    ],
+  },
+  6: {
+    id: 6,
+    title: 'The Last Attendance',
+    subtitle: 'Chapter Six',
+    location: 'Room 13',
+    time: '—:— —',
+    tip: 'She is not trying to keep you. She is trying to make you remember.',
+    objectives: [
+      { id: 'reach', text: 'Reach Room 13', flag: 'c6_reached' },
+      { id: 'book', text: 'Go to the attendance book', flag: 'c6_book' },
+      { id: 'answer', text: 'Answer the attendance', flag: 'c6_answered' },
+    ],
+  },
+};
+
+export const CHAPTER_IDS: ChapterId[] = [1, 2, 3, 4, 5, 6];
