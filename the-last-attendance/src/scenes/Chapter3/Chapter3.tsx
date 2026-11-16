@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { PropModel } from '@/components/Environment/PropModel';
+import { EnvModel } from '@/components/Environment/EnvModel';
 import { GlbCabinet } from '@/scenes/shared/props';
 import { Atmosphere, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, FallingBooks, HidingSpot, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
@@ -16,6 +18,13 @@ import { Horror } from '@/systems/HorrorEventSystem/HorrorEventSystem';
 import { teacherControl, type TeacherConfig } from '@/systems/EnemyAISystem/TeacherBrain';
 
 const D = DIALOGUE.c3;
+
+/** Registrar's desk height (office-cubicle model). */
+const DESK_TOP = 0.76;
+/** Archive room: the abandoned-office model, with a doorway cut where the keypad door is. */
+const ARCHIVE: [number, number, number] = [38, 0, 0];
+const ARCHIVE_DOOR: [number, number, number, number, number, number] = [33.9, -0.1, -0.75, 35.1, 2.2, 0.75];
+const ARCHIVE_CLEAR: [number, number, number, number][] = [[33.8, -1.0, 35.8, 1.0]];
 
 const TEACHER_CFG: TeacherConfig = {
   bounds: [-1, -11, 43, 15],
@@ -57,14 +66,14 @@ function buildLevel(): LevelBuilder {
   for (let i = 0; i < 6; i++) b.cabinet(18.2 + i * 1.0, -9.65, 2, 0.95, 1.6, 0.6, 'metal', false);
   b.cabinet(28.6, -6.2, 1, 0.95, 1.6, 0.6, 'metal', false);
   b.cabinet(28.6, -8.6, 1, 0.95, 1.6, 0.6, 'metal', false);
-  b.table(20, -5, 1.8, 0.9, 0.76, 'darkwood');
-  b.chair(20, -4.3, 2);
-  b.table(24.5, -5.5, 2.4, 1.4, 0.78, 'wood'); // comparison table
+  // registrar's L-shaped workstation (office-cubicle model); colliders for its two desk arms
+  b.block(21.7, -8.9, 24.0, -3.7, 0, 0.9, false);
+  b.block(17.7, -8.9, 21.7, -6.9, 0, 0.9, false);
   b.debris(23, -4, 4, 18);
   // archive (east, behind keypad door)
   b.room(34, -5, 42, 5, { skip: ['w'], floor: 'concrete', lower: null, upper: 'concrete' });
   b.wall(34, -5, 34, -0.6, {}); b.wall(34, 0.6, 34, 5, {});
-  for (let i = 0; i < 3; i++) { b.bookshelf(37, -3.5 + i * 3.4, 0, 3, 2.4, 0.5); b.bookshelf(40.5, -3.5 + i * 3.4, 0, 2.4, 2.4, 0.5); }
+  // archive interior: the abandoned-office model (see ARCHIVE)
   // corridor dressing
   b.lockers(26, 1.75, 0, 5);
   b.debris(16, 0, 10, 12);
@@ -139,6 +148,11 @@ export default function Chapter3() {
     >
       <Atmosphere fog="#0a0d16" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      <Suspense fallback={null}>
+        <PropModel model="env_office" maxPart={8} position={[20.85, 0, -6.3]} rotationY={Math.PI} tint="#8f8a80" />
+        <PropModel model="env_lab" position={[4.65, 0.81, 3.4]} width={0.7} animate tint="#b0a898" />
+        <EnvModel model="env_old_office" position={ARCHIVE} tint="#9a948c" hole={ARCHIVE_DOOR} collide clear={ARCHIVE_CLEAR} />
+      </Suspense>
       {[0, 1, 2, 3, 4, 5].map((i) => <GlbCabinet key={i} x={18.2 + i * 1.0} z={-9.65} r={2} w={0.95} h={1.6} d={0.6} />)}
       <GlbCabinet x={28.6} z={-6.2} r={1} w={0.95} h={1.6} d={0.6} />
       <GlbCabinet x={28.6} z={-8.6} r={1} w={0.95} h={1.6} d={0.6} />
@@ -198,9 +212,9 @@ export default function Chapter3() {
       <HidingSpot id="pc_desk" position={[5.5, 0.4, -8.4]} view={[5.5, 0.5, -8.1]} exit={[5.5, 0, -6.6]} yaw={0} label="Hide under the desk" />
 
       {/* records office */}
-      <Pickup item="official_report" position={[20.2, 0.8, -5.1]} verb="Read" />
+      <Pickup item="official_report" position={[19.5, DESK_TOP, -7.9]} verb="Read" />
       <Hotspot
-        id="compare_table" position={[24.5, 0.9, -5.5]} size={[2.2, 0.3, 1.2]}
+        id="compare_table" position={[22.85, DESK_TOP + 0.1, -5.5]} size={[1.6, 0.3, 2.0]}
         prompt={compared ? null : 'Reconstruct the attendance'}
         onInteract={() => game().openPuzzle('attendance')}
       />
@@ -218,7 +232,7 @@ export default function Chapter3() {
       <Pickup item="mara_enrollment" position={[28.3, 0.02, -9.6]} verb="Pull out" />
       <GhostGirl id="c3" position={[26.8, 0, -8.6]} rotationY={-Math.PI / 2 - 0.3} enabled={compared} />
       <HidingSpot id="rec_cab" position={[18.2, 0.9, -9.25]} view={[18.2, 1.0, -9.6]} exit={[18.2, 0, -8.4]} yaw={Math.PI} label="Squeeze behind the cabinets" />
-      <BatteryPickup id="c3_rec" position={[19.5, 0.8, -4.9]} />
+      <BatteryPickup id="c3_rec" position={[23.0, DESK_TOP, -4.3]} />
 
       {/* archive */}
       <Trigger id="c3_enter_archive" min={[35, -4.5]} max={[41.5, 4.5]} enabled={archiveOpen} onEnter={() => {

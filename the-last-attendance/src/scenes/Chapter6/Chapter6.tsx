@@ -237,7 +237,7 @@ export default function Chapter6() {
 
       {/* corridor ghosts (harmless) */}
       <GhostStudent position={[14, 0, 1.2]} rotationY={Math.PI / 2} pose="stand" look={STUDENT_LOOKS.girl} vanishDistance={3} />
-      <GhostStudent position={[31, 0, -1.0]} rotationY={-Math.PI / 2} pose="stand" look={STUDENT_LOOKS.boy} vanishDistance={3} />
+      <GhostStudent position={[31, 0, -1.0]} rotationY={-Math.PI / 2} pose="stand" model="boy_animated" look={STUDENT_LOOKS.boy} vanishDistance={3} />
 
       {/* Room 13 */}
       <Trigger id="c6_enter" min={R.min} max={[R.max[0], R.southZ - 1.2]} onEnter={enterRoom} />

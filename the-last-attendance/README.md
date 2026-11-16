@@ -142,7 +142,7 @@ the-last-attendance/
 | Mara Dizon, the girl in the hallway | `girl_bob.glb` |
 | Daniel's memory | `boy_rigged.glb` (walk cycle) |
 | Ghost students | `girl_ponytail.glb`, `girl_bob.glb`, `boy_stylized.glb`, `boy_stylized6.glb`, `student.glb`, `boy_rigged.glb` |
-| Spare (registered, not yet placed) | `boy_animated.glb` |
+| Ghost in the Chapter 6 corridor | `boy_animated.glb` (its own animation) |
 
 - **Rooms:** environment GLBs are registered in `ENV_MODELS` (`components/Environment/EnvModel.tsx`). Room 13 is built from them through `scenes/shared/room13Sets.tsx`: each `RoomSet` stores the model's plan-space anchors (teacher, desk, blackboard, seats, doorway). `Room13Model` places the model, cuts the hallway doorway through its wall with clipping planes, and generates walkability colliders directly from the model's triangles (`systems/CollisionSystem/meshColliders.ts`).
 
@@ -245,10 +245,10 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 - "Stereo Cassette Deck" by Tom: https://sketchfab.com/3d-models/stereo-cassette-deck-624e0a2e69ed475d85f0492f4341f3ea (CC BY 4.0) — Chapter 5 tape player
 - "Stylized Chemistry Set" by hayley.morris1: https://sketchfab.com/3d-models/stylized-chemistry-set-41e5f46a588649658d579069d00f8bbc (CC BY 4.0) — Chapter 4 lab
 - "Philippines Flag" by mljsantos: https://sketchfab.com/3d-models/philippines-flag-b0de5302fca04e55bd3efa2d4d602b00 (**Sketchfab Standard licence**) — Chapter 1 courtyard
-- "Low-Poly Laboratory" by Yahor: https://sketchfab.com/3d-models/low-poly-laboratory-fedc3b5df4724997ac003f7f1b9c8cca (CC BY 4.0) — included, not placed yet
-- "low-poly office" by DarianDS: https://sketchfab.com/3d-models/low-poly-office-c924672f29df4fd68c3e3b9fd70741fe (CC BY 4.0) — included, not placed yet
-- "office is old abandoned FREE" by dasy444: https://sketchfab.com/3d-models/office-is-old-abandoned-free-3977a108b2304b85a698f3dda1777015 (CC BY 4.0) — included, not placed yet
-- "Science Lab Table" by Skecthfab: https://sketchfab.com/3d-models/science-lab-table-5ef0a834474b41c4bb3f26b6986a404c (CC BY 4.0) — included, not placed yet
+- "Low-Poly Laboratory" by Yahor: https://sketchfab.com/3d-models/low-poly-laboratory-fedc3b5df4724997ac003f7f1b9c8cca (CC BY 4.0) — science-fair diorama in the Chapter 3 library
+- "low-poly office" by DarianDS: https://sketchfab.com/3d-models/low-poly-office-c924672f29df4fd68c3e3b9fd70741fe (CC BY 4.0) — registrar's workstation in the Chapter 3 records office
+- "office is old abandoned FREE" by dasy444: https://sketchfab.com/3d-models/office-is-old-abandoned-free-3977a108b2304b85a698f3dda1777015 (CC BY 4.0) — Chapter 3 archive room
+- "Science Lab Table" by Skecthfab: https://sketchfab.com/3d-models/science-lab-table-5ef0a834474b41c4bb3f26b6986a404c (CC BY 4.0) — Chapter 4 Room 12
 
 Both Sketchfab Standard models ("Abandoned classroom" and "Philippines Flag") may be used inside the game but must not be redistributed as files on their own; keep them out of a public repository if that matters to you.
 

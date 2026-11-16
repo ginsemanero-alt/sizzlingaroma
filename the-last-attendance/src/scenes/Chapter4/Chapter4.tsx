@@ -208,6 +208,9 @@ export default function Chapter4() {
         ))}
       </Suspense>
       <GlbFire position={[7.4, 0.95, -8.7]} height={3.2} />
+      <Suspense fallback={null}>
+        <PropModel model="prop_lab_table" position={[17.2, 0, -5.2]} height={1.0} tint="#5a4a44" collide="low" />
+      </Suspense>
       <GlbFire position={[19, 0.4, 9.0]} height={3.0} />
 
       <Sign position={[7, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[1.3, 0.2]} lines={['SCIENCE LAB']} bg="#2b3a2b" color="#ddd" />

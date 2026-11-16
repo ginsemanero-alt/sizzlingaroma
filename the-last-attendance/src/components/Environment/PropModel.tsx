@@ -24,6 +24,8 @@ export interface PropModelProps {
   only?: RegExp;
   /** Keep only meshes whose centre lies in this box [x0, z0, x1, z1], in metres relative to the model's centre. */
   onlyBox?: [number, number, number, number];
+  /** Drop meshes wider than this on X or Z (metres), e.g. a floor/carpet baked into the file. */
+  maxPart?: number;
   tint?: string;
   /** Emissive boost for dark textures. */
   lift?: number;
@@ -42,7 +44,7 @@ export interface PropModelProps {
  * optionally animated and collidable. Visual stand-in for procedural boxes.
  */
 export function PropModel({
-  model, position, rotationY = 0, height, width, depth, scale = 1, size, hide, only, onlyBox, tint, lift = 0, collide = false, animate = false, animSpeed = 1, shadows = true, anchor = 'floor',
+  model, position, rotationY = 0, height, width, depth, scale = 1, size, hide, only, onlyBox, maxPart, tint, lift = 0, collide = false, animate = false, animSpeed = 1, shadows = true, anchor = 'floor',
 }: PropModelProps) {
   const gltf = useGLTF(ENV_MODELS[model].url, DRACO_PATH);
   const ref = useRef<THREE.Group>(null);
@@ -52,7 +54,8 @@ export function PropModel({
     const drop: THREE.Object3D[] = [];
     let full: THREE.Box3 | null = null;
     const unit = ENV_MODELS[model].scale;
-    if (onlyBox) { obj.updateMatrixWorld(true); full = new THREE.Box3().setFromObject(obj); }
+    if (onlyBox || maxPart) { obj.updateMatrixWorld(true); full = new THREE.Box3().setFromObject(obj); }
+    const ms = new THREE.Vector3();
     const fc = full ? full.getCenter(new THREE.Vector3()) : null;
     const mc = new THREE.Vector3();
     const list: THREE.Material[] = [];
@@ -61,6 +64,10 @@ export function PropModel({
       if (!mesh.isMesh) return;
       const mname = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material)?.name ?? '';
       if ((hide && (hide.test(mesh.name) || hide.test(mname))) || (only && !only.test(mesh.name) && !only.test(mname))) { drop.push(mesh); return; }
+      if (maxPart) {
+        new THREE.Box3().setFromObject(mesh).getSize(ms);
+        if (Math.max(ms.x, ms.z) * unit > maxPart) { drop.push(mesh); return; }
+      }
       if (onlyBox && fc) {
         new THREE.Box3().setFromObject(mesh).getCenter(mc);
         const x = (mc.x - fc.x) * unit, z = (mc.z - fc.z) * unit;
@@ -100,7 +107,7 @@ export function PropModel({
     if (mx) { const a = mx.clipAction(gltf.animations[0]); a.play(); a.time = Math.random() * gltf.animations[0].duration; }
     return { root: holder, mats: list, mixer: mx, box: new THREE.Vector3(sz.x * s.x, sz.y * s.y, sz.z * s.z) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gltf, model, onlyBox?.join(','), hide, only, tint, lift, shadows, anchor, size?.join(','), height, width, depth, scale, rotationY, animate]);
+  }, [gltf, model, onlyBox?.join(','), maxPart, hide, only, tint, lift, shadows, anchor, size?.join(','), height, width, depth, scale, rotationY, animate]);
 
   useEffect(() => () => { mats.forEach((m) => m.dispose()); mixer?.stopAllAction(); }, [mats, mixer]);
 
