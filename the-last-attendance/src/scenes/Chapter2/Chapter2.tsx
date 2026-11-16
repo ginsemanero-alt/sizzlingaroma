@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { PropModel } from '@/components/Environment/PropModel';
 import { GlbCabinet, GlbLockers } from '@/scenes/shared/props';
 import { Atmosphere, ChalkText, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, HidingSpot, MovingChair, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
@@ -19,6 +20,10 @@ import { teacherControl, type TeacherConfig } from '@/systems/EnemyAISystem/Teac
 
 const D = DIALOGUE.c2;
 const BELONGINGS = ['hannah_ribbon', 'carlo_jersey', 'katrina_glasses', 'joshua_pick'];
+
+/** One long table with its seats, cut out of the cafeteria model (metres from the model's centre). */
+const CANTEEN_TABLE: [number, number, number, number] = [0.8, -4.6, 3.0, 1.4];
+const TABLE_TOP = 0.76;
 
 const TEACHER_CFG: TeacherConfig = {
   bounds: [-1, -12, 41, 13],
@@ -65,7 +70,7 @@ function buildLevel(): LevelBuilder {
   b.room(18, 2, 32, 13, { skip: ['n'], floor: 'tile' });
   b.solid(30.6, 0.55, 7.5, 0.6, 1.1, 8, 'wood', false); // counter
   b.box(31.6, 1.1, 7.5, 0.6, 2.2, 8, 'metal');
-  [[21, 5], [21, 9], [25, 5], [25, 9]].forEach(([x, z]) => { b.table(x, z, 2.2, 1.0); b.chair(x - 0.6, z + 0.75, 2); b.chair(x + 0.6, z - 0.75, 0); });
+  // canteen tables: two table sets taken from the cafeteria model (see CANTEEN_TABLE)
   b.desk(27.5, 11.5, 1, true);
   // faculty room (north)
   b.room(4, -10, 14, -2, { skip: ['s'], floor: 'floorWood', w: [{ at: 4, w: 1.6, h: 1.3, y: 1.0 }] });
@@ -149,6 +154,11 @@ export default function Chapter2() {
     >
       <Atmosphere fog="#0a0f1a" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      <Suspense fallback={null}>
+        {[5.2, 9.6].map((z) => (
+          <PropModel key={z} model="env_cafeteria" onlyBox={CANTEEN_TABLE} position={[23.4, 0, z]} rotationY={Math.PI / 2} tint="#8a8070" collide="low" />
+        ))}
+      </Suspense>
       <GlbLockers x={9.1} z={7.75} r={0} count={9} />
       <GlbLockers x={6.4} z={2.25} r={2} count={3} />
       <GlbLockers x={12.6} z={2.25} r={2} count={3} />
@@ -223,7 +233,7 @@ export default function Chapter2() {
 
       {/* canteen */}
       <Pickup item="mara_canteen" position={[30.9, 0.35, 9.6]} verb="Take" />
-      <BatteryPickup id="c2_cant" position={[25, 0.78, 9]} />
+      <BatteryPickup id="c2_cant" position={[25, TABLE_TOP, 9.6]} />
       <MusicBox />
       <HidingSpot id="counter" position={[30.0, 0.5, 4.5]} view={[31.1, 0.75, 4.6]} exit={[29.6, 0, 4.6]} yaw={Math.PI / 2} label="Hide behind the counter" />
       <GhostGirl id="c2" position={[28.8, 0, 11.3]} rotationY={-Math.PI / 2 - 0.6} enabled={belongings >= 2} />
@@ -300,10 +310,10 @@ function MusicBox() {
   const played = useFlag('c2_musicbox');
   return (
     <>
-      <mesh position={[21, 0.84, 5]}><boxGeometry args={[0.22, 0.12, 0.16]} /><meshStandardMaterial color="#6a3a2a" /></mesh>
+      <mesh position={[21.6, TABLE_TOP + 0.06, 5.2]}><boxGeometry args={[0.22, 0.12, 0.16]} /><meshStandardMaterial color="#6a3a2a" /></mesh>
       <Trigger id="c2_musicbox" min={[18.5, 2.5]} max={[27, 12.5]} onEnter={() => {
         game().setFlag('c2_musicbox', true);
-        AudioSystem.play('musicbox', { pos: [21, 0.9, 5], ref: 3 });
+        AudioSystem.play('musicbox', { pos: [21.6, 0.9, 5.2], ref: 3 });
       }} />
       {played && null}
     </>

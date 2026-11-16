@@ -1,8 +1,9 @@
-import { useMemo, useRef } from 'react';
+import { Suspense, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { EnvModel } from '@/components/Environment/EnvModel';
 import { Atmosphere, Clock, Dust, FluoroLight, Sign } from '@/components/Environment/Props';
 import type { HumanoidHandle } from '@/components/Characters/Humanoid';
 import { ModelCharacter } from '@/components/Characters/ModelCharacter';
@@ -46,7 +47,7 @@ export function MenuBackground() {
     camera.rotation.set(pointer.y * 0.08 + Math.sin(t * 0.2) * 0.01, -pointer.x * 0.5 - wander, 0);
 
     // Has the teacher left the view?
-    const tp = new THREE.Vector3(0, 1.3, -30);
+    const tp = new THREE.Vector3(0, 1.3, -19);
     const ndc = tp.clone().project(camera);
     const inView = Math.abs(ndc.x) < 1 && Math.abs(ndc.y) < 1 && ndc.z < 1;
     const s = state.current;
@@ -64,16 +65,17 @@ export function MenuBackground() {
   return (
     <>
       <Atmosphere fog="#070a12" density={0.075} ambient="#4a5a80" ambientIntensity={0.25} hemiIntensity={0.25} moon={false} />
-      <StaticLevel builder={builder} />
-      <FluoroLight position={[0, 3.18, -4]} flicker="subtle" intensity={4} />
-      <FluoroLight position={[0, 3.18, -13]} flicker="broken" intensity={4} />
-      <FluoroLight position={[0, 3.18, -22]} flicker="none" on={false} light={false} />
-      <FluoroLight position={[0, 3.18, -29]} flicker="broken" intensity={5} color="#e6eeff" />
+      <Suspense fallback={<StaticLevel builder={builder} />}>
+        <EnvModel model="env_hallway" position={[0, 0, -10]} rotationY={Math.PI / 2} tint="#8c8494" shadows={false} />
+      </Suspense>
+      <FluoroLight position={[0, 3.05, -3]} flicker="subtle" intensity={4} />
+      <FluoroLight position={[0, 3.05, -10]} flicker="broken" intensity={4} />
+      <FluoroLight position={[0, 3.05, -17]} flicker="broken" intensity={5} color="#e6eeff" />
       <directionalLight position={[8, 6, -10]} color="#6d82b8" intensity={0.5} />
-      <Clock position={[-2.08, 2.5, -8]} rotation={[0, Math.PI / 2, 0]} />
-      <Sign position={[-2.08, 1.6, -15]} rotation={[0, Math.PI / 2, 0]} size={[1.1, 0.7]} lines={['ANG PAGIGING TAPAT', 'AY PAGIGING MALAYA']} bg="#c9b98f" />
-      <Sign position={[0, 2.6, -33.88]} size={[1.4, 0.4]} lines={['ROOM 13 →']} bg="#2b3a2b" color="#ddd" />
-      <ModelCharacter ref={teacher} model="teacher" position={[0, 0, -30]} rotationY={0} tint="#d9d6d2" fallback={{ skin: '#d6cfc6', shirt: '#d9d3c4', bottom: '#2b2a35', hair: '#060505', hairStyle: 'long', skirt: true, eyes: 'dark' }} />
+      <Clock position={[-2.9, 2.4, -7]} rotation={[0, Math.PI / 2, 0]} />
+      <Sign position={[2.9, 1.6, -12]} rotation={[0, -Math.PI / 2, 0]} size={[1.1, 0.7]} lines={['ANG PAGIGING TAPAT', 'AY PAGIGING MALAYA']} bg="#c9b98f" />
+      <Sign position={[0, 2.5, -21.4]} size={[1.4, 0.4]} lines={['ROOM 13 →']} bg="#2b3a2b" color="#ddd" />
+      <ModelCharacter ref={teacher} model="teacher" position={[0, 0, -19]} rotationY={0} tint="#d9d6d2" fallback={{ skin: '#d6cfc6', shirt: '#d9d3c4', bottom: '#2b2a35', hair: '#060505', hairStyle: 'long', skirt: true, eyes: 'dark' }} />
       <Dust count={160} />
       <AmbientMenuAudio />
     </>

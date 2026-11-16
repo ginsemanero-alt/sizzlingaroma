@@ -16,7 +16,7 @@ export const ENV_MODELS = {
   env_abandoned_classroom: { url: 'models/env_abandoned_classroom.glb', scale: 0.0254, ignore: /^$/ },
   env_classroom: { url: 'models/env_classroom.glb', scale: 0.01, ignore: /godray|Rideau|neon|clock|board/i },
   env_old_classroom: { url: 'models/env_old_classroom.glb', scale: 1, ignore: /glass/i },
-  env_hallway: { url: 'models/env_hallway.glb', scale: 1, ignore: /^$/ },
+  env_hallway: { url: 'models/env_hallway.glb', scale: 0.0254, ignore: /^$/ },
   env_cafeteria: { url: 'models/env_cafeteria.glb', scale: 1, ignore: /^$/ },
   env_construction_school: { url: 'models/env_construction_school.glb', scale: 1, ignore: /^$/ },
   env_school_exterior: { url: 'models/env_school_exterior.glb', scale: 1, ignore: /^$/ },
