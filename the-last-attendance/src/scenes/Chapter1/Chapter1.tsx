@@ -14,7 +14,7 @@ import { addClassroom } from '@/scenes/shared/schoolParts';
 import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { DIALOGUE } from '@/data/dialogue';
 import { ROLL_CALL } from '@/data/characters';
-import { game } from '@/store/gameStore';
+import { game, useGame } from '@/store/gameStore';
 import { bus, runtime } from '@/systems/runtime';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 import { Horror } from '@/systems/HorrorEventSystem/HorrorEventSystem';
@@ -102,6 +102,7 @@ function buildLevel(): LevelBuilder {
 export default function Chapter1() {
   const ctx = useScript();
   const builder = useMemo(buildLevel, []);
+  const graphics = useGame((st) => st.settings.graphics);
   const power = useFlag('c1_power');
   const rollDone = useFlag('c1_rollcall');
   const idFound = useFlag('c1_id');
@@ -186,6 +187,13 @@ export default function Chapter1() {
       <StaticLevel builder={builder} />
       <Suspense fallback={null}>
         <PropModel model="prop_flag" position={[-8, 0.5, 20]} height={6} rotationY={-Math.PI / 2} animate />
+        {graphics !== 'low' && (
+          <>
+            {/* the rest of the campus, seen over the fence through the rain */}
+            <PropModel model="env_construction_school" position={[-50, 0, 22]} width={44} rotationY={Math.PI / 2} tint="#59606e" shadows={false} />
+            <PropModel model="env_library" position={[36, 0, 24]} height={11} rotationY={-Math.PI / 2} tint="#5a5a66" shadows={false} />
+          </>
+        )}
         <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />
         <PropModel model="prop_fuse_box" position={[-15.5, 1.0, -9.7]} height={0.8} tint="#b0aaa0" />
       </Suspense>

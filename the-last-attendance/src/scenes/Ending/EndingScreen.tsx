@@ -10,6 +10,7 @@ import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment/Props';
 import { ROOM_2018, roomAt } from '@/scenes/shared/room13Sets';
 import { EnvModel } from '@/components/Environment/EnvModel';
+import { PropModel } from '@/components/Environment/PropModel';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
 import { ModelCharacter } from '@/components/Characters/ModelCharacter';
@@ -95,22 +96,25 @@ function IdCard({ position }: { position: [number, number, number] }) {
 function GateScene() {
   const b = useMemo(() => {
     const lb = new LevelBuilder();
-    lb.floor(-20, -20, 20, 20, 'concrete');
-    lb.wall(-20, -10, 20, -10, { h: 7, lower: 'paintLower', openings: [{ at: 20, w: 2.4, h: 2.5 }] });
-    for (let i = 0; i < 8; i++) lb.box(-14 + i * 4, 4.6, -10.12, 1.6, 1.3, 0.05, 'glass');
+    lb.floor(-30, -60, 30, 30, 'concrete');
     lb.box(0, 1.5, 6, 0.15, 3, 0.15, 'rust');
     for (let i = -10; i <= 10; i++) if (Math.abs(i) > 1) lb.box(i * 0.5, 1.2, 6, 0.06, 2.4, 0.06, 'rust');
+    lb.box(-8, 1.2, 6, 10, 2.4, 0.3, 'concrete');
+    lb.box(8, 1.2, 6, 10, 2.4, 0.3, 'concrete');
     return lb;
   }, []);
   return (
     <>
       <StaticLevel builder={b} />
+      <Suspense fallback={null}>
+        <PropModel model="env_school_exterior" position={[0, 0, -18]} width={44} rotationY={Math.PI} tint="#c9bfb4" />
+      </Suspense>
       <Sky />
       <ambientLight intensity={0.45} color="#b8a7c9" />
       <directionalLight position={[-10, 4, 20]} intensity={1.4} color="#ffb98a" />
       <color attach="background" args={['#5b5468']} />
-      <fogExp2 attach="fog" args={['#5b5468', 0.04]} />
-      <Sign position={[0, 3.3, -9.88]} size={[5, 0.6]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" />
+      <fogExp2 attach="fog" args={['#5b5468', 0.025]} />
+      <Sign position={[0, 3.0, 5.8]} size={[5, 0.6]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" />
     </>
   );
 }

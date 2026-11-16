@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { PropModel } from '@/components/Environment/PropModel';
+import { EnvModel } from '@/components/Environment/EnvModel';
 import { GlbFire } from '@/scenes/shared/props';
 import { Atmosphere, ChalkText, Dust, EmergencyLight, Fire, Sign, Smoke } from '@/components/Environment/Props';
 import { Door, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
@@ -22,6 +23,9 @@ import type { DialogueLine } from '@/types';
 
 const D = DIALOGUE.c4;
 /** Room 13 as it was in 2018 (classroom model), north of the hallway. */
+/** Science lab model: centre and the doorway kept walkable (its door faces the hallway after rotation). */
+const LAB: [number, number, number] = [7, 0, 2 - 5.83];
+const LAB_DOOR: [number, number, number, number][] = [[6.0, -0.4, 8.0, 2.4]];
 const RS = ROOM_2018;
 const R = roomAt(RS, 29, 2 - RS.half[1]);
 /** Hallway-side face of the wall in front of Room 13. */
@@ -32,14 +36,14 @@ const R13_CLEAR: [number, number, number, number][] = [[R.doorX - 0.9, R.southZ 
 
 interface SmokeZone { min: [number, number]; max: [number, number]; rate: number }
 const SMOKE: SmokeZone[] = [
-  { min: [2, -8], max: [12, -3.5], rate: 16 },
+  { min: [2.9, -9.7], max: [11.1, -4.6], rate: 16 },
   { min: [16, 6], max: [22, 12], rate: 22 },
   { min: [12.5, 2], max: [23, 6], rate: 6 },
 ];
 
 const FRAGMENTS: { id: string; pos: [number, number, number]; figure: [number, number, number]; yaw: number; lines: DialogueLine[] }[] = [
   {
-    id: 'f1', pos: [9.5, 1.0, -2.8], figure: [9.5, 0, -3.4], yaw: 0,
+    id: 'f1', pos: [8.9, 1.0, -3.0], figure: [8.9, 0, -3.6], yaw: 0,
     lines: [
       { s: 'daniel', en: 'Got it! My reviewer. Ma\'am Reyes will kill me if I fail chem.', fil: 'Nakuha ko na! Yung reviewer ko. Papatayin ako ni Ma\'am Reyes pag bumagsak ako sa chem.', lang: 'fil' },
       { s: 'alex', en: 'You\'ve been gone twenty minutes. I\'m the monitor — I have to bring you back.' },
@@ -76,17 +80,14 @@ function buildLevel(): LevelBuilder {
   b.ceil(0, 2, 44, 6);
   b.wall(0, 2, 0, 6, {});
   b.wall(44, 2, 44, 6, { openings: [{ at: 2, w: 1.6, h: 2.3 }] });
-  b.wall(0, 2, R.min[0], 2, { openings: [{ at: 7, w: 1.1, h: 2.2 }, { at: 18, w: 1.1, h: 2.2 }] });
+  b.wall(0, 2, R.min[0], 2, { openings: [{ at: 7, w: 1.5, h: 2.2 }, { at: 18, w: 1.1, h: 2.2 }] });
   b.wall(R.min[0], H13, R.max[0], H13, { openings: [{ at: R.doorX - R.min[0], w: RS.door.width, h: 2.2 }] });
   b.box((R.min[0] + R.max[0]) / 2, 1.6, 2.13, R.max[0] - R.min[0], 3.2, 0.05, 'black');
   b.wall(R.max[0], 2, 44, 2, {});
   b.wall(0, 6, 44, 6, { openings: [{ at: 19, w: 4, h: 2.8 }] });
   // science lab
-  b.room(2, -8, 12, 2, { skip: ['s'], floor: 'tile', w: [{ at: 3, w: 1.6, h: 1.4, y: 1 }] });
-  [[5, -1], [9, -1], [5, -4.5], [9, -4.5]].forEach(([x, z]) => { b.table(x, z, 2.4, 1.1, 0.9, 'charred'); b.chair(x - 0.6, z + 0.8, 0); });
-  b.solid(6, 1.2, -7.6, 2.4, 2.4, 0.8, 'metal'); // fume hood
-  b.box(6, 0.9, -7.15, 2.2, 0.05, 0.1, 'black');
-  b.cabinet(11.5, -6.5, 1, 0.9, 1.9, 0.5);
+  // science lab: the chemistry-lab model (see LAB below) supplies walls, benches and colliders
+  b.floor(2.9, -9.7, 11.1, 2, 'tile');
   b.debris(7, -3, 6, 24, 'ash');
   // room 12
   b.room(14, -6.5, 22, 2, { skip: ['s'], floor: 'floorWood' });
@@ -177,21 +178,24 @@ export default function Chapter4() {
       <SmokeBreath onFaint={() => game().caught('You collapsed in the smoke.')} />
 
       {/* fire & emergency lighting */}
-      <Fire position={[6, 0.9, -7.0]} scale={1.4} />
-      <Fire position={[4, 0.1, -6.2]} scale={0.7} light={false} />
-      <Fire position={[11, 0.1, -2]} scale={0.6} />
+      <Suspense fallback={null}>
+        <EnvModel model="env_chem_lab" position={LAB} rotationY={Math.PI / 2} tint="#8a7466" collide clear={LAB_DOOR} />
+      </Suspense>
+      <Fire position={[7.4, 0.95, -8.6]} scale={1.4} />
+      <Fire position={[3.6, 0.1, -8.9]} scale={0.7} light={false} />
+      <Fire position={[10.4, 0.1, -1.0]} scale={0.6} />
       <Fire position={[19, 0.4, 9.0]} scale={1.2} />
       <Fire position={[14.5, 0.1, 3.0]} scale={0.5} light={false} />
       <EmergencyLight position={[3, 2.9, 2.2]} />
       <EmergencyLight position={[17, 2.9, 5.8]} />
       <EmergencyLight position={[30, 2.9, 2.2]} />
       <EmergencyLight position={[43.8, 2.7, 4]} intensity={4} />
-      <Smoke center={[7, 0, -5.5]} size={[9, 3, 5]} density={30} color="#2b2522" opacity={0.6} />
+      <Smoke center={[7, 0, -7.2]} size={[7.6, 3, 4.5]} density={30} color="#2b2522" opacity={0.6} />
       <Smoke center={[19, 0, 9]} size={[6, 3, 6]} density={30} color="#2b2522" opacity={0.7} />
       <Smoke center={[18, 1.4, 4]} size={[10, 1.8, 3.5]} density={22} color="#3a302a" opacity={0.35} />
       <Smoke center={[34, 2, 4]} size={[18, 1.2, 3.5]} density={16} color="#3a302a" opacity={0.3} />
 
-      <Door id="lab" position={[7, 0, 2]} axis="x" startOpen />
+      <Door id="lab" position={[7, 0, 2]} axis="x" width={1.4} startOpen />
       <Door id="r12" position={[18, 0, 2]} axis="x" startOpen />
       <Door id="r13" position={[R.doorX, 0, H13]} axis="x" width={RS.door.width} startOpen />
       <Room13Model room={R} tint="#c09070" hideExtra={HIDE_GODRAYS} clearExtra={R13_CLEAR} />
@@ -199,11 +203,11 @@ export default function Chapter4() {
       <Suspense fallback={null}>
         <PropModel model="prop_exit_door" position={[44.02, 0, 4]} size={[0.14, 2.3, 1.6]} collide />
         <PropModel model="env_staircase" position={[19, 0, 10.3]} height={2.4} rotationY={Math.PI} tint="#4a4038" />
-        {[[5, -1], [9, -1], [5, -4.5], [9, -4.5]].map(([x, z]) => (
-          <PropModel key={`${x},${z}`} model="prop_chemistry_set" position={[x, 0.93, z]} width={1.1} tint="#6a5a50" />
+        {[[7.05, -2.2], [7.05, -5.0]].map(([x, z]) => (
+          <PropModel key={`${x},${z}`} model="prop_chemistry_set" position={[x, 0.95, z]} width={1.0} rotationY={Math.PI / 2} tint="#6a5a50" />
         ))}
       </Suspense>
-      <GlbFire position={[6, 0.9, -7.0]} height={3.2} />
+      <GlbFire position={[7.4, 0.95, -8.7]} height={3.2} />
       <GlbFire position={[19, 0.4, 9.0]} height={3.0} />
 
       <Sign position={[7, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[1.3, 0.2]} lines={['SCIENCE LAB']} bg="#2b3a2b" color="#ddd" />
@@ -218,7 +222,7 @@ export default function Chapter4() {
       ))}
 
       {/* fire source */}
-      <Pickup item="extension_cord" position={[6.6, 0.02, -6.9]} verb="Examine" onCollect={() => {
+      <Pickup item="extension_cord" position={[7.0, 0.02, -7.9]} verb="Examine" onCollect={() => {
         game().setFlag('c4_source', true);
         ctx.run('source', async (c) => { await c.wait(300); await c.say(D.source); game().saveCheckpoint('source'); });
       }} />
