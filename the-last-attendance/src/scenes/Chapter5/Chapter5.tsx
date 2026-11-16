@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { PropModel } from '@/components/Environment/PropModel';
+import { GlbCabinet } from '@/scenes/shared/props';
 import { Atmosphere, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, HidingSpot, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot, Interactable } from '@/components/Interactions/Interactable';
@@ -44,8 +46,8 @@ function buildLevel(): LevelBuilder {
   b.teacherDesk(9, -7.2, 0);
   b.chair(9, -8, 2);
   b.chair(8.4, -5.8, 0); b.chair(9.6, -5.8, 0);
-  b.cabinet(4.4, -4, 3, 0.9, 1.9, 0.5, 'darkwood');
-  b.cabinet(12.5, -9.65, 2, 0.9, 1.6, 0.5, 'darkwood');
+  b.cabinet(4.4, -4, 3, 0.9, 1.9, 0.5, 'darkwood', false);
+  b.cabinet(12.5, -9.65, 2, 0.9, 1.6, 0.5, 'darkwood', false);
   b.box(9, 2.1, -9.88, 1.4, 0.9, 0.05, 'darkwood'); // diploma frame
   b.table(6, -9.2, 1.2, 0.6, 0.6, 'darkwood');
   // hidden storage (behind the bookshelf, east of the office)
@@ -144,6 +146,8 @@ export default function Chapter5() {
     >
       <Atmosphere fog="#0b0b12" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      <GlbCabinet x={4.4} z={-4} r={3} tint="#b08a6a" />
+      <GlbCabinet x={12.5} z={-9.65} r={2} h={1.6} tint="#b08a6a" />
       <Dust />
 
       <FluoroLight position={[4, 3.18, 0]} flicker="subtle" />
@@ -186,8 +190,10 @@ export default function Chapter5() {
           }
         });
       }}>
-        <mesh><boxGeometry args={[0.3, 0.1, 0.18]} /><meshStandardMaterial color="#2a2a2a" /></mesh>
-        <mesh position={[0, 0.051, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[0.12, 0.07]} /><meshStandardMaterial color="#d8cfb4" /></mesh>
+        <Suspense fallback={<mesh><boxGeometry args={[0.3, 0.1, 0.18]} /><meshStandardMaterial color="#2a2a2a" /></mesh>}>
+          <PropModel model="prop_cassette_deck" position={[0, -0.07, 0]} width={0.36} rotationY={Math.PI} lift={0.08} />
+        </Suspense>
+        <mesh userData={{ noHighlight: true }}><boxGeometry args={[0.36, 0.14, 0.26]} /><meshBasicMaterial visible={false} /></mesh>
       </Interactable>
       <Hotspot id="mirror" position={[4.15, 1.6, -7.5]} size={[0.1, 0.8, 0.6]} prompt={collected.includes('cracked_mirror') ? null : 'Look in the mirror'} onInteract={() => {
         game().collect('cracked_mirror');

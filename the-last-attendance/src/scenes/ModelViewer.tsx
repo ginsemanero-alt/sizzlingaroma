@@ -10,9 +10,16 @@ import type { AABB } from '@/systems/CollisionSystem/CollisionSystem';
  * Developer model viewer: #/viewer?m=<id>[&top=1]. Environment models are shown exactly as the game
  * places them (metres, centred, floor at 0); top=1 adds an orthographic plan with generated colliders.
  */
-function FitCamera({ inside }: { inside: string | null }) {
+function FitCamera({ inside, size }: { inside: string | null; size: [number, number, number] | null }) {
   const { camera, controls } = useThree() as unknown as { camera: THREE.PerspectiveCamera; controls: { target: THREE.Vector3; update: () => void } | null };
   useEffect(() => {
+    if (size && !inside) {
+      const r = Math.max(...size);
+      camera.position.set(r * 0.9, size[1] * 0.6 + r * 0.5, r * 1.1);
+      camera.near = r / 500; camera.far = r * 50; camera.updateProjectionMatrix();
+      controls?.target.set(0, size[1] * 0.4, 0); controls?.update();
+      return;
+    }
     if (inside) {
       const d = ({ '+x': [1, 0], '-x': [-1, 0], '+z': [0, 1], '-z': [0, -1] } as Record<string, number[]>)[inside] ?? [0, -1];
       camera.fov = 75; camera.updateProjectionMatrix();
@@ -21,7 +28,7 @@ function FitCamera({ inside }: { inside: string | null }) {
     }
     else { camera.position.set(10, 9, 10); controls?.target.set(0, 0.8, 0); }
     controls?.update();
-  }, [camera, controls, inside]);
+  }, [camera, controls, inside, size]);
   return null;
 }
 
@@ -48,7 +55,8 @@ export function ModelViewer() {
   const inside = q.get('inside');
   const isEnv = sel in ENV_MODELS;
   const [boxes, setBoxes] = useState<AABB[]>([]);
-  const onBounds = useMemo(() => (sz: [number, number, number]) => { (window as unknown as { __viewerBounds: unknown }).__viewerBounds = sz.map((v) => +v.toFixed(2)); }, []);
+  const [size, setSize] = useState<[number, number, number] | null>(null);
+  const onBounds = useMemo(() => (sz: [number, number, number]) => { setSize(sz); (window as unknown as { __viewerBounds: unknown }).__viewerBounds = sz.map((v) => +v.toFixed(2)); }, []);
   const onCols = useMemo(() => (c: AABB[]) => { setBoxes(c); (window as unknown as { __viewerInfo: unknown }).__viewerInfo = { colliders: c.length }; }, []);
   return (
     <div className="screen" style={{ background: '#222' }}>
@@ -64,7 +72,7 @@ export function ModelViewer() {
         <gridHelper args={[30, 30, '#88ff88', '#555']} position={[0, 0.02, 0]} />
         <axesHelper args={[2]} />
         {!top && <OrbitControls makeDefault />}
-        {!top && <FitCamera inside={inside} />}
+        {!top && <FitCamera inside={inside} size={isEnv ? size : null} />}
       </Canvas>
       <div style={{ position: 'fixed', left: 12, top: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
         {ids.map((id) => (

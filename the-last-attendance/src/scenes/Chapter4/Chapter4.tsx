@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { PropModel } from '@/components/Environment/PropModel';
+import { GlbFire } from '@/scenes/shared/props';
 import { Atmosphere, ChalkText, Dust, EmergencyLight, Fire, Sign, Smoke } from '@/components/Environment/Props';
 import { Door, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot, Interactable } from '@/components/Interactions/Interactable';
@@ -93,7 +95,7 @@ function buildLevel(): LevelBuilder {
   // room 13
   // main stairs (blocked)
   b.room(16, 6, 22, 12, { skip: ['n'], floor: 'concrete' });
-  b.stairs(19, 11.6, 0, 3, 8);
+  b.stairs(19, 11.6, 0, 3, 8, 0.18, 0.3, false);
   b.solid(19, 0.6, 9.4, 3.5, 1.2, 0.9, 'charred');
   b.box(18.2, 1.4, 9.4, 2.6, 0.2, 0.3, 'charred', undefined, 0.4);
   b.table(17, 7.2, 1.0, 0.6, 0.78, 'darkwood'); // stair landing desk (guard log)
@@ -194,7 +196,15 @@ export default function Chapter4() {
       <Door id="r13" position={[R.doorX, 0, H13]} axis="x" width={RS.door.width} startOpen />
       <Room13Model room={R} tint="#c09070" hideExtra={HIDE_GODRAYS} clearExtra={R13_CLEAR} />
       <pointLight position={R.p([0, 0], 2.6)} color="#ff7a3a" intensity={3} distance={10} />
-      <Door id="exit" position={[44, 0, 4]} axis="z" width={1.6} height={2.3} metal double color="#7a1e1a" locked lockedText="" noInteract />
+      <Suspense fallback={null}>
+        <PropModel model="prop_exit_door" position={[44.02, 0, 4]} size={[0.14, 2.3, 1.6]} collide />
+        <PropModel model="env_staircase" position={[19, 0, 10.3]} height={2.4} rotationY={Math.PI} tint="#4a4038" />
+        {[[5, -1], [9, -1], [5, -4.5], [9, -4.5]].map(([x, z]) => (
+          <PropModel key={`${x},${z}`} model="prop_chemistry_set" position={[x, 0.93, z]} width={1.1} tint="#6a5a50" />
+        ))}
+      </Suspense>
+      <GlbFire position={[6, 0.9, -7.0]} height={3.2} />
+      <GlbFire position={[19, 0.4, 9.0]} height={3.0} />
 
       <Sign position={[7, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[1.3, 0.2]} lines={['SCIENCE LAB']} bg="#2b3a2b" color="#ddd" />
       <Sign position={[R.doorX, 2.45, H13 + 0.12]} rotation={[0, 0, 0]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#2b3a2b" color="#ddd" />
@@ -257,12 +267,10 @@ export default function Chapter4() {
           game().completeChapter();
         });
       }}>
-        <group rotation={[0, 0, 0]}>
-          {[0.3, 0.55, 0.8].map((y) => (
-            <mesh key={y} position={[0, y - 0.55, 0]} rotation={[0, 0, Math.PI / 2]}><torusGeometry args={[0.25, 0.015, 6, 20]} /><meshStandardMaterial color="#6a6560" metalness={0.8} roughness={0.5} /></mesh>
-          ))}
-          <mesh position={[-0.05, -0.2, 0.1]}><boxGeometry args={[0.06, 0.09, 0.07]} /><meshStandardMaterial color="#b8923a" metalness={0.8} roughness={0.3} /></mesh>
-        </group>
+        <Suspense fallback={null}>
+          <PropModel model="prop_padlock" position={[0, -0.35, 0]} width={0.95} rotationY={Math.PI / 2} />
+        </Suspense>
+        <mesh userData={{ noHighlight: true }}><boxGeometry args={[0.2, 0.6, 0.9]} /><meshBasicMaterial visible={false} /></mesh>
       </Interactable>
     </ChapterBase>
   );

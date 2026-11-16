@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { PropModel } from '@/components/Environment/PropModel';
+import { GlbCabinet } from '@/scenes/shared/props';
 import { Atmosphere, ChalkText, Clock, Dust, EmergencyLight, FluoroLight, Rain, Sign, Sky } from '@/components/Environment/Props';
 import { BatteryPickup, Door, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot } from '@/components/Interactions/Interactable';
@@ -47,7 +49,7 @@ function buildLevel(): LevelBuilder {
   b.box(0, 3.4, 6.35, 44, 0.15, 0.4, 'concrete'); // ledge
   b.box(-22.05, 3.6, 0, 0.3, 7.2, 12, 'plaster'); b.box(22.05, 3.6, 0, 0.3, 7.2, 12, 'plaster');
   // courtyard props
-  b.solid(-8, 3, 20, 0.12, 6, 0.12, 'metal'); // flagpole
+  b.block(-8.1, 19.9, -7.9, 20.1); // flagpole (model)
   b.solid(-8, 0.25, 20, 1.2, 0.5, 1.2, 'concrete');
   b.solid(10, 1.6, 22, 0.5, 3.2, 0.5, 'darkwood'); // tree trunk
   [[10, 4.2, 22, 2.6], [9, 3.6, 21, 1.8], [11.2, 3.8, 23, 2]].forEach(([x, y, z, s]) => b.box(x, y, z, s, s * 0.8, s, 'grass'));
@@ -81,13 +83,11 @@ function buildLevel(): LevelBuilder {
   b.solid(1.5, 1.6, -7.75, 5, 3.2, 8.5, 'plaster'); // sealed utility block
   b.solid(17.5, 1.6, -7.75, 5, 3.2, 8.5, 'plaster');
   // west stairs going up (sealed)
-  b.stairs(-18.9, -0.6, 2, 1.6, 10);
-  b.box(-18.9, 2.6, -2.6, 1.6, 1.2, 0.1, 'rust');
+  b.block(-19.75, -3.4, -18.05, -0.15, 0, 3, false); // west stairs (model)
   // guard station furniture
   b.table(-17.5, -8.6, 1.6, 0.8);
   b.chair(-17.5, -7.9, 2);
-  b.cabinet(-13, -9.4, 2, 0.9, 1.9, 0.5);
-  b.box(-15.5, 1.5, -9.85, 0.8, 1.0, 0.2, 'metal'); // breaker panel
+  b.cabinet(-13, -9.4, 2, 0.9, 1.9, 0.5, 'metal', false);
   b.lockers(-13, -5.5, 3, 3);
   // hallway dressing
   b.lockers(-9, -0.25, 0, 6);
@@ -184,6 +184,12 @@ export default function Chapter1() {
       <Sky />
       <Rain bounds={{ minX: -30, maxX: 30, minZ: 6.3, maxZ: 50 }} />
       <StaticLevel builder={builder} />
+      <Suspense fallback={null}>
+        <PropModel model="prop_flag" position={[-8, 0.5, 20]} height={6} rotationY={-Math.PI / 2} animate />
+        <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />
+        <PropModel model="prop_fuse_box" position={[-15.5, 1.0, -9.7]} height={0.8} tint="#b0aaa0" />
+      </Suspense>
+      <GlbCabinet x={-13} z={-9.4} r={2} />
       <Dust count={120} />
 
       {/* exterior lights */}

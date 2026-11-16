@@ -223,9 +223,11 @@ export class LevelBuilder {
     return this;
   }
 
-  cabinet(x: number, z: number, r: Rot = 0, w = 0.9, h = 1.9, d = 0.5, m: MatKey = 'metal'): this {
-    this.lbox(x, z, r, 0, h / 2, 0, w, h, d, m);
-    this.lbox(x, z, r, 0, h / 2, -d / 2 - 0.005, 0.02, h * 0.9, 0.01, 'black');
+  cabinet(x: number, z: number, r: Rot = 0, w = 0.9, h = 1.9, d = 0.5, m: MatKey = 'metal', visual = true): this {
+    if (visual) {
+      this.lbox(x, z, r, 0, h / 2, 0, w, h, d, m);
+      this.lbox(x, z, r, 0, h / 2, -d / 2 - 0.005, 0.02, h * 0.9, 0.01, 'black');
+    }
     const [a, b] = this.sz(r, w, d);
     this.block(x - a / 2, z - b / 2, x + a / 2, z + b / 2, 0, h, true);
     return this;
@@ -254,9 +256,9 @@ export class LevelBuilder {
     return this;
   }
 
-  lockers(x: number, z: number, r: Rot, count: number): this {
+  lockers(x: number, z: number, r: Rot, count: number, visual = true): this {
     const w = 0.45;
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count && visual; i++) {
       const lx = (i - (count - 1) / 2) * w;
       this.lbox(x, z, r, lx, 0.95, 0, w - 0.02, 1.9, 0.5, 'locker');
       this.lbox(x, z, r, lx + 0.15, 1.0, -0.255, 0.03, 0.12, 0.01, 'metal');
@@ -304,8 +306,8 @@ export class LevelBuilder {
   }
 
   /** Decorative stairs going up (non-walkable) with collider. */
-  stairs(x: number, z: number, r: Rot, w = 2, steps = 10, rise = 0.18, run = 0.3): this {
-    for (let i = 0; i < steps; i++) this.lbox(x, z, r, 0, (i + 1) * rise / 2, -i * run, w, (i + 1) * rise, run, 'concrete');
+  stairs(x: number, z: number, r: Rot, w = 2, steps = 10, rise = 0.18, run = 0.3, visual = true): this {
+    for (let i = 0; i < steps && visual; i++) this.lbox(x, z, r, 0, (i + 1) * rise / 2, -i * run, w, (i + 1) * rise, run, 'concrete');
     const len = steps * run;
     const [cx, cz] = this.place(x, z, r, 0, -len / 2 + run / 2);
     const [a, b] = this.sz(r, w, len);

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { GlbCabinet } from '@/scenes/shared/props';
 import { Atmosphere, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, FallingBooks, HidingSpot, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot } from '@/components/Interactions/Interactable';
@@ -53,9 +54,9 @@ function buildLevel(): LevelBuilder {
   b.box(12.2, 0.95, -3.4, 0.55, 0.28, 0.42, 'paper', '#bdb8a6');
   // records office (north)
   b.room(17, -10, 29, -2, { skip: ['s'], floor: 'tile' });
-  for (let i = 0; i < 6; i++) b.cabinet(18.2 + i * 1.0, -9.65, 2, 0.95, 1.6, 0.6, 'metal');
-  b.cabinet(28.6, -6.2, 1, 0.95, 1.6, 0.6, 'metal');
-  b.cabinet(28.6, -8.6, 1, 0.95, 1.6, 0.6, 'metal');
+  for (let i = 0; i < 6; i++) b.cabinet(18.2 + i * 1.0, -9.65, 2, 0.95, 1.6, 0.6, 'metal', false);
+  b.cabinet(28.6, -6.2, 1, 0.95, 1.6, 0.6, 'metal', false);
+  b.cabinet(28.6, -8.6, 1, 0.95, 1.6, 0.6, 'metal', false);
   b.table(20, -5, 1.8, 0.9, 0.76, 'darkwood');
   b.chair(20, -4.3, 2);
   b.table(24.5, -5.5, 2.4, 1.4, 0.78, 'wood'); // comparison table
@@ -138,6 +139,9 @@ export default function Chapter3() {
     >
       <Atmosphere fog="#0a0d16" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      {[0, 1, 2, 3, 4, 5].map((i) => <GlbCabinet key={i} x={18.2 + i * 1.0} z={-9.65} r={2} w={0.95} h={1.6} d={0.6} />)}
+      <GlbCabinet x={28.6} z={-6.2} r={1} w={0.95} h={1.6} d={0.6} />
+      <GlbCabinet x={28.6} z={-8.6} r={1} w={0.95} h={1.6} d={0.6} />
       <Dust />
 
       <FluoroLight position={[5, 3.18, 0]} flicker="subtle" />

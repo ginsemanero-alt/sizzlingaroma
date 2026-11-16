@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
+import { GlbCabinet, GlbLockers } from '@/scenes/shared/props';
 import { Atmosphere, ChalkText, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
 import { BatteryPickup, Door, HidingSpot, MovingChair, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
 import { Hotspot, Interactable } from '@/components/Interactions/Interactable';
@@ -54,9 +55,9 @@ function buildLevel(): LevelBuilder {
   b.wall(0, 2, 40, 2, { openings: [{ at: 9, w: 6, h: 2.6 }, { at: 24, w: 4, h: 2.6 }] });
   // locker hall (south, open to the corridor)
   b.room(4, 2, 14, 8, { skip: ['n'] });
-  b.lockers(9.1, 7.75, 0, 9);
-  b.lockers(6.4, 2.25, 2, 3);
-  b.lockers(12.6, 2.25, 2, 3);
+  b.lockers(9.1, 7.75, 0, 9, false);
+  b.lockers(6.4, 2.25, 2, 3, false);
+  b.lockers(12.6, 2.25, 2, 3, false);
   b.cabinet(13.6, 5, 1, 1.2, 2.0, 0.6, 'locker');
   b.debris(9, 5, 5, 16);
   b.bench(9, 5);
@@ -71,17 +72,17 @@ function buildLevel(): LevelBuilder {
   b.table(7, -5, 2.4, 1.1, 0.75, 'darkwood');
   b.table(11, -5, 2.4, 1.1, 0.75, 'darkwood');
   b.chair(7, -4.2, 2); b.chair(11, -4.2, 2); b.chair(6.4, -5.8, 0);
-  b.cabinet(13.6, -8, 1, 0.9, 1.9, 0.5);
-  b.cabinet(4.4, -8.6, 3, 0.9, 1.9, 0.5);
-  b.cabinet(12.5, -9.6, 2, 0.9, 1.4, 0.5);
+  b.cabinet(13.6, -8, 1, 0.9, 1.9, 0.5, 'metal', false);
+  b.cabinet(4.4, -8.6, 3, 0.9, 1.9, 0.5, 'metal', false);
+  b.cabinet(12.5, -9.6, 2, 0.9, 1.4, 0.5, 'metal', false);
   b.box(9, 1.6, -9.88, 3, 1.4, 0.06, 'darkwood'); // photo cork board
   // Room 9 — Sampaguita homeroom (north)
   addClassroom(b, 20, -11, 32, -2, { skip: ['s'], cols: 3, rows: 2, e: [{ at: 2.5, w: 1.6, h: 1.4, y: 1.0 }, { at: 6, w: 1.6, h: 1.4, y: 1.0 }] });
   b.box(20.15, 1.6, -5, 0.05, 1.2, 2.2, 'darkwood'); // seating chart board
   b.cabinet(20.45, -3.0, 3, 0.9, 1.9, 0.5);
   // corridor dressing
-  b.lockers(16, -1.75, 2, 4);
-  b.lockers(34, -1.75, 2, 4);
+  b.lockers(16, -1.75, 2, 4, false);
+  b.lockers(34, -1.75, 2, 4, false);
   b.debris(20, 0, 10, 14);
   b.desk(36.5, 1.2, 0, true);
   return b;
@@ -148,6 +149,14 @@ export default function Chapter2() {
     >
       <Atmosphere fog="#0a0f1a" density={0.06} ambientIntensity={0.3} hemiIntensity={0.3} />
       <StaticLevel builder={builder} />
+      <GlbLockers x={9.1} z={7.75} r={0} count={9} />
+      <GlbLockers x={6.4} z={2.25} r={2} count={3} />
+      <GlbLockers x={12.6} z={2.25} r={2} count={3} />
+      <GlbLockers x={16} z={-1.75} r={2} count={4} />
+      <GlbLockers x={34} z={-1.75} r={2} count={4} />
+      <GlbCabinet x={13.6} z={-8} r={1} />
+      <GlbCabinet x={4.4} z={-8.6} r={3} />
+      <GlbCabinet x={12.5} z={-9.6} r={2} h={1.4} />
       <Dust />
 
       {/* lights */}
