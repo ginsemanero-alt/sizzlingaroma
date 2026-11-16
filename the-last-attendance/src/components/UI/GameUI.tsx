@@ -14,10 +14,19 @@ export function requestLock(): void {
   if (!canvas || document.pointerLockElement) return;
   const s = useGame.getState();
   if (s.overlay !== 'none' || s.inventoryOpen) return;
+  if (runtime.noPointerLock) return;
+  if (typeof canvas.requestPointerLock !== 'function') { lockUnavailable(); return; }
   try {
     const r = canvas.requestPointerLock() as unknown as Promise<void> | undefined;
-    if (r && typeof r.catch === 'function') r.catch(() => undefined);
-  } catch { /* ignored: requires user gesture */ }
+    if (r && typeof r.catch === 'function') r.catch((e: unknown) => { if (e instanceof Error && /sandbox|not allowed|NotSupported|WrongDocument/i.test(e.name + e.message)) lockUnavailable(); });
+  } catch { lockUnavailable(); }
+}
+
+/** Switch to drag-to-look (pointer lock blocked, e.g. inside a sandboxed embed). */
+function lockUnavailable(): void {
+  if (runtime.noPointerLock) return;
+  runtime.noPointerLock = true;
+  useGame.getState().notify('Drag with the mouse to look around', 'info');
 }
 
 /** Set when the game itself releases the mouse, so the resulting pointerlockchange isn't read as Esc. */
@@ -112,15 +121,17 @@ export function GameUI() {
         s.openOverlay('pause');
       }
     };
+    const onErr = () => { if (window.self !== window.top) { lockUnavailable(); setNeedsClick(false); } };
     document.addEventListener('pointerlockchange', onLock);
-    return () => document.removeEventListener('pointerlockchange', onLock);
+    document.addEventListener('pointerlockerror', onErr);
+    return () => { document.removeEventListener('pointerlockchange', onLock); document.removeEventListener('pointerlockerror', onErr); };
   }, []);
 
   useEffect(() => {
     if (uiOpen) { setNeedsClick(false); return; }
     requestLock();
     const t = window.setTimeout(() => {
-      if (!document.pointerLockElement && !runtime.debug) setNeedsClick(true);
+      if (!document.pointerLockElement && !runtime.debug && !runtime.noPointerLock) setNeedsClick(true);
     }, 450);
     return () => window.clearTimeout(t);
   }, [uiOpen]);

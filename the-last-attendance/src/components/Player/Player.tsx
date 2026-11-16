@@ -45,7 +45,9 @@ export function Player({ spawn, yaw: spawnYaw = 0 }: { spawn: [number, number]; 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       const p = runtime.player;
-      if (!runtime.pointerLocked || runtime.paused || p.lookLocked) return;
+      if (runtime.paused || p.lookLocked) return;
+      // normal: pointer lock; fallback (embedded/sandboxed): look while dragging with the mouse
+      if (!runtime.pointerLocked && !(runtime.noPointerLock && (e.buttons & 1))) return;
       const s = game().settings;
       const k = 0.0021 * s.mouseSensitivity;
       p.yaw -= e.movementX * k;

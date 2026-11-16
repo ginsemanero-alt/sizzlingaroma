@@ -35,6 +35,8 @@ export const runtime = {
   camera: null as THREE.Camera | null,
   keys: new Set<string>(),
   pointerLocked: false,
+  /** Pointer lock is unavailable (e.g. sandboxed iframe): look by dragging the mouse instead. */
+  noPointerLock: false,
   battery: 100,
   /** Global light flicker multiplier, driven by HorrorEventSystem. */
   flicker: 1,
