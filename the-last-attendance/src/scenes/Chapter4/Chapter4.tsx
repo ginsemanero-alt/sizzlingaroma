@@ -46,7 +46,7 @@ const FRAGMENTS: { id: string; pos: [number, number, number]; figure: [number, n
   {
     id: 'f2', pos: [13.5, 1.2, 4], figure: [13.5, 0, 4.6], yaw: Math.PI / 2,
     lines: [
-      { s: 'daniel', en: 'Alex... the lab. Something\'s burning. Smell that?', fil: 'Alex... yung lab. May nasusunog. Naaamoy mo?', lang: 'fil' },
+      { s: 'daniel', en: 'Jasmine... the lab. Something\'s burning. Smell that?', fil: 'Jasmine... yung lab. May nasusunog. Naaamoy mo?', lang: 'fil' },
       { s: 'alex', en: 'The bell — why is the guard ringing the bell by hand?' },
     ],
   },
@@ -61,7 +61,7 @@ const FRAGMENTS: { id: string; pos: [number, number, number]; figure: [number, n
   {
     id: 'f4', pos: [28.9, 1.2, -5.2], figure: [28.93, 0, -7.2], yaw: Math.PI,
     lines: [
-      { s: 'reyes', en: 'Aquino. Bautista. Flores. Garcia... where are Cruz and Mercado?', fil: 'Aquino. Bautista. Flores. Garcia... nasaan sina Cruz at Mercado?', lang: 'fil' },
+      { s: 'reyes', en: 'Aquino. Bautista. Flores. Garcia... where are Cruz and Semanero?', fil: 'Aquino. Bautista. Flores. Garcia... nasaan sina Cruz at Semanero?', lang: 'fil' },
       { s: 'reyes', en: 'Everyone, hold hands. We are not leaving anyone behind.', fil: 'Lahat, maghawak-kamay. Walang maiiwan.', lang: 'fil' },
     ],
   },

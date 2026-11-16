@@ -191,7 +191,7 @@ export default function Chapter1() {
       <mesh position={[4, 4.3, 40]}><boxGeometry args={[0.4, 0.15, 0.25]} /><meshStandardMaterial color="#ffc27a" emissive="#ffa040" emissiveIntensity={3} /></mesh>
       <mesh position={[4, 2.1, 40.2]}><cylinderGeometry args={[0.06, 0.08, 4.3, 8]} /><meshStandardMaterial color="#333" /></mesh>
       <pointLight position={[0, 3.2, 7]} color="#ffb070" intensity={2} distance={7} decay={1.6} />
-      <Sign position={[0, 5.4, 6.2]} size={[6, 0.8]} lines={['SAN AURELIO HIGH SCHOOL']} bg="#cfc6a8" color="#2a2a2a" />
+      <Sign position={[0, 5.4, 6.2]} size={[6, 0.8]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" color="#2a2a2a" />
       <Sign position={[0, 1.4, 36.25]} rotation={[0, Math.PI, 0]} size={[1.4, 0.5]} lines={['CLOSED BY ORDER', 'OF THE DIVISION']} bg="#b9a77a" />
       {shadow && (
         <mesh position={[-7.6, 4.5, 6.1]}>
@@ -245,7 +245,7 @@ export default function Chapter1() {
       <Sign position={[R.doorX, 2.45, H13 + 0.12]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#2b3a2b" color="#ddd" />
       <Sign position={[19.85, 2.65, -1.75]} rotation={[0, -Math.PI / 2, 0]} size={[1.4, 0.25]} lines={['WING B — CLASSROOMS']} bg="#2b3a2b" color="#ddd" />
       <Sign position={[-8, 1.7, -0.13]} rotation={[0, Math.PI, 0]} size={[0.9, 0.6]} lines={['CLEAN AS', 'YOU GO']} bg="#cbbf98" />
-      <Sign position={[6, 1.7, -0.13]} rotation={[0, Math.PI, 0]} size={[1.2, 0.7]} lines={['MABUHAY ANG', 'KABATAANG', 'SAN AURELIO']} bg="#b9c3a0" />
+      <Sign position={[6, 1.7, -0.13]} rotation={[0, Math.PI, 0]} size={[1.2, 0.7]} lines={['MABUHAY ANG', 'KABATAANG', 'BUBOG']} bg="#b9c3a0" />
       <ChalkText position={[-6.5, 1.65, -11.83]} lines={['REVIEW: MARCH 9', 'GOD BLESS, SAMPAGUITA!']} />
       <ChalkText position={R.boardFront(1.6)} rotation={[0, R.boardRotY, 0]} size={[RS.boardWidth, 0.9]} lines={rollDone ? ['MONITOR: ________', 'PRESENT 11 / ABSENT 1'] : ['EVENING REVIEW', '6:00 — 9:00 PM']} glow={rollDone ? 0.15 : 0} />
 

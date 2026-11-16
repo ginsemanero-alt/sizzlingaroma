@@ -5,9 +5,9 @@ import type { PuzzleId } from '@/types';
 export const FUSE_BREAKERS = ['MAIN', 'CANTEEN', 'ROOM 13', 'HALLWAY'] as const;
 export const FUSE_SOLUTION = ['MAIN', 'HALLWAY', 'ROOM 13'];
 
-export const SEATING_NAMES = ['Alex', 'Daniel', 'Hannah', 'Carlo', 'Katrina', 'Joshua'] as const;
+export const SEATING_NAMES = ['Jasmine', 'Daniel', 'Hannah', 'Carlo', 'Katrina', 'Joshua'] as const;
 /** Seats 1..6: front row 1-2-3, back row 4-5-6; window side is seat 3/6. */
-export const SEATING_SOLUTION: Record<number, string> = { 1: 'Katrina', 2: 'Hannah', 3: 'Alex', 4: 'Joshua', 5: 'Carlo', 6: 'Daniel' };
+export const SEATING_SOLUTION: Record<number, string> = { 1: 'Katrina', 2: 'Hannah', 3: 'Jasmine', 4: 'Joshua', 5: 'Carlo', 6: 'Daniel' };
 
 export interface PhotoCard { id: string; description: string; answer: string }
 export const PHOTO_CARDS: PhotoCard[] = [
@@ -23,12 +23,12 @@ export const ARCHIVE_CODE = '0738';
 
 export const ATTENDANCE_CANDIDATES = [
   'Aquino, Miguel', 'Bautista, Andrea', 'Cruz, Daniel', 'Flores, Katrina', 'Garcia, Nicole', 'Ilagan, Ramon',
-  'Lim, Hannah', 'Mendoza, Carlo', 'Mercado, Alex', 'Navarro, Paolo', 'Ocampo, Liza', 'Ramos, Joshua',
-  'Santos, Erika', 'Tan, Gabriel', 'Torres, Beatriz',
+  'Lim, Hannah', 'Mendoza, Carlo', 'Navarro, Paolo', 'Ocampo, Liza', 'Ramos, Joshua',
+  'Santos, Erika', 'Semanero, Jasmine', 'Tan, Gabriel', 'Torres, Beatriz',
 ];
 export const ATTENDANCE_SOLUTION = [
   'Aquino, Miguel', 'Bautista, Andrea', 'Cruz, Daniel', 'Flores, Katrina', 'Garcia, Nicole', 'Lim, Hannah',
-  'Mendoza, Carlo', 'Mercado, Alex', 'Navarro, Paolo', 'Ramos, Joshua', 'Santos, Erika', 'Tan, Gabriel',
+  'Mendoza, Carlo', 'Navarro, Paolo', 'Ramos, Joshua', 'Santos, Erika', 'Semanero, Jasmine', 'Tan, Gabriel',
 ];
 
 export interface SequenceEvent { id: string; label: string }
@@ -40,7 +40,7 @@ export const SEQUENCES: Record<'evacuation' | 'timeline' | 'secret_timeline', Se
     instructions:
       'Ms. Reyes chalked the evacuation as she planned it. Arrange the route the class actually took, from first to last. Listen to what you heard in the halls.',
     events: [
-      { id: 'e1', label: 'Room 13 — Ms. Reyes counts the students (Alex and Daniel missing)' },
+      { id: 'e1', label: 'Room 13 — Ms. Reyes counts the students (Jasmine and Daniel missing)' },
       { id: 'e2', label: 'Main stairs — filled with smoke, impassable' },
       { id: 'e3', label: 'East hallway — the class moves toward the emergency exit' },
       { id: 'e4', label: 'East emergency exit — the last place they were' },
@@ -53,10 +53,10 @@ export const SEQUENCES: Record<'evacuation' | 'timeline' | 'secret_timeline', Se
     events: [
       { id: 't1', label: 'Evening session begins in Room 13; attendance is taken' },
       { id: 't2', label: 'Daniel leaves for the science lab to get his reviewer' },
-      { id: 't3', label: 'Alex leaves Room 13 to look for Daniel' },
+      { id: 't3', label: 'Jasmine leaves Room 13 to look for Daniel' },
       { id: 't4', label: 'Fire starts at the extension cord in the lab' },
       { id: 't5', label: 'Ms. Reyes leads the class toward the east exit' },
-      { id: 't6', label: 'Alex and Daniel are separated at the stairs' },
+      { id: 't6', label: 'Jasmine and Daniel are separated at the stairs' },
       { id: 't7', label: 'The principal declares the evacuation "complete"' },
     ],
   },
@@ -72,7 +72,7 @@ export const SEQUENCES: Record<'evacuation' | 'timeline' | 'secret_timeline', Se
       { id: 's5', label: 'The guard finds the east exit chained; the key is with the principal' },
       { id: 's6', label: 'The incident report is rewritten at 2:14 AM' },
       { id: 's7', label: 'The East Wing is sealed; no search is ordered' },
-      { id: 's8', label: "Alex Mercado's record is changed to \"transferred\"" },
+      { id: 's8', label: "Jasmine Semanero's record is changed to \"transferred\"" },
     ],
   },
 };

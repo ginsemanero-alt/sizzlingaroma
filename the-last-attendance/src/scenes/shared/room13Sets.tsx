@@ -25,7 +25,7 @@ export interface RoomSet {
   /** Centre of the blackboard surface (plan) and the chalk area width. */
   board: XZ;
   boardWidth: number;
-  /** Where ghost students stand (behind each chair): 11 students + Alex. */
+  /** Where ghost students stand (behind each chair): 11 students + Jasmine. */
   seats: XZ[];
   /** The unrecorded desk at the back (Mara). */
   extraSeat: XZ;

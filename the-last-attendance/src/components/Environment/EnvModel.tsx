@@ -16,6 +16,27 @@ export const ENV_MODELS = {
   env_abandoned_classroom: { url: 'models/env_abandoned_classroom.glb', scale: 0.0254, ignore: /^$/ },
   env_classroom: { url: 'models/env_classroom.glb', scale: 0.01, ignore: /godray|Rideau|neon|clock|board/i },
   env_old_classroom: { url: 'models/env_old_classroom.glb', scale: 1, ignore: /glass/i },
+  env_hallway: { url: 'models/env_hallway.glb', scale: 1, ignore: /^$/ },
+  env_cafeteria: { url: 'models/env_cafeteria.glb', scale: 1, ignore: /^$/ },
+  env_construction_school: { url: 'models/env_construction_school.glb', scale: 1, ignore: /^$/ },
+  env_school_exterior: { url: 'models/env_school_exterior.glb', scale: 1, ignore: /^$/ },
+  env_library: { url: 'models/env_library.glb', scale: 1, ignore: /^$/ },
+  env_lab: { url: 'models/env_lab.glb', scale: 1, ignore: /^$/ },
+  env_chem_lab: { url: 'models/env_chem_lab.glb', scale: 1, ignore: /^$/ },
+  env_office: { url: 'models/env_office.glb', scale: 1, ignore: /^$/ },
+  env_old_office: { url: 'models/env_old_office.glb', scale: 1, ignore: /^$/ },
+  env_detective_office: { url: 'models/env_detective_office.glb', scale: 1, ignore: /^$/ },
+  env_staircase: { url: 'models/env_staircase.glb', scale: 1, ignore: /^$/ },
+  prop_exit_door: { url: 'models/prop_exit_door.glb', scale: 1, ignore: /^$/ },
+  prop_filing_cabinets: { url: 'models/prop_filing_cabinets.glb', scale: 1, ignore: /^$/ },
+  prop_fire: { url: 'models/prop_fire.glb', scale: 1, ignore: /^$/ },
+  prop_flag: { url: 'models/prop_flag.glb', scale: 1, ignore: /^$/ },
+  prop_padlock: { url: 'models/prop_padlock.glb', scale: 1, ignore: /^$/ },
+  prop_locker: { url: 'models/prop_locker.glb', scale: 1, ignore: /^$/ },
+  prop_lab_table: { url: 'models/prop_lab_table.glb', scale: 1, ignore: /^$/ },
+  prop_fuse_box: { url: 'models/prop_fuse_box.glb', scale: 1, ignore: /^$/ },
+  prop_cassette_deck: { url: 'models/prop_cassette_deck.glb', scale: 1, ignore: /^$/ },
+  prop_chemistry_set: { url: 'models/prop_chemistry_set.glb', scale: 1, ignore: /^$/ },
 } as const;
 export type EnvModelId = keyof typeof ENV_MODELS;
 
@@ -44,6 +65,8 @@ export interface EnvModelProps {
   /** World-space box [x0, y0, z0, x1, y1, z1] cut out of the model (a doorway through its wall). */
   hole?: [number, number, number, number, number, number];
   onColliders?: (c: AABB[]) => void;
+  /** Reports the placed size in metres (after unit scale). */
+  onBounds?: (size: [number, number, number]) => void;
 }
 
 /** Clipping planes whose intersection is the inside of a box (used with clipIntersection = true). */
@@ -56,11 +79,11 @@ function boxClipPlanes([x0, y0, z0, x1, y1, z1]: [number, number, number, number
 }
 
 /** A static environment model placed in the world, optionally walkable via mesh-generated colliders. */
-export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift = 0, hide, collide = false, clear, shadows = true, hole, onColliders }: EnvModelProps) {
+export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift = 0, hide, collide = false, clear, shadows = true, hole, onColliders, onBounds }: EnvModelProps) {
   const def = ENV_MODELS[model];
   const gltf = useGLTF(def.url, DRACO_PATH);
 
-  const { root, mats } = useMemo(() => {
+  const { root, mats, size } = useMemo(() => {
     const obj = gltf.scene.clone(true);
     const toRemove: THREE.Object3D[] = [];
     const list: THREE.Material[] = [];
@@ -97,7 +120,8 @@ export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift
     holder.add(centred);
     centred.rotation.y = rotationY;
     holder.position.set(...position);
-    return { root: holder, mats: list };
+    const sz = box.getSize(new THREE.Vector3());
+    return { root: holder, mats: list, size: [sz.x, sz.y, sz.z] as [number, number, number] };
   }, [gltf, def.scale, scale, rotationY, tint, lift, hide, shadows, position, hole]);
 
   useEffect(() => {
@@ -110,6 +134,7 @@ export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift
     return () => ids.forEach((id) => CollisionSystem.remove(id));
   }, [root, collide, clear, def.ignore, onColliders, model]);
 
+  useEffect(() => { onBounds?.(size); }, [size, onBounds]);
   useEffect(() => () => mats.forEach((m) => m.dispose()), [mats]);
   return <primitive object={root} />;
 }

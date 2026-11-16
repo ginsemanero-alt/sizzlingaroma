@@ -36,7 +36,7 @@ const LOCKERS: { n: number; x: number; z: number; item: string | null; name: str
   { n: 5, x: 9.1, z: 7.75, item: null, name: 'GARCIA, N.' },
   { n: 6, x: 9.55, z: 7.75, item: null, name: 'ILAGAN, R.' },
   { n: 7, x: 10.0, z: 7.75, item: 'hannah_ribbon', name: 'LIM, H.' },
-  { n: 8, x: 10.45, z: 7.75, item: null, name: 'MERCADO, A.' },
+  { n: 8, x: 10.45, z: 7.75, item: null, name: 'SEMANERO, J.' },
   { n: 9, x: 10.9, z: 7.75, item: 'joshua_pick', name: 'RAMOS, J.' },
   { n: 10, x: 5.95, z: 2.25, item: null, name: 'NAVARRO, P.' },
   { n: 11, x: 6.4, z: 2.25, item: 'carlo_jersey', name: 'MENDOZA, C.' },
@@ -182,7 +182,7 @@ export default function Chapter2() {
       <Sign position={[9, 1.6, -9.84]} size={[2.9, 1.3]} lines={photos ? (identified ? ['SAMPAGUITA 2018', 'LIM · MENDOZA · FLORES · RAMOS'] : ['?   ?   ?   ?']) : ['FACULTY & STUDENTS', '2017–2018']} bg="#8a6a46" color="#1e140c" />
       <Sign position={[20.2, 1.6, -5]} rotation={[0, Math.PI / 2, 0]} size={[2.1, 1.1]} lines={seating ? ['K  H  A', 'J  C  D'] : ['SEATING PLAN', '_  _  _', '_  _  _']} bg="#d8cfb2" />
       <Sign position={[31.25, 1.8, 7.5]} rotation={[0, -Math.PI / 2, 0]} size={[2.6, 0.5]} lines={['PANCIT · TUROn · JUICE']} bg="#d9c08a" />
-      <ChalkText position={[26, 1.65, -10.83]} lines={['ALEX = MONITOR', 'DON\'T FORGET: EVENING REVIEW FRI']} />
+      <ChalkText position={[26, 1.65, -10.83]} lines={['JASMINE = MONITOR', 'DON\'T FORGET: EVENING REVIEW FRI']} />
       <Clock position={[13.88, 2.5, -5]} rotation={[0, -Math.PI / 2, 0]} />
       <Clock position={[31.88, 2.5, -4]} rotation={[0, -Math.PI / 2, 0]} />
 

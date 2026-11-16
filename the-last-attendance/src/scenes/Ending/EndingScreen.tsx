@@ -83,7 +83,7 @@ function NewStudentRoom() {
 }
 
 function IdCard({ position }: { position: [number, number, number] }) {
-  const tex = useMemo(() => textTexture(['SAN AURELIO HIGH SCHOOL', 'MERCADO, ALEX R.', 'GRADE 12 – SAMPAGUITA', 'NEW STUDENT'], { w: 512, h: 320, bg: '#e8eef5', size: 34, color: '#1a2a3a' }), []);
+  const tex = useMemo(() => textTexture(['BUBOG NATIONAL HIGH SCHOOL', 'SEMANERO, JASMINE', 'GRADE 12 – SAMPAGUITA', 'NEW STUDENT'], { w: 512, h: 320, bg: '#e8eef5', size: 28, color: '#1a2a3a' }), []);
   return (
     <mesh position={position} rotation={[-Math.PI / 2, 0, 0.2]}>
       <planeGeometry args={[0.2, 0.125]} />
@@ -110,7 +110,7 @@ function GateScene() {
       <directionalLight position={[-10, 4, 20]} intensity={1.4} color="#ffb98a" />
       <color attach="background" args={['#5b5468']} />
       <fogExp2 attach="fog" args={['#5b5468', 0.04]} />
-      <Sign position={[0, 3.3, -9.88]} size={[5, 0.6]} lines={['SAN AURELIO HIGH SCHOOL']} bg="#cfc6a8" />
+      <Sign position={[0, 3.3, -9.88]} size={[5, 0.6]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" />
     </>
   );
 }
@@ -230,7 +230,7 @@ function AbsentBookPage() {
       <div className="paper" style={{ fontSize: 14 }}>
         {'EVENING ATTENDANCE — ROOM 13\n\n'}
         {ROLL_CALL.map((r) => `${r.surname}, ${r.first[0]}. ........ ABSENT\n`).join('')}
-        <span style={{ color: '#7a1414', animation: 'fadeIn 3s 3s both', display: 'inline-block' }}>{'Mercado, A. ......... ABSENT'}</span>
+        <span style={{ color: '#7a1414', animation: 'fadeIn 3s 3s both', display: 'inline-block' }}>{'Semanero, J. ......... ABSENT'}</span>
       </div>
     </div>
   );

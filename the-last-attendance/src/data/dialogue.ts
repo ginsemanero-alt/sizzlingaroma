@@ -4,7 +4,7 @@ import type { DialogueLine } from '@/types';
 export const DIALOGUE = {
   c1: {
     intro: [
-      { s: 'narrator', en: 'San Aurelio High School. Closed since 2018.' },
+      { s: 'narrator', en: 'Bubog National High School. Closed since 2018.' },
       { s: 'alex', en: 'Ten years. I said I would never come back here.' },
       { s: 'alex', en: 'Room 13... I never even had class in Room 13. I transferred before — before all that happened.' },
     ],
@@ -42,7 +42,7 @@ export const DIALOGUE = {
       { s: 'alex', en: 'If they were missing, someone should have come for their things.' },
     ],
     lockers: [{ s: 'alex', en: 'Hannah. Carlo. Katrina. Joshua. I remember their faces. I don\'t remember why I remember them.' }],
-    whisper: [{ s: 'student', en: 'Alex...', fil: 'Alex...', d: 2200 }],
+    whisper: [{ s: 'student', en: 'Jasmine...', fil: 'Jasmine...', d: 2200 }],
     ghosts: [{ s: 'alex', en: 'They\'re... sitting at their desks. Like they\'re waiting for class.' }],
     photos: [{ s: 'alex', en: 'The faculty photo board. The name labels have all been torn off.' }],
     identified: [
@@ -105,7 +105,7 @@ export const DIALOGUE = {
     shelf: [{ s: 'alex', en: 'There\'s a draft coming from behind this bookshelf.' }],
     altered: [{ s: 'alex', en: 'Correction fluid. Every check mark painted over. "ABSENT." My name scratched out.' }],
     reyesPurpose: [
-      { s: 'reyes', en: 'I am not keeping you here, Alex.', fil: 'Hindi kita ikinukulong, Alex.', lang: 'fil', d: 3800 },
+      { s: 'reyes', en: 'I am not keeping you here, Jasmine.', fil: 'Hindi kita ikinukulong, Jasmine.', lang: 'fil', d: 3800 },
       { s: 'reyes', en: 'I am only asking you to remember.', fil: 'Pinapaalala ko lang.', lang: 'fil', d: 3600 },
       { s: 'reyes', en: 'You were the class monitor. You are the only one who can answer for us.', fil: 'Ikaw ang class monitor. Ikaw lang ang makakasagot para sa amin.', lang: 'fil', d: 5200 },
       { s: 'reyes', en: 'Come back to Room 13. It is time for the last attendance.', fil: 'Bumalik ka sa Room 13. Oras na ng huling attendance.', lang: 'fil', d: 4800 },
@@ -118,10 +118,10 @@ export const DIALOGUE = {
     ],
     leaveConfirm: [{ s: 'alex', en: 'I could just leave. Drive home. Forget again.' }],
     enter: [{ s: 'reyes', en: 'Sit down, class. We are almost complete.', fil: 'Umupo na kayo. Halos kumpleto na tayo.', lang: 'fil', d: 3800 }],
-    roll: [{ s: 'reyes', en: 'The attendance book is on my desk, Alex. Bring it to me.', fil: 'Nasa mesa ko ang attendance book, Alex. Dalhin mo sa akin.', lang: 'fil', d: 4400 }],
+    roll: [{ s: 'reyes', en: 'The attendance book is on my desk, Jasmine. Bring it to me.', fil: 'Nasa mesa ko ang attendance book, Jasmine. Dalhin mo sa akin.', lang: 'fil', d: 4400 }],
     q1: { s: 'reyes', en: 'Where were you when the fire started?', fil: 'Nasaan ka nang magsimula ang sunog?', lang: 'fil' } as DialogueLine,
     q2: { s: 'reyes', en: 'Why did you leave Room 13?', fil: 'Bakit ka umalis sa Room 13?', lang: 'fil' } as DialogueLine,
     q3: { s: 'reyes', en: 'What happened to Daniel?', fil: 'Ano ang nangyari kay Daniel?', lang: 'fil' } as DialogueLine,
-    finalName: { s: 'reyes', en: 'Alex?', d: 3200 } as DialogueLine,
+    finalName: { s: 'reyes', en: 'Jasmine?', d: 3200 } as DialogueLine,
   },
 } satisfies Record<string, Record<string, DialogueLine[] | DialogueLine>>;

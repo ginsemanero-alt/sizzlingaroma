@@ -48,6 +48,7 @@ export function ModelViewer() {
   const inside = q.get('inside');
   const isEnv = sel in ENV_MODELS;
   const [boxes, setBoxes] = useState<AABB[]>([]);
+  const onBounds = useMemo(() => (sz: [number, number, number]) => { (window as unknown as { __viewerBounds: unknown }).__viewerBounds = sz.map((v) => +v.toFixed(2)); }, []);
   const onCols = useMemo(() => (c: AABB[]) => { setBoxes(c); (window as unknown as { __viewerInfo: unknown }).__viewerInfo = { colliders: c.length }; }, []);
   return (
     <div className="screen" style={{ background: '#222' }}>
@@ -57,7 +58,7 @@ export function ModelViewer() {
         <directionalLight position={[5, 10, 7]} intensity={2.2} />
         {top && <OrthographicCamera makeDefault position={[0, 30, 0]} zoom={zoom} up={[0, 0, -1]} onUpdate={(c) => c.lookAt(0, 0, 0)} />}
         <Suspense fallback={null}>
-          {isEnv ? <EnvModel key={sel} model={sel as EnvModelId} position={[0, 0, 0]} rotationY={Number(q.get('rot') ?? 0)} collide={top} onColliders={onCols} hide={q.get('hide') ? new RegExp(q.get('hide')!, 'i') : top ? /ceil|ceiling|lambert1|material_1|wall004/i : undefined} /> : <ModelCharacter key={sel} model={sel as ModelId} />}
+          {isEnv ? <EnvModel key={sel} model={sel as EnvModelId} position={[0, 0, 0]} rotationY={Number(q.get('rot') ?? 0)} collide={top} onColliders={onCols} onBounds={onBounds} hide={q.get('hide') ? new RegExp(q.get('hide')!, 'i') : top ? /ceil|ceiling|lambert1|material_1|wall004/i : undefined} /> : <ModelCharacter key={sel} model={sel as ModelId} />}
         </Suspense>
         {top && !plain && <Colliders boxes={boxes} />}
         <gridHelper args={[30, 30, '#88ff88', '#555']} position={[0, 0.02, 0]} />

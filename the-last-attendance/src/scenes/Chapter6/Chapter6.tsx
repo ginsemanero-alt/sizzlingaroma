@@ -72,7 +72,7 @@ export default function Chapter6() {
   const [ghosts, setGhosts] = useState(0); // number of students visible
   const [final, setFinal] = useState(false);
   const seats = useMemo(() => RS.seats.map((l) => R.xz(l)), []);
-  // seat index → student; seat 11 (back row, window) is Alex's
+  // seat index → student; seat 11 (back row, window) is Jasmine's
   const studentSeats = useMemo(() => seats.slice(0, 11), [seats]);
 
   const enterRoom = () => ctx.run('enter', async (c) => {
@@ -107,7 +107,7 @@ export default function Chapter6() {
     const ev = summarizeEvidence(game().collected, game().flags);
     const canRestore = game().has('altered_attendance') && game().has('attendance_reconstructed');
     await s.line('reyes', 'This is the book they said was never recovered.', 'Ito ang librong sinabi nilang hindi na nakita.', 'fil');
-    if (!ev.allKey) await s.line('reyes', 'You have not found everything, Alex. Some of us are still missing from your memory.', 'Hindi mo pa nahahanap ang lahat, Alex. May mga kulang pa sa alaala mo.', 'fil');
+    if (!ev.allKey) await s.line('reyes', 'You have not found everything, Jasmine. Some of us are still missing from your memory.', 'Hindi mo pa nahahanap ang lahat, Jasmine. May mga kulang pa sa alaala mo.', 'fil');
     else await s.line('reyes', 'You found all of it. Every page they tried to bury.', 'Nahanap mo lahat. Bawat pahinang ibinaon nila.', 'fil');
 
     const record = (await s.choose('The evening attendance of March 9, 2018 lies open. Under the correction fluid, every check mark is still there.', [
@@ -200,7 +200,7 @@ export default function Chapter6() {
       <ChalkText position={[24, 2.2, -2.38]} size={[3.4, 1]} lines={['WHO TOOK THE ATTENDANCE?']} color="#ffd0d0" glow={0.4} />
       <ChalkText position={[35, 1.7, 2.38]} rotation={[0, Math.PI, 0]} size={[3.4, 1.2]} lines={['TRANSFERRED', 'TRANSFERRED', 'TRANSFERRED']} color="#ffd0d0" glow={0.4} />
       <ChalkText position={[43.88, 1.8, 0]} rotation={[0, -Math.PI / 2, 0]} size={[3.6, 1.2]} lines={['ROOM 13 ←', 'KUMPLETO NA BA TAYO?']} color="#ffe0e0" glow={0.6} />
-      <ChalkText position={R.boardFront(1.6)} rotation={[0, R.boardRotY, 0]} size={[RS.boardWidth, 0.9]} lines={final ? ['MERCADO, ALEX', '?'] : ['THE LAST ATTENDANCE', 'MARCH 9']} glow={0.3} />
+      <ChalkText position={R.boardFront(1.6)} rotation={[0, R.boardRotY, 0]} size={[RS.boardWidth, 0.9]} lines={final ? ['SEMANERO, JASMINE', '?'] : ['THE LAST ATTENDANCE', 'MARCH 9']} glow={0.3} />
       <Sign position={[R.doorX, 2.45, H13 + 0.12]} size={[0.8, 0.2]} lines={['ROOM 13']} bg="#3a0d0d" color="#ffd0d0" />
       <Clock position={[20, 2.7, -2.38]} />
 

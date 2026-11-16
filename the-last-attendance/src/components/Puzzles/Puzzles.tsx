@@ -144,11 +144,11 @@ function PcPassword() {
     }
   };
   return (
-    <Shell id="pc_password" hint="SAN AURELIO HS — Student Information System, 2018. A sticky note on the monitor may help." status={status}>
+    <Shell id="pc_password" hint="BUBOG NHS — Student Information System, 2018. A sticky note on the monitor may help." status={status}>
       <div className="terminal">
         {!unlocked ? (
           <>
-            <div>SAN AURELIO HIGH SCHOOL — SIS v2.3</div>
+            <div>BUBOG NATIONAL HIGH SCHOOL — SIS v2.3</div>
             <div>USER: admin_er</div>
             <div style={{ marginTop: 10 }}>PASSWORD: <input autoFocus value={value} onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') submit(); }} /></div>
           </>

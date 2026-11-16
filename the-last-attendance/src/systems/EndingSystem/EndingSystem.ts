@@ -2,11 +2,11 @@ import type { EndingId, Flags } from '@/types';
 import { HIDDEN_CLUES, KEY_EVIDENCE, SECRET_RECORDS } from '@/data/items';
 
 export interface FinalDecision {
-  /** What Alex did with the attendance book. */
+  /** What Jasmine did with the attendance book. */
   record: 'restore' | 'leave' | 'tear';
   /** Number of truthful answers to Ms. Reyes's questions (0..3). */
   truthful: number;
-  /** Final answer to "Alex?" */
+  /** Final answer to "Jasmine?" */
   answer: 'present' | 'silent' | 'never';
 }
 
@@ -46,8 +46,8 @@ export function canAttemptSecretTimeline(collected: string[]): boolean {
 
 /**
  * Ending resolution:
- *  - ABSENT: the record is left untouched, or Alex refuses to answer / denies he was there.
- *  - THE NEW STUDENT: Alex answers "present" but has not remembered (missing key evidence,
+ *  - ABSENT: the record is left untouched, or Jasmine refuses to answer / denies she was there.
+ *  - THE NEW STUDENT: Jasmine answers "present" but has not remembered (missing key evidence,
  *    untruthful answers, or a torn record). Also reached by being caught in Chapter 6.
  *  - PRESENT: all key evidence, timeline reconstructed, record restored, truthful answers, "present".
  *  - THE UNRECORDED: PRESENT + every optional record and hidden clue + secret timeline solved.

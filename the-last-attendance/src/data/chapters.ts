@@ -5,7 +5,7 @@ export const CHAPTERS: Record<ChapterId, ChapterMeta> = {
     id: 1,
     title: 'After School',
     subtitle: 'Chapter One',
-    location: 'San Aurelio High School — Main Building',
+    location: 'Bubog National High School — Main Building',
     time: 'March 9, 2028 — 7:00 PM',
     tip: 'Hold SHIFT to run, CTRL or C to crouch. Interact with E. Your flashlight battery drains while it is on.',
     objectives: [
@@ -51,7 +51,7 @@ export const CHAPTERS: Record<ChapterId, ChapterMeta> = {
     id: 4,
     title: 'The Night of the Fire',
     subtitle: 'Chapter Four',
-    location: 'San Aurelio High School — March 9, 2018',
+    location: 'Bubog National High School — March 9, 2018',
     time: '7:38 PM',
     tip: 'Smoke rises. Crouch to breathe. Follow the memory fragments.',
     objectives: [

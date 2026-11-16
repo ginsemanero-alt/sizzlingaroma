@@ -2,7 +2,7 @@
 
 > *"Every name has a story. Every absence has a reason."*
 
-A first-person 3D psychological horror game that runs in the browser. You play Alex Mercado, who goes back to San Aurelio High School ten years after a fire that the official report says happened in an empty building.
+A first-person 3D psychological horror game that runs in the browser. You play Jasmine Semanero, who goes back to Bubog National High School ten years after a fire that the official report says happened in an empty building.
 
 - **6 playable chapters**, each with its own lazy-loaded 3D environment, objectives, puzzles and horror events
 - **9 logic puzzles**: breaker panel, photo matching, seating plan, records-computer password, attendance reconstruction, archive keypad, evacuation route, incident timeline, and a secret timeline
@@ -167,17 +167,17 @@ the-last-attendance/
 <details>
 <summary>Setting & premise</summary>
 
-On **Friday, March 9, 2018**, Grade 12 – Section Sampaguita held an evening review in **Room 13** of San Aurelio High School. At 7:38 PM a fire started in the science lab. The official report called it an electrical accident, said the session "did not take place", and listed eleven students and their adviser, Ms. Elena Reyes, as missing. The evening attendance book was never recovered, and the school closed.
+On **Friday, March 9, 2018**, Grade 12 – Section Sampaguita held an evening review in **Room 13** of Bubog National High School. At 7:38 PM a fire started in the science lab. The official report called it an electrical accident, said the session "did not take place", and listed eleven students and their adviser, Ms. Elena Reyes, as missing. The evening attendance book was never recovered, and the school closed.
 
-On **March 9, 2028**, exactly ten years later, Alex Mercado gets a text: *"Alex, may isang pangalan na hindi pa natawag. Bumalik ka sa Room 13."* Alex introduces himself as 18 and is sure he transferred out before the fire. His Chapter 1 ID card says otherwise.
+On **March 9, 2028**, exactly ten years later, Jasmine Semanero gets a text: *"Jasmine, may isang pangalan na hindi pa natawag. Bumalik ka sa Room 13."* Jasmine introduces herself as 18 and is sure she transferred out before the fire. Her Chapter 1 ID card says otherwise.
 </details>
 
 <details>
 <summary>Chapter walkthrough</summary>
 
 1. **After School:** push the gate, enter, and restore power at the guard station. The note says MAIN → HALLWAY → ROOM 13, and never CANTEEN. Watch the roll call in Room 13, then take the ID and the Wing B key from the teacher's desk.
-2. **Present:** open lockers 04, 07, 09 and 11 for the four belongings, then match the faculty photos (ribbon = Hannah, jersey #7 = Carlo, glasses = Katrina, guitar pick = Joshua). Fill the Room 9 seating plan from Ms. Reyes's notes: Katrina, Hannah, Alex / Joshua, Carlo, Daniel. Daniel's drawer holds his diary and the records key. Ms. Reyes starts hunting after the photos are identified.
-3. **The Missing Names:** the records PC password is your section plus your room (`SAMPAGUITA13`). The printer then prints the original attendance. Reconstruct the attendance with the 11 missing students plus **Mercado, Alex**, and leave out Ilagan (transferred), Ocampo (excused) and Torres (other section). Read the "TRANSFERS" file. The archive code is the time every clock stopped: `0738`.
+2. **Present:** open lockers 04, 07, 09 and 11 for the four belongings, then match the faculty photos (ribbon = Hannah, jersey #7 = Carlo, glasses = Katrina, guitar pick = Joshua). Fill the Room 9 seating plan from Ms. Reyes's notes: Katrina, Hannah, Jasmine / Joshua, Carlo, Daniel. Daniel's drawer holds his diary and the records key. Ms. Reyes starts hunting after the photos are identified.
+3. **The Missing Names:** the records PC password is your section plus your room (`SAMPAGUITA13`). The printer then prints the original attendance. Reconstruct the attendance with the 11 missing students plus **Semanero, Jasmine**, and leave out Ilagan (transferred), Ocampo (excused) and Torres (other section). Read the "TRANSFERS" file. The archive code is the time every clock stopped: `0738`.
 4. **The Night of the Fire:** crouch in smoke, follow Daniel's four memory fragments, examine the extension cord under the fume hood, and order the evacuation on the Room 13 board (Room 13 → main stairs → east hallway → east exit). Then examine the chained exit.
 5. **The False Report:** collect the principal's order and the edited draft report, play the confession tape (side A), open the attendance book in the archive, play Daniel's tape, and pin the timeline: 6:00, 7:10, 7:30, 7:38, 7:44, 7:49, 8:05. Ms. Reyes's last note explains what she wants.
 6. **The Last Attendance:** get through the distorted corridor (hide from her distorted form) to Room 13, take the attendance book, decide what to do with the record, answer her three questions, and answer the final name.
@@ -232,4 +232,4 @@ The models are re-posed, tinted and rendered translucent at runtime. The two CC 
 
 Built with React 18, TypeScript, Vite, Three.js, React Three Fiber, Drei, @react-three/postprocessing, Zustand, Howler.js and React Router. Fonts: Special Elite, IBM Plex Mono and Cormorant Garamond (Google Fonts, OFL). Everything except the Sketchfab models is generated procedurally by the game.
 
-This is a work of fiction. San Aurelio High School does not exist.
+This is a work of fiction. Bubog National High School does not exist.

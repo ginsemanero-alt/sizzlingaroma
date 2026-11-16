@@ -20,7 +20,7 @@ export function Credits() {
         <p>Design, story, code, procedural art and procedural audio</p>
         <p>built with React, TypeScript, Three.js, React Three Fiber, Drei, Zustand and Howler.js</p>
         <h3>CAST</h3>
-        <p>Alex Mercado — the class monitor</p>
+        <p>Jasmine Semanero — the class monitor</p>
         <p>Ms. Elena Reyes — the adviser</p>
         <p>Daniel Cruz — the best friend</p>
         <p>Mara Dizon — the girl in the hallway</p>
@@ -47,7 +47,7 @@ export function Credits() {
         <h3>FONTS</h3>
         <p>Special Elite · IBM Plex Mono · Cormorant Garamond (Google Fonts, OFL)</p>
         <h3>&nbsp;</h3>
-        <p>This is a work of fiction. San Aurelio High School does not exist.</p>
+        <p>This is a work of fiction. Bubog National High School does not exist.</p>
         <p>The people it is about could have.</p>
         <h3>&nbsp;</h3>
         <p style={{ color: 'var(--muted)' }}>Click or press Esc to return.</p>

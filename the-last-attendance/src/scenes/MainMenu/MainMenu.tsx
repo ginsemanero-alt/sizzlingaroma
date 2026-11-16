@@ -57,7 +57,7 @@ export function MainMenu({ audioReady }: { audioReady: boolean }) {
       )}
       {view === 'main' && (
         <div className="menu-foot">
-          <span>San Aurelio High School · Room 13</span>
+          <span>Bubog National High School · Room 13</span>
           <span>Endings found: {meta.endings.length}/4</span>
         </div>
       )}
