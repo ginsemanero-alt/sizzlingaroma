@@ -129,7 +129,8 @@ export function Room13Model({ room, tint, lift = 0, hideExtra, shadows = true, c
   const hide = useMemo(() => {
     const parts = [set.hide?.source, hideExtra?.source].filter(Boolean);
     return parts.length ? new RegExp(parts.join('|'), 'i') : undefined;
-  }, [set.hide, hideExtra]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [set.hide, hideExtra?.source]);
 
   useEffect(() => {
     const t = 0.15, [x0, z0] = room.min, [x1, z1] = room.max;

@@ -24,6 +24,8 @@ const RS = ROOM_2018;
 const R = roomAt(RS, 29, 2 - RS.half[1]);
 /** Hallway-side face of the wall in front of Room 13. */
 const H13 = 2.28;
+/** Light shafts only make sense in daylight. */
+const HIDE_GODRAYS = /godray/;
 const R13_CLEAR: [number, number, number, number][] = [[R.doorX - 0.9, R.southZ - 1.6, R.doorX + 0.9, R.southZ]];
 
 interface SmokeZone { min: [number, number]; max: [number, number]; rate: number }
@@ -190,7 +192,7 @@ export default function Chapter4() {
       <Door id="lab" position={[7, 0, 2]} axis="x" startOpen />
       <Door id="r12" position={[18, 0, 2]} axis="x" startOpen />
       <Door id="r13" position={[R.doorX, 0, H13]} axis="x" width={RS.door.width} startOpen />
-      <Room13Model room={R} tint="#c09070" hideExtra={/godray/} clearExtra={R13_CLEAR} />
+      <Room13Model room={R} tint="#c09070" hideExtra={HIDE_GODRAYS} clearExtra={R13_CLEAR} />
       <pointLight position={R.p([0, 0], 2.6)} color="#ff7a3a" intensity={3} distance={10} />
       <Door id="exit" position={[44, 0, 4]} axis="z" width={1.6} height={2.3} metal double color="#7a1e1a" locked lockedText="" noInteract />
 

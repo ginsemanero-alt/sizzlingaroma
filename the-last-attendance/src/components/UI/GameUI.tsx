@@ -20,8 +20,11 @@ export function requestLock(): void {
   } catch { /* ignored: requires user gesture */ }
 }
 
+/** Set when the game itself releases the mouse, so the resulting pointerlockchange isn't read as Esc. */
+let intentionalRelease = false;
+
 function releaseLock(): void {
-  if (document.pointerLockElement) document.exitPointerLock();
+  if (document.pointerLockElement) { intentionalRelease = true; document.exitPointerLock(); }
 }
 
 function PauseMenu() {
@@ -99,10 +102,11 @@ export function GameUI() {
       const s = useGame.getState();
       if (runtime.pointerLocked && (s.overlay !== 'none' || s.inventoryOpen)) {
         // Lock was granted after an overlay opened (async request): give the cursor back.
-        document.exitPointerLock();
+        releaseLock();
         return;
       }
       if (runtime.pointerLocked) setNeedsClick(false);
+      else if (intentionalRelease) intentionalRelease = false;
       else if (s.overlay === 'none' && !s.inventoryOpen && s.inGame && !s.caughtMessage && !s.transitionTo && !s.ending) {
         // Esc pressed while playing → pause
         s.openOverlay('pause');
