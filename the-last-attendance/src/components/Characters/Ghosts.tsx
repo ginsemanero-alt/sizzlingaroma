@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Humanoid, type HumanoidHandle, type HumanoidLook, type Pose } from './Humanoid';
+import type { HumanoidHandle, HumanoidLook, Pose } from './Humanoid';
+import { ModelCharacter, studentModel, type ModelId } from './ModelCharacter';
 import { runtime } from '@/systems/runtime';
 import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 import { game } from '@/store/gameStore';
@@ -11,8 +12,8 @@ type V3 = [number, number, number];
 
 /** A translucent student. Fades in/out with `visible`; can vanish when the player comes close. */
 export function GhostStudent({
-  position, rotationY = 0, visible = true, pose = 'sit', look, vanishDistance = 0, flicker = true, color = '#7f9cff',
-}: { position: V3; rotationY?: number; visible?: boolean; pose?: Pose; look: HumanoidLook; vanishDistance?: number; flicker?: boolean; color?: string }) {
+  position, rotationY = 0, visible = true, pose = 'sit', look, vanishDistance = 0, flicker = true, color = '#7f9cff', model,
+}: { position: V3; rotationY?: number; visible?: boolean; pose?: Pose; look: HumanoidLook; vanishDistance?: number; flicker?: boolean; color?: string; model?: ModelId }) {
   const ref = useRef<HumanoidHandle>(null);
   const op = useRef(0);
   const gone = useRef(false);
@@ -26,7 +27,10 @@ export function GhostStudent({
     ref.current?.setOpacity(o);
   });
   useEffect(() => { if (visible) gone.current = false; }, [visible]);
-  return <Humanoid ref={ref} position={position} rotationY={rotationY} pose={pose} {...look} ghost ghostColor={color} opacity={0} eyes="glow" />;
+  const id = model ?? studentModel(!!look.skirt, Math.abs(Math.round(position[0] * 3 + position[2] * 7)));
+  // The models are standing-posed: "seated" ghosts stand at their desk, just behind the seat.
+  const pos: V3 = pose === 'sit' ? [position[0], 0, position[2] + 0.42] : position;
+  return <ModelCharacter ref={ref} model={id} position={pos} rotationY={rotationY} pose={pose} ghost ghostColor={color} opacity={0} fallback={{ ...look, eyes: 'glow' }} />;
 }
 
 /**
@@ -64,31 +68,27 @@ export function GhostGirl({ id, position, rotationY = 0, enabled = true, pose = 
     ref.current?.setOpacity(op.current);
   });
   return (
-    <Humanoid
+    <ModelCharacter
       ref={ref}
+      model="girl_bob"
       position={position}
       rotationY={rotationY}
       pose={pose}
-      shirt="#e8e6df"
-      bottom="#1f2b4a"
-      skirt
-      hairStyle="long"
       ghost
       ghostColor="#9fb0ff"
-      eyes="glow"
-      height={0.93}
       opacity={0}
+      fallback={{ shirt: '#e8e6df', bottom: '#1f2b4a', skirt: true, hairStyle: 'long', eyes: 'glow', height: 0.93 }}
     />
   );
 }
 
 /** Glowing memory figure (Daniel in the flashback). */
-export function MemoryFigure({ position, rotationY = 0, visible = true, pose = 'stand', color = '#ffd29a' }: { position: V3; rotationY?: number; visible?: boolean; pose?: Pose; color?: string }) {
+export function MemoryFigure({ position, rotationY = 0, visible = true, pose = 'stand', color = '#ffd29a', model = 'boy_rigged' }: { position: V3; rotationY?: number; visible?: boolean; pose?: Pose; color?: string; model?: ModelId }) {
   const ref = useRef<HumanoidHandle>(null);
   const op = useRef(0);
   useFrame((_, dt) => {
     op.current += ((visible ? 0.55 : 0) - op.current) * Math.min(1, dt * 2);
     ref.current?.setOpacity(op.current * (0.85 + 0.15 * Math.sin(runtime.time * 6)));
   });
-  return <Humanoid ref={ref} position={position} rotationY={rotationY} pose={pose} shirt="#e8e6df" bottom="#1d2230" hairStyle="short" ghost ghostColor={color} eyes="normal" opacity={0} />;
+  return <ModelCharacter ref={ref} model={model} position={position} rotationY={rotationY} pose={pose} ghost ghostColor={color} opacity={0} fallback={{ shirt: '#e8e6df', bottom: '#1d2230', hairStyle: 'short' }} />;
 }

@@ -29,9 +29,16 @@ export function Credits() {
         {ROLL_CALL.map((r) => <p key={r.surname}>{r.first} {r.surname}</p>)}
         <p>Elena Reyes</p>
         <p>Mara Dizon</p>
+        <h3>CHARACTER MODELS (SKETCHFAB)</h3>
+        <p>"Animated Female Teacher for Narration" by LasquetiSpice — CC BY 4.0</p>
+        <p>"High School Student V10" by Fadly.W — CC BY 4.0</p>
+        <p>"Bob Cut High School Girl" by minecraft3193092 — CC BY-SA 4.0</p>
+        <p>"Ponytail High School Girl" by minecraft3193092 — CC BY-SA 4.0</p>
+        <p>"Rigged Anime Japanese High School Boy" by suzuart — CC BY 4.0</p>
+        <p>"Stylized Anime Japanese High School Boy 8" by suzuart — CC BY 4.0</p>
+        <p style={{ color: 'var(--muted)', fontSize: 12 }}>Models are re-posed, tinted and rendered as ghosts at runtime.</p>
         <h3>ASSETS</h3>
-        <p>All 3D models, textures and sounds are generated procedurally at runtime.</p>
-        <p>No third-party audio or model assets are used.</p>
+        <p>Environments, textures, props and all sounds are generated procedurally at runtime.</p>
         <h3>FONTS</h3>
         <p>Special Elite · IBM Plex Mono · Cormorant Garamond (Google Fonts, OFL)</p>
         <h3>&nbsp;</h3>

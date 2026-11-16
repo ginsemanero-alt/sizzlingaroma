@@ -9,7 +9,7 @@ A first-person 3D psychological horror game that runs in the browser. You play A
 - **Teacher AI** built as a finite state machine (idle, watching, patrolling, investigating, searching, chasing, disappearing), with A* navigation, sight, hearing and hiding spots
 - **35+ collectible items and evidence pieces**, readable in the inventory, plus 3D inspection with hidden details on the back of some items
 - **4 endings** decided by the evidence you collect and the choices you make
-- **Procedural everything**: textures, furniture, characters and every sound are generated at runtime, so the repo contains no licensed assets
+- **Character models**: Ms. Reyes, the ghost students, Mara and Daniel use six GLB models from Sketchfab (credits below); environments, textures and every sound are generated procedurally
 - Positional 3D audio, subtitles in English or Filipino, save and checkpoint system, settings and accessibility options
 
 ---
@@ -134,7 +134,14 @@ the-last-attendance/
 
 - **Audio:** add a file to `src/assets/audio/`, import it, and map it in `ASSET_OVERRIDES` in `systems/AudioSystem/AudioSystem.ts` (e.g. `bell: bellUrl`). Every `AudioSystem.play('bell')` then uses the recording.
 - **Textures:** swap a generator in `components/Environment/textures.ts` for a `TextureLoader` call (keep `RepeatWrapping`).
-- **Models:** `Humanoid` and `ItemModel` are self-contained, so a GLB (via drei `useGLTF`) can replace them one component at a time.
+- **Characters:** GLB files live in `public/models/` and are registered in `CHARACTER_MODELS` (`components/Characters/ModelCharacter.tsx`). Each model is normalised at runtime (height, feet on the floor, facing direction), T-posed arms are lowered (bone rotation for rigged models, vertex bending for unrigged ones), and ghosts get a translucent glowing material. The procedural `Humanoid` is shown while a model loads. To add a model: drop the `.glb` in `public/models/` and add one line to `CHARACTER_MODELS`.
+
+| Character | Model |
+|---|---|
+| Ms. Elena Reyes (and her distorted form) | `teacher.glb`, with its idle narration animation |
+| Mara Dizon, the girl in the hallway | `girl_bob.glb` |
+| Daniel's memory | `boy_rigged.glb` (walk cycle) |
+| Ghost students | `girl_ponytail.glb`, `girl_bob.glb`, `boy_stylized.glb`, `student.glb`, `boy_rigged.glb` |
 
 ---
 
@@ -191,6 +198,16 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 
 ## Credits
 
-Built with React 18, TypeScript, Vite, Three.js, React Three Fiber, Drei, @react-three/postprocessing, Zustand, Howler.js and React Router. Fonts: Special Elite, IBM Plex Mono and Cormorant Garamond (Google Fonts, OFL). All models, textures and sounds are generated procedurally by the game.
+**Character models (Sketchfab):**
+- "Animated Female Teacher for Narration" by LasquetiSpice: https://sketchfab.com/3d-models/animated-female-teacher-for-narration-2b24fd414b9a4fbb9ffb5ffdd4e6a4e5 (CC BY 4.0)
+- "High School Student V10" by Fadly.W: https://sketchfab.com/3d-models/high-school-student-v10-08dcb65df3da4fb9b7537fc85b39828d (CC BY 4.0)
+- "Bob Cut High School Girl" by minecraft3193092: https://sketchfab.com/3d-models/bob-cut-high-school-girl-21f78bdb6e3a4b679c4aaf70ad96ea5c (CC BY-SA 4.0)
+- "Ponytail High School Girl" by minecraft3193092: https://sketchfab.com/3d-models/ponytail-high-school-girl-d3cb15fd8bc7465182c39f982e32e5d0 (CC BY-SA 4.0)
+- "Rigged Anime Japanese High School Boy" by suzuart: https://sketchfab.com/3d-models/rigged-anime-japanese-high-school-boy-845df0101cd5429e86b190be757d1365 (CC BY 4.0)
+- "Stylized Anime Japanese High School Boy 8" by suzuart: https://sketchfab.com/3d-models/stylized-anime-japanese-high-school-boy-8-e5b837094f5340bd898b3e785f59f2b8 (CC BY 4.0)
+
+The models are re-posed, tinted and rendered translucent at runtime. The two CC BY-SA models (and any changes to them) stay under CC BY-SA 4.0.
+
+Built with React 18, TypeScript, Vite, Three.js, React Three Fiber, Drei, @react-three/postprocessing, Zustand, Howler.js and React Router. Fonts: Special Elite, IBM Plex Mono and Cormorant Garamond (Google Fonts, OFL). Everything except the six character models is generated procedurally by the game.
 
 This is a work of fiction. San Aurelio High School does not exist.

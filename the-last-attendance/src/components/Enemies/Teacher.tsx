@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Humanoid, type HumanoidHandle } from '@/components/Characters/Humanoid';
+import type { HumanoidHandle } from '@/components/Characters/Humanoid';
+import { ModelCharacter } from '@/components/Characters/ModelCharacter';
 import { TeacherBrain, teacherControl, type TeacherConfig, type TeacherMode } from '@/systems/EnemyAISystem/TeacherBrain';
 import { runtime } from '@/systems/runtime';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
@@ -49,17 +50,13 @@ export function Teacher({ config, mode, distorted = false }: { config: TeacherCo
 
   return (
     <group ref={root}>
-      <Humanoid
+      <ModelCharacter
         ref={body}
-        skin={distorted ? '#b8b4b0' : '#d6cfc6'}
-        shirt={distorted ? '#8a8378' : '#d9d3c4'}
-        bottom={distorted ? '#120d10' : '#2b2a35'}
-        hair="#060505"
-        hairStyle="long"
-        skirt
-        eyes={distorted ? 'glow' : 'dark'}
-        height={distorted ? 1.08 : 1.02}
-        pose="book"
+        model="teacher"
+        tint={distorted ? '#8f7f80' : '#d9d6d2'}
+        glow={distorted ? '#ff2020' : undefined}
+        glowIntensity={0.18}
+        fallback={{ skin: '#d6cfc6', shirt: '#d9d3c4', bottom: '#2b2a35', hair: '#060505', hairStyle: 'long', skirt: true, eyes: 'dark' }}
       />
       <pointLight ref={light} position={[0, 1.7, -0.6]} color={distorted ? '#ff5a5a' : '#9fb6ff'} intensity={0} distance={3.2} decay={2} />
     </group>

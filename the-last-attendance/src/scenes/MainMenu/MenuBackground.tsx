@@ -4,7 +4,8 @@ import * as THREE from 'three';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, Clock, Dust, FluoroLight, Sign } from '@/components/Environment/Props';
-import { Humanoid, type HumanoidHandle } from '@/components/Characters/Humanoid';
+import type { HumanoidHandle } from '@/components/Characters/Humanoid';
+import { ModelCharacter } from '@/components/Characters/ModelCharacter';
 import { runtime } from '@/systems/runtime';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 
@@ -72,7 +73,7 @@ export function MenuBackground() {
       <Clock position={[-2.08, 2.5, -8]} rotation={[0, Math.PI / 2, 0]} />
       <Sign position={[-2.08, 1.6, -15]} rotation={[0, Math.PI / 2, 0]} size={[1.1, 0.7]} lines={['ANG PAGIGING TAPAT', 'AY PAGIGING MALAYA']} bg="#c9b98f" />
       <Sign position={[0, 2.6, -33.88]} size={[1.4, 0.4]} lines={['ROOM 13 →']} bg="#2b3a2b" color="#ddd" />
-      <Humanoid ref={teacher} position={[0, 0, -30]} rotationY={0} pose="book" skin="#d6cfc6" shirt="#d9d3c4" bottom="#2b2a35" hair="#060505" hairStyle="long" skirt eyes="dark" height={1.02} />
+      <ModelCharacter ref={teacher} model="teacher" position={[0, 0, -30]} rotationY={0} tint="#d9d6d2" fallback={{ skin: '#d6cfc6', shirt: '#d9d3c4', bottom: '#2b2a35', hair: '#060505', hairStyle: 'long', skirt: true, eyes: 'dark' }} />
       <Dust count={160} />
       <AmbientMenuAudio />
     </>

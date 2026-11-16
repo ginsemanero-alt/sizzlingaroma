@@ -226,7 +226,7 @@ export default function Chapter4() {
       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
         <GhostStudent key={i} position={[38 + (i % 6) * 0.9, 0, 3.2 + Math.floor(i / 6) * 1.4]} rotationY={-Math.PI / 2} pose="stand" look={i % 2 ? STUDENT_LOOKS.girl : STUDENT_LOOKS.boy} visible={evac && !done} vanishDistance={2.5} color="#ffb98a" />
       ))}
-      <MemoryFigure position={[43, 0, 4]} rotationY={Math.PI / 2} visible={evac && !done} pose="book" color="#ffcf9a" />
+      <MemoryFigure position={[43, 0, 4]} rotationY={Math.PI / 2} visible={evac && !done} pose="book" color="#ffcf9a" model="teacher" />
 
       {/* the chained exit */}
       <Interactable id="chain" position={[43.75, 1.1, 4]} radius={0.5} prompt={done ? null : 'Examine the chained exit'} onInteract={() => {
@@ -275,7 +275,7 @@ function Fragment({ f, onRemember }: { f: (typeof FRAGMENTS)[number]; onRemember
           <pointLight position={[0, f.pos[1], 0]} intensity={1.6} distance={3} color="#ffc070" />
         </Interactable>
       )}
-      <MemoryFigure position={f.figure} rotationY={f.yaw} visible={!seen} pose={f.id === 'f1' ? 'reach' : f.id === 'f3' ? 'point' : f.id === 'f4' ? 'book' : 'stand'} color={f.id === 'f4' ? '#ff9f9f' : '#ffd29a'} />
+      <MemoryFigure position={f.figure} rotationY={f.yaw} visible={!seen} pose={f.id === 'f1' ? 'reach' : f.id === 'f3' ? 'point' : f.id === 'f4' ? 'book' : 'stand'} color={f.id === 'f4' ? '#ff9f9f' : '#ffd29a'} model={f.id === 'f4' ? 'teacher' : 'boy_rigged'} />
     </>
   );
 }

@@ -10,7 +10,8 @@ import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment/Props';
 import { addRoom13, room13Seats } from '@/scenes/shared/schoolParts';
 import { GhostStudent } from '@/components/Characters/Ghosts';
-import { Humanoid, STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
+import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
+import { ModelCharacter } from '@/components/Characters/ModelCharacter';
 import { textTexture } from '@/components/Environment/textures';
 import { AudioSystem, VoiceSystem } from '@/systems/AudioSystem/AudioSystem';
 import { Exposure, PostFX } from '@/components/Effects/PostFX';
@@ -61,7 +62,7 @@ function Room13Scene({ morning, ghosts, teacherWalk }: { morning: boolean; ghost
         <GhostStudent key={i} position={[s.x, 0, s.z + 0.15]} look={i % 2 ? STUDENT_LOOKS.girl : STUDENT_LOOKS.boy} visible={ghostsOn} color={morning ? '#ffe2b0' : '#7f9cff'} />
       ))}
       {!morning && (
-        <Humanoid ref={teacher} position={[8.9, 0, -6.6]} rotationY={Math.PI} pose="book" skin="#d6cfc6" shirt="#d9d3c4" bottom="#2b2a35" hair="#060505" hairStyle="long" skirt eyes="dark" />
+        <ModelCharacter ref={teacher} model="teacher" position={[8.9, 0, -6.6]} rotationY={Math.PI} tint="#cfcac4" />
       )}
       {!morning && <pointLight position={[9, 2.2, -2.5]} intensity={3} distance={6} color="#9fb6ff" />}
       {!morning && <IdCard position={[9.15, 0.735, -1.0]} />}

@@ -12,6 +12,7 @@ import { InteractionSystem } from '@/systems/InteractionSystem/InteractionSystem
 import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 import { LoadingScreen } from '@/components/UI/LoadingScreen';
 import { installDebugApi } from '@/utils/debugApi';
+import { preloadCharacterModels } from '@/components/Characters/ModelCharacter';
 
 /** Chapter environments are lazy-loaded (code-split) and fully unmounted between chapters. */
 const CHAPTER_SCENES: Record<ChapterId, React.LazyExoticComponent<ComponentType>> = {
@@ -48,7 +49,7 @@ export function GameScene() {
 
   useEffect(() => { if (!inGame) navigate('/'); }, [inGame, navigate]);
   useEffect(() => { if (ending) { AudioSystem.stopAllLoops(400); navigate(`/ending/${ending}`); } }, [ending, navigate]);
-  useEffect(() => installDebugApi(), []);
+  useEffect(() => { installDebugApi(); preloadCharacterModels(); }, []);
 
   // minimum loading screen per chapter load
   useEffect(() => {
