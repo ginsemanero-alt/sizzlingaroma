@@ -61,6 +61,22 @@ Browsers close the tab on **Ctrl+W**, so use **C** to crouch while moving forwar
 
 ---
 
+## Admin mode (god's eye)
+
+Press **F9** in game and enter the admin PIN (default: `BUBOGADMIN13`). The PIN is asked once per browser tab.
+
+| Key | What it does |
+|---|---|
+| G | Fly through walls (spectator camera: WASD, Space up, C down, Shift fast) |
+| M | Overhead map with the ceilings cut away (WASD pan, Space/C zoom) |
+| L | See everything: labels on every item, belonging (★), secret clue (◆), door and hiding spot, plus Ms. Reyes and Jasmine, through walls |
+| B | Full bright |
+| I | Invisible: Ms. Reyes cannot see, hear or catch Jasmine |
+| T | Move Jasmine to the flying camera |
+| F9 | Admin panel: teacher off/stalker/hunter, give items or belongings, full battery, jump to any chapter, log out |
+
+To change the PIN, run `echo -n "NEWPIN" | sha256sum` (PIN in capitals) and put the hash in `PIN_HASH` in `src/components/Admin/admin.ts`. This is a lock inside the game itself: it keeps ordinary players out, but anyone who reads the game's code could get around it.
+
 ## Settings & accessibility
 
 Master, music, ambient and effects volume · synthesized voices on/off · mouse sensitivity · invert Y · graphics quality (low/medium/high) · brightness · field of view · fullscreen · subtitles on/off · subtitle language (English/Filipino) · reduced camera shake · reduced flashing.

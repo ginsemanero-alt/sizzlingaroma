@@ -6,7 +6,7 @@ import { SaveSystem } from '@/systems/SaveSystem/SaveSystem';
 import { ITEMS, KEEPSAKES } from '@/data/items';
 import { bus, runtime } from '@/systems/runtime';
 
-export type Overlay = 'none' | 'pause' | 'puzzle' | 'choice' | 'reader' | 'inspect' | 'settings';
+export type Overlay = 'none' | 'pause' | 'puzzle' | 'choice' | 'reader' | 'inspect' | 'settings' | 'admin';
 
 export interface ChoiceOption { id: string; label: string; disabled?: boolean; hint?: string }
 export interface ChoiceRequest { prompt: string; speaker?: SpeakerId; options: ChoiceOption[]; resolve: (id: string) => void }

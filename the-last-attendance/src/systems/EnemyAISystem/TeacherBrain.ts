@@ -140,7 +140,7 @@ export class TeacherBrain {
 
   private canSeePlayer(): boolean {
     const p = runtime.player;
-    if (p.hidden) return false;
+    if (p.hidden || runtime.admin.invisible) return false;
     const dx = p.pos.x - this.pos.x, dz = p.pos.z - this.pos.z;
     const dist = Math.hypot(dx, dz);
     let range = this.cfg.sight ?? 13;
@@ -312,7 +312,7 @@ export class TeacherBrain {
     this.seeTimer = Math.max(0, this.seeTimer - dt);
     const p = runtime.player;
     const d = this.pos.distanceTo(p.pos);
-    if (p.noise > 0 && d < p.noise && !p.hidden && this.state !== 'investigating') {
+    if (p.noise > 0 && d < p.noise && !p.hidden && !runtime.admin.invisible && this.state !== 'investigating') {
       this.searchTarget.copy(p.pos);
       this.setState('investigating');
     }
@@ -331,6 +331,7 @@ export class TeacherBrain {
   }
 
   private catchPlayer(msg?: string): void {
+    if (runtime.admin.invisible) { this.setState('searching'); return; }
     this.setState('scripted');
     AudioSystem.play('scream', { volume: 0.8 });
     AudioSystem.play('bass_hit');

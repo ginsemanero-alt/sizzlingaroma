@@ -15,6 +15,7 @@ import { LoadingScreen } from '@/components/UI/LoadingScreen';
 import { installDebugApi } from '@/utils/debugApi';
 import { preloadCharacterModels } from '@/components/Characters/ModelCharacter';
 import { releaseEnvModels } from '@/components/Environment/EnvModel';
+import { AdminLayer } from '@/components/Admin/AdminLayer';
 
 /** Chapter environments are lazy-loaded (code-split) and fully unmounted between chapters. */
 const CHAPTER_SCENES: Record<ChapterId, React.LazyExoticComponent<ComponentType>> = {
@@ -98,6 +99,7 @@ export function GameScene() {
         <Suspense fallback={null}>
           <ChapterHost chapter={chapter} nonce={nonce} />
         </Suspense>
+        <AdminLayer />
         <PostFX />
       </Canvas>
       <GameUI />

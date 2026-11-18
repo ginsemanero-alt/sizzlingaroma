@@ -8,6 +8,8 @@ import { CaughtOverlay, CenterText, ChapterCard, Fade, FearAndStatus, Meters, No
 import { ConfirmDialog, ControlsPanel, SettingsPanel } from './Settings';
 import { InspectOverlay, InventoryOverlay, ReaderOverlay } from '@/components/Inventory/InventoryOverlay';
 import { PuzzleOverlay } from '@/components/Puzzles/Puzzles';
+import { AdminBadge, AdminPanel } from '@/components/Admin/AdminPanel';
+import { restoreAdmin, setFly, setTop, teleportHere, toggle } from '@/components/Admin/admin';
 
 export function requestLock(): void {
   const canvas = document.querySelector('#game-canvas canvas') as HTMLCanvasElement | null;
@@ -143,10 +145,28 @@ export function GameUI() {
     window.setTimeout(() => AudioSystem.play('breath', { volume: 0.35 }), 700);
   }), []);
 
+  useEffect(() => { restoreAdmin(); }, []);
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       const s = useGame.getState();
+      if (e.code === 'F9') {
+        e.preventDefault();
+        if (s.overlay === 'admin') s.closeOverlay();
+        else if (s.overlay === 'none' && !s.inventoryOpen && !s.caughtMessage) s.openOverlay('admin');
+        return;
+      }
       if (e.target instanceof HTMLInputElement) return;
+      // admin hotkeys (only after the admin PIN was entered)
+      if (runtime.admin.active && s.overlay === 'none' && !s.inventoryOpen && !e.repeat) {
+        const a = runtime.admin;
+        if (e.code === 'KeyG') { if (a.fly && !a.top) setFly(false); else { setFly(true); setTop(false); } return; }
+        if (e.code === 'KeyM') { setTop(!a.top); return; }
+        if (e.code === 'KeyL') { toggle('labels'); return; }
+        if (e.code === 'KeyB') { toggle('fullbright'); return; }
+        if (e.code === 'KeyI') { toggle('invisible'); s.notify(a.invisible ? 'Ms. Reyes can no longer see you' : 'Ms. Reyes can see you again', 'info'); return; }
+        if (e.code === 'KeyT' && a.fly) { teleportHere(); return; }
+      }
       if (['Tab', 'Space', 'ArrowUp', 'ArrowDown'].includes(e.code)) e.preventDefault();
       if (e.ctrlKey && e.code !== 'ControlLeft' && e.code !== 'ControlRight') e.preventDefault();
       runtime.keys.add(e.code);
@@ -177,7 +197,7 @@ export function GameUI() {
           break;
         case 'Escape':
           if (s.inventoryOpen) { s.setInventory(false); break; }
-          if (s.overlay === 'reader' || s.overlay === 'inspect' || s.overlay === 'puzzle') { s.closeOverlay(); break; }
+          if (s.overlay === 'reader' || s.overlay === 'inspect' || s.overlay === 'puzzle' || s.overlay === 'admin') { s.closeOverlay(); break; }
           if (s.overlay === 'pause') { s.closeOverlay(); requestLock(); break; }
           if (s.overlay === 'none') s.openOverlay('pause');
           break;
@@ -216,6 +236,8 @@ export function GameUI() {
       {overlay === 'inspect' && <InspectOverlay key={inspectItem ?? ''} />}
       {overlay === 'puzzle' && <PuzzleOverlay />}
       {inventoryOpen && <InventoryOverlay />}
+      {overlay === 'admin' && <AdminPanel />}
+      <AdminBadge />
       {needsClick && !uiOpen && !transitionTo && !caught && (
         <div className="click-resume" onClick={() => { AudioSystem.unlock(); requestLock(); setNeedsClick(false); }}>CLICK TO CONTINUE</div>
       )}

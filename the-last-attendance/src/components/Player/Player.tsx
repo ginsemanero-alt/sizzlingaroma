@@ -45,11 +45,17 @@ export function Player({ spawn, yaw: spawnYaw = 0 }: { spawn: [number, number]; 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       const p = runtime.player;
-      if (runtime.paused || p.lookLocked) return;
       // normal: pointer lock; fallback (embedded/sandboxed): look while dragging with the mouse
       if (!runtime.pointerLocked && !(runtime.noPointerLock && (e.buttons & 1))) return;
       const s = game().settings;
       const k = 0.0021 * s.mouseSensitivity;
+      if (runtime.admin.fly && !runtime.paused) {
+        const a = runtime.admin.cam;
+        a.yaw -= e.movementX * k;
+        a.pitch = Math.max(-1.55, Math.min(1.55, a.pitch - e.movementY * k * (s.invertY ? -1 : 1)));
+        return;
+      }
+      if (runtime.paused || p.lookLocked) return;
       p.yaw -= e.movementX * k;
       p.pitch -= e.movementY * k * (s.invertY ? -1 : 1);
       p.pitch = Math.max(-1.45, Math.min(1.45, p.pitch));
@@ -70,6 +76,14 @@ export function Player({ spawn, yaw: spawnYaw = 0 }: { spawn: [number, number]; 
     const p = runtime.player;
     const keys = runtime.keys;
     if (!runtime.paused) runtime.time += dt;
+
+    // ── admin spectator camera: Jasmine stays where she is ──
+    if (runtime.admin.fly) {
+      p.vel.set(0, 0, 0); p.moving = false; p.noise = 0;
+      flyCamera(camera, dt, keys);
+      InteractionSystem.update(camera);
+      return;
+    }
 
     // ── scripted look-at ──
     if (p.lookTarget) {
@@ -151,4 +165,33 @@ export function Player({ spawn, yaw: spawnYaw = 0 }: { spawn: [number, number]; 
   });
 
   return null;
+}
+
+const UP = new THREE.Vector3(0, 1, 0);
+
+/** Minecraft-style spectator flight (WASD + Space/C, Shift = fast) or an overhead map (`admin.top`). */
+function flyCamera(camera: THREE.Camera, dt: number, keys: Set<string>): void {
+  const a = runtime.admin.cam;
+  const fast = keys.has('ShiftLeft') || keys.has('ShiftRight') ? 3.5 : 1;
+  const fwd = (keys.has('KeyW') || keys.has('ArrowUp') ? 1 : 0) - (keys.has('KeyS') || keys.has('ArrowDown') ? 1 : 0);
+  const side = (keys.has('KeyD') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('KeyA') || keys.has('ArrowLeft') ? 1 : 0);
+  const rise = (keys.has('Space') ? 1 : 0) - (keys.has('KeyC') || keys.has('ControlLeft') ? 1 : 0);
+  if (runtime.paused) return;
+  if (runtime.admin.top) {
+    // overhead map: WASD pans (north up), Space/C zoom
+    const sp = (6 + a.height * 0.6) * fast * dt;
+    a.pos.x += side * sp;
+    a.pos.z -= fwd * sp;
+    a.height = Math.max(6, Math.min(90, a.height - rise * 20 * fast * dt));
+    camera.position.set(a.pos.x, a.height, a.pos.z);
+    camera.rotation.set(-Math.PI / 2, 0, 0, 'YXZ');
+  } else {
+    const sp = 5 * fast * dt;
+    const dir = new THREE.Vector3(-Math.sin(a.yaw) * Math.cos(a.pitch), Math.sin(a.pitch), -Math.cos(a.yaw) * Math.cos(a.pitch));
+    const right = new THREE.Vector3(Math.cos(a.yaw), 0, -Math.sin(a.yaw));
+    a.pos.addScaledVector(dir, fwd * sp).addScaledVector(right, side * sp).addScaledVector(UP, rise * sp);
+    camera.position.copy(a.pos);
+    camera.rotation.set(a.pitch, a.yaw, 0, 'YXZ');
+  }
+  camera.updateMatrixWorld();
 }

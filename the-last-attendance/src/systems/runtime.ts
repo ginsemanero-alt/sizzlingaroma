@@ -56,6 +56,22 @@ export const runtime = {
   teacherPos: new THREE.Vector3(999, 0, 999),
   teacherState: 'idle' as string,
   debug: typeof window !== 'undefined' && /[?&]debug/.test(window.location.search + window.location.hash),
+  /** Admin "god's eye" mode (see components/Admin). Only usable after entering the admin PIN. */
+  admin: {
+    /** Logged in this browser tab. */
+    active: false,
+    /** Free-flying spectator camera that passes through walls. */
+    fly: false,
+    /** Overhead map view (ceilings cut away). */
+    top: false,
+    /** The teacher cannot see, hear or catch Jasmine. */
+    invisible: false,
+    /** Show every item, clue and the teacher through walls. */
+    labels: true,
+    /** Extra light everywhere. */
+    fullbright: false,
+    cam: { pos: new THREE.Vector3(), yaw: 0, pitch: 0, height: 30 },
+  },
 };
 
 export function resetRuntime(): void {
