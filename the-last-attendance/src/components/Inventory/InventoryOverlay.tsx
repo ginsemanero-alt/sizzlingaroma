@@ -6,7 +6,7 @@ import { ITEMS } from '@/data/items';
 import { CHARACTERS } from '@/data/characters';
 import type { ItemCategory, ItemDef } from '@/types';
 import { PhotoView } from './PhotoView';
-import { ItemModel } from './ItemModel';
+import { ItemModel, glbItemSize, isGlbItem } from './ItemModel';
 import { playRecording, scriptHost } from '@/systems/DialogueSystem/DialogueSystem';
 import { summarizeEvidence } from '@/systems/EndingSystem/EndingSystem';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
@@ -14,7 +14,7 @@ import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 type Tab = 'all' | ItemCategory | 'evidence';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'evidence', label: 'EVIDENCE' }, { id: 'item', label: 'ITEMS' }, { id: 'document', label: 'DOCUMENTS' },
-  { id: 'photo', label: 'PHOTOS' }, { id: 'recording', label: 'AUDIO' }, { id: 'all', label: 'ALL' },
+  { id: 'photo', label: 'PHOTOS' }, { id: 'recording', label: 'AUDIO' }, { id: 'keepsake', label: 'BELONGINGS' }, { id: 'all', label: 'ALL' },
 ];
 
 function matches(def: ItemDef, tab: Tab): boolean {
@@ -139,9 +139,15 @@ function Spinner({ kind, flipped }: { kind: ItemDef['model']; flipped: boolean }
         drag.current.y += e.movementY * 0.01;
       }}
     >
-      <group rotation={[Math.PI / 2, 0, 0]} scale={['chain', 'mirror'].includes(kind) ? 2.2 : kind === 'card' || kind === 'pick' || kind === 'clip' ? 9 : 4.5}>
-        <ItemModel kind={kind} />
-      </group>
+      {isGlbItem(kind) ? (
+        <group scale={0.95 / glbItemSize(kind)}>
+          <ItemModel kind={kind} centered />
+        </group>
+      ) : (
+        <group rotation={[Math.PI / 2, 0, 0]} scale={['chain', 'mirror'].includes(kind) ? 2.2 : kind === 'card' || kind === 'pick' || kind === 'clip' ? 9 : 4.5}>
+          <ItemModel kind={kind} />
+        </group>
+      )}
     </group>
   );
 }

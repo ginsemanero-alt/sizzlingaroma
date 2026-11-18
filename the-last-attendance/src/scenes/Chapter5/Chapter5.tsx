@@ -152,7 +152,13 @@ export default function Chapter5() {
       <StaticLevel builder={builder} />
       <Suspense fallback={null}>
         <EnvModel model="env_detective_office" position={OFFICE} hide={OFFICE_SHELL} tint="#c8b8a8" collide clear={OFFICE_CLEAR} />
+        <PropModel model="item_mirror" position={[4.42, 0, -7.5]} height={1.85} rotationY={Math.PI / 2} tint="#8a7a6a" collide="low" />
+        <PropModel model="prop_desk_fan" position={[10.25, DESK_TOP, -7.45]} height={0.36} rotationY={Math.PI / 2} animate shadows={false} />
+        <PropModel model="prop_horror_mask" position={[16.6, 1.75, -9.82]} height={0.3} rotationY={0} anchor="center" tint="#c0b8b0" shadows={false} />
+        <PropModel model="prop_cassette_deck" position={[21.6, 0, 9.6]} fit={0.5} rotationY={-0.4} tint="#8a8078" shadows={false} />
+        <PropModel model="prop_photo_frame" position={[10.3, DESK_TOP, -7.95]} height={0.2} rotationY={Math.PI / 2 - 0.4} shadows={false} />
       </Suspense>
+      <Pickup item="reyes_handbag" position={[15.3, 0.01, -9.3]} verb="Take" />
       <GlbCabinet x={4.4} z={-4} r={3} tint="#b08a6a" />
       <GlbCabinet x={12.5} z={-9.65} r={2} h={1.6} tint="#b08a6a" />
       <Dust />

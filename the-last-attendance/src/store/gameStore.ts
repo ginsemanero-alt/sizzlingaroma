@@ -3,8 +3,8 @@ import type {
   ChapterId, Checkpoint, EndingId, FlagValue, Flags, MetaData, PuzzleId, SaveData, Settings, Snapshot, SpeakerId, Vec3,
 } from '@/types';
 import { SaveSystem } from '@/systems/SaveSystem/SaveSystem';
-import { ITEMS } from '@/data/items';
-import { runtime } from '@/systems/runtime';
+import { ITEMS, KEEPSAKES } from '@/data/items';
+import { bus, runtime } from '@/systems/runtime';
 
 export type Overlay = 'none' | 'pause' | 'puzzle' | 'choice' | 'reader' | 'inspect' | 'settings';
 
@@ -136,6 +136,19 @@ export const useGame = create<GameState>((set, get) => ({
     const def = ITEMS[id];
     set((s) => ({ collected: [...s.collected, id], selectedItem: id }));
     if (!def || opts.silent) return;
+    if (def.category === 'keepsake') {
+      const n = KEEPSAKES.filter((k) => get().collected.includes(k)).length;
+      get().notify(`Belonging returned: ${def.name} (${n}/${KEEPSAKES.length})`, 'evidence');
+      if (n === KEEPSAKES.length) window.setTimeout(() => get().notify('Every belonging has been found. They will remember.', 'objective'), 1800);
+      bus.emit('keepsake', id);
+      if (def.memory && !get().subtitle) {
+        const speaker: SpeakerId = def.owner === 'Reyes' ? 'reyes' : def.owner === 'Dizon' ? 'girl' : def.owner === 'Cruz' ? 'daniel' : 'student';
+        get().setSubtitle({ speaker, en: def.memory.en, fil: def.memory.fil });
+        const sid = get().subtitle?.id;
+        window.setTimeout(() => { if (get().subtitle?.id === sid) get().setSubtitle(null); }, 5200);
+      }
+      return;
+    }
     const label = def.tool ? 'Item' : def.category === 'recording' ? 'Recording' : def.category === 'photo' ? 'Photograph' : 'Evidence';
     get().notify(`${label}: ${def.name}`, def.tool ? 'item' : 'evidence');
     if (opts.open && (def.category === 'document' || def.category === 'photo')) get().openReader(id);

@@ -12,6 +12,7 @@ import { GhostGirl } from '@/components/Characters/Ghosts';
 import { ChapterBase, useFlag, useFlagEffect, useScript } from '@/scenes/ChapterBase';
 import { addClassroom } from '@/scenes/shared/schoolParts';
 import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
+import { Room13Clutter } from '@/scenes/shared/clutter';
 import { DIALOGUE } from '@/data/dialogue';
 import { ROLL_CALL } from '@/data/characters';
 import { game, useGame } from '@/store/gameStore';
@@ -196,7 +197,15 @@ export default function Chapter1() {
         )}
         <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />
         <PropModel model="prop_fuse_box" position={[-15.5, 1.0, -9.7]} height={0.8} tint="#b0aaa0" />
+        <Room13Clutter room={R} worn />
+        {/* hallway: the school bell, a lost shoe; the guard's cot in the station */}
+        <PropModel model="prop_school_bell" position={[-1.2, 2.25, -3.38]} height={0.42} rotationY={0} anchor="center" tint="#c0b0a0" shadows={false} />
+        <PropModel model="prop_shoe" position={[-7.6, 0, -1.7]} fit={0.28} rotationY={2.3} tint="#9a9088" shadows={false} />
+        <PropModel model="prop_hospital_bed" position={[-19.0, 0, -6.6]} height={0.95} rotationY={Math.PI / 2} tint="#8a8278" collide="low" />
+        <PropModel model="prop_wall_clock" position={[0, 2.6, 5.93]} height={0.36} rotationY={Math.PI} anchor="center" tint="#b0a090" shadows={false} />
       </Suspense>
+      <Pickup item="miguel_ball" position={[6.4, 0.01, -2.95]} verb="Pick up" />
+      <Pickup item="erika_umbrella" position={[-2.7, 0.01, 4.5]} verb="Pick up" />
       <GlbCabinet x={-13} z={-9.4} r={2} />
       <Dust count={120} />
 

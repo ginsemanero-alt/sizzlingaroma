@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGame } from '@/store/gameStore';
-import { runtime } from '@/systems/runtime';
+import { bus, runtime } from '@/systems/runtime';
 import { InteractionSystem } from '@/systems/InteractionSystem/InteractionSystem';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 import { CHARACTERS } from '@/data/characters';
@@ -135,6 +135,13 @@ export function GameUI() {
     }, 450);
     return () => window.clearTimeout(t);
   }, [uiOpen]);
+
+  // a belonging of the missing was found: its owner whispers nearby
+  useEffect(() => bus.on('keepsake', () => {
+    const p = runtime.player.pos;
+    AudioSystem.play('whisper', { pos: [p.x + 1.2, 1.5, p.z - 0.8], volume: 0.75 });
+    window.setTimeout(() => AudioSystem.play('breath', { volume: 0.35 }), 700);
+  }), []);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

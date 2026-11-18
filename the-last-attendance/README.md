@@ -9,7 +9,8 @@ A first-person 3D psychological horror game that runs in the browser. You play J
 - **Teacher AI** built as a finite state machine (idle, watching, patrolling, investigating, searching, chasing, disappearing), with A* navigation, sight, hearing and hiding spots
 - **35+ collectible items and evidence pieces**, readable in the inventory, plus 3D inspection with hidden details on the back of some items
 - **4 endings** decided by the evidence you collect and the choices you make
-- **3D models**: Ms. Reyes, the ghost students, Mara, Daniel and Room 13 itself use Sketchfab models (credits below); the rest of the school, the textures and every sound are generated procedurally
+- **Belongings of the missing**: 13 optional keepsakes (one for each student of Grade 12 – Sampaguita, plus Mara and Ms. Reyes) spread across all six chapters. Each owner whispers when you find theirs; at the Chapter 6 roll call they answer differently and their belonging appears at their seat, and the ending epilogue counts how many you brought home
+- **3D models**: Ms. Reyes, the ghost students, Mara, Daniel, the guard, Room 13, most school rooms, the collectible items and the classroom clutter use Sketchfab models (credits below); the rest of the school, the textures and every sound are generated procedurally
 - Positional 3D audio, subtitles in English or Filipino, save and checkpoint system, settings and accessibility options
 
 ---
@@ -252,7 +253,60 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 - "office is old abandoned FREE" by dasy444: https://sketchfab.com/3d-models/office-is-old-abandoned-free-3977a108b2304b85a698f3dda1777015 (CC BY 4.0) — Chapter 3 archive room
 - "Science Lab Table" by Skecthfab: https://sketchfab.com/3d-models/science-lab-table-5ef0a834474b41c4bb3f26b6986a404c (CC BY 4.0) — Chapter 4 Room 12
 
-Both Sketchfab Standard models ("Abandoned classroom" and "Philippines Flag") may be used inside the game but must not be redistributed as files on their own; keep them out of a public repository if that matters to you.
+**Belongings, props and characters (batch 3):**
+
+- "Acoustic Guitar" by Jinhong Jeong: https://sketchfab.com/3d-models/acoustic-guitar-e2e7a415bafd4346a481afcc0645dce3 (**CC BY-NC 4.0 (non-commercial)**) — Joshua's guitar, Chapter 2
+- "Ballpen" by rustic.orcullo13: https://sketchfab.com/3d-models/ballpen-7995e39be8c2468096966c15838637c9 (CC BY 4.0) — teacher's desk, Room 13
+- "Basketball" by Marek Picheta: https://sketchfab.com/3d-models/basketball-b7357866e35e4e1181e7488ae0577bdb (CC BY 4.0) — Miguel's basketball (belonging)
+- "Basketball Jersey" by Sev: https://sketchfab.com/3d-models/basketball-jersey-3ee634a324d5400ab84555b0636416f6 (CC BY 4.0) — Carlo's jersey (belonging)
+- "Beads Lanyard (EMP (SBH) 15-S)" by eeelabvisual: https://sketchfab.com/3d-models/beads-lanyard-emp-sbh-15-s-c1b19a8f98a4483b9b1df5a9b2a60023 (CC BY 4.0) — registrar desk, Chapter 3
+- "calculator" by Cyril43: https://sketchfab.com/3d-models/calculator-f0b1f7c17d70489888f5ae922169c0ce (CC BY 4.0) — Room 13 desks
+- "Candles set" by shuvalov.di: https://sketchfab.com/3d-models/candles-set-f09212756bc94764a8bcfcd3c7e38f8e (CC BY-SA 4.0) — memorials, Chapter 6 and the gate
+- "Cassette Recorder" by zombitt: https://sketchfab.com/3d-models/cassette-recorder-ce9f02da632641299189f557633cb16d (CC BY 4.0) — Daniel's recorder (belonging)
+- "China Doll - toy" by Brian Trepanier: https://sketchfab.com/3d-models/china-doll-toy-7c6f3f614592486e9124b0d84e1fde08 (CC BY 4.0) — Mara's desk, Chapter 6
+- "Clipboard" by Cookie: https://sketchfab.com/3d-models/clipboard-a37158f20ccf436483029e8295629738 (CC BY 4.0) — attendance clipboard, Room 13
+- "Designer Leather Pencil Case" by Eric Augustinowicz: https://sketchfab.com/3d-models/designer-leather-pencil-case-0f44286d1a2d49fabce767ef1cd365a5 (CC BY 4.0) — Room 13 teacher's desk
+- "Desk Fan | Rigged | Free" by plazma019: https://sketchfab.com/3d-models/desk-fan-rigged-free-3cd147a143a64d578d54040224cbc720 (**Sketchfab Standard licence**) — Room 13 (2018) and the principal's office
+- "Electric Fan" by Lillya: https://sketchfab.com/3d-models/electric-fan-c27f71e432b84353a245fb9b65dcdbf2 (CC BY 4.0) — Room 13 (2018), computer room
+- "Flashlight" by MAR.COS.: https://sketchfab.com/3d-models/flashlight-5fa9a65e7b0141ee877ed18f4f42d953 (CC BY 4.0) — the flashlight
+- "Flower Hair Clip" by leman0312: https://sketchfab.com/3d-models/flower-hair-clip-2c3e3299e0ca41af924a23b7c46f90fb (CC BY 4.0) — Mara's hair clip
+- "Folded_shirt_men" by funlab117: https://sketchfab.com/3d-models/folded-shirt-men-44b95c9dc9de4dc98c54d5313e394e62 (CC BY 4.0) — Chapter 2 lockers
+- "Ghost Girl V2" by Ezau954gamer: https://sketchfab.com/3d-models/ghost-girl-v2-2dc9cc80283f4da281f72888be0215ef (CC BY 4.0) — Mara
+- "Horror Game Prop Collection 1" by AlienKat: https://sketchfab.com/3d-models/horror-game-prop-collection-1-eff04084f9954f8c826cb097c81db61a (**CC BY-NC 4.0 (non-commercial)**) — effigy in the Chapter 6 corridor
+- "Horror mask" by Bulat.Shakirov: https://sketchfab.com/3d-models/horror-mask-c548becf104644dd802e158848c8f6b4 (CC BY 4.0) — hidden storage, Chapter 5
+- "Hospital Bed" by loxfear: https://sketchfab.com/3d-models/hospital-bed-f8c13a19e84343e7b644c19f7b9488d3 (CC BY 4.0) — guard station cot, Chapter 1
+- "Jasmine" by SCADL & Co: https://sketchfab.com/3d-models/jasmine-7ccfc2b34bcb45a2b46cef3d3ba15f5d (CC BY 4.0) — sampaguita flowers at the memorials
+- "Key" by eucocker: https://sketchfab.com/3d-models/key-a4aca11a2259462f8735a60eead33962 (**CC BY-NC-SA 4.0 (non-commercial)**) — keys
+- "Mirror" by eucocker: https://sketchfab.com/3d-models/mirror-cf964a1ff455478ba65771400a4ea1ab (CC BY 4.0) — principal's mirror, Chapter 5
+- "MQTT School Bell Ringer" by digitalurban: https://sketchfab.com/3d-models/mqtt-school-bell-ringer-2869c618d1c5406ea06989ef44d0cd91 (CC BY 4.0) — Chapter 1 hallway
+- "Old School Skate Shoe" by f l y i n c a t: https://sketchfab.com/3d-models/old-school-skate-shoe-ce83d71a24524480909fb56b37fa7925 (CC BY 4.0) — Room 13 and Chapter 1 hallway
+- "PB153 Notebook Low" by Makovetkyi Volodymyr: https://sketchfab.com/3d-models/pb153-notebook-low-79f30cb4af5a40c482e487c8e7c3c58d (CC BY 4.0) — Daniel's diary
+- "Pencil case, pencil, sharpener, eraser and ruler" by Mr.Octopus: https://sketchfab.com/3d-models/pencil-case-pencil-sharpener-eraser-and-ruler-62d50825c5de4d1ba574356fbe9b2985 (CC BY 4.0) — Room 13 desks
+- "phone" by AlemanGame: https://sketchfab.com/3d-models/phone-7e8a826999e04e7fa82eca240d6ae265 (CC BY 4.0) — phone / Nicole's phone (belonging)
+- "Photo Frame" by pedrohfds: https://sketchfab.com/3d-models/photo-frame-7c248d87fc644bcda9a061b64daea3ea (CC BY 4.0) — memorials and offices
+- "Plastic Water Bottle" by RoutineStudio: https://sketchfab.com/3d-models/plastic-water-bottle-731efe2635c9472c9c1e4fdb1f8fbd13 (CC BY 4.0) — Room 13, canteen
+- "Power strip extension lead" by Sousinho: https://sketchfab.com/3d-models/power-strip-extension-lead-2180b1f7b55b433285cbe08181a9e88a (CC BY 4.0) — the scorched extension cord
+- "Realistic Blackboard" by ali98hussain: https://sketchfab.com/3d-models/realistic-blackboard-1fcaf45adf91486c94988080742ebdc5 (**Sketchfab Standard licence**) — Chapter 2 corridor
+- "Rosary" by Carlos.Maciel: https://sketchfab.com/3d-models/rosary-fdf7f60f70f74611b655eac50adcc21a (CC BY 4.0) — Paolo's rosary (belonging)
+- "Rubiks's Cube" by mellais: https://sketchfab.com/3d-models/rubikss-cube-2391353d88c14642a2e6e2e10d18e5e8 (CC BY 4.0) — Gabriel's puzzle cube (belonging)
+- "Ruler" by Artieee: https://sketchfab.com/3d-models/ruler-6ef95979598942cd8aa91922f35dc28f (CC BY 4.0) — Room 13 teacher's desk
+- "School Backpack" by MadeByYeshe: https://sketchfab.com/3d-models/school-backpack-524d7fc724094ead9f203ed06bae76e1 (CC BY 4.0) — Room 13 and canteen
+- "School in Uniform girl" by Padarozhnik: https://sketchfab.com/3d-models/school-in-uniform-girl-587d7391083c47d29bfa90ee5d2845b1 (CC BY 4.0) — corridor ghost, Chapter 6
+- "Security Guard – Rigged 3D Model" by Q.SARDOR: https://sketchfab.com/3d-models/security-guard-rigged-3d-model-1e3307732bbf4453b30f021bfec5bcaf (CC BY 4.0) — the guard at the gate (ending)
+- "Sketchbook PBR" by RinRainicorn: https://sketchfab.com/3d-models/sketchbook-pbr-2d27c357a8f9454183e9c157165462a8 (CC BY 4.0) — Andrea's sketchbook (belonging)
+- "Sketchpad" by Jeremy E. Grayson: https://sketchfab.com/3d-models/sketchpad-1bd2933b309943febc7e3e2b63a89205 (CC BY 4.0) — Room 13 desks
+- "SpringBok - Rugby Jersey" by OmegaRedZA: https://sketchfab.com/3d-models/springbok-rugby-jersey-65a049dab9ed4bb49ec52cd54cf847a1 (CC BY 4.0) — Chapter 2 lockers
+- "Stack Of Old Books" by Arjun Perayil: https://sketchfab.com/3d-models/stack-of-old-books-c6ca6667fd7d4381bd184874dcf44075 (CC BY 4.0) — Room 13, library
+- "Stylized Eyeglasses Set –  3D Model Pack" by Anka Inoplanetyanka: https://sketchfab.com/3d-models/stylized-eyeglasses-set-3d-model-pack-30fd3bff1e7c485c86c2a1bede38fe2d (CC BY 4.0) — Katrina's glasses (belonging)
+- "Teddy Bear" by sergeilihandristov: https://sketchfab.com/3d-models/teddy-bear-fe59581a0be24cb1802c443a2a9bc5ae (CC BY 4.0) — Mara's teddy bear (belonging)
+- "The Umbrella Corporation's Umbrella" by Erai: https://sketchfab.com/3d-models/the-umbrella-corporations-umbrella-c1b7cf8f40a94277a5b740bdce328fe6 (CC BY 4.0) — Erika's umbrella (belonging)
+- "Wall Clock" by Mehdi Shahsavan: https://sketchfab.com/3d-models/wall-clock-6d7473893d47458495f810f0d2a89945 (CC BY 4.0) — Chapter 1 lobby, Chapter 4 hallway
+- "Wheelchair 3.0" by neverfollow81: https://sketchfab.com/3d-models/wheelchair-30-6af0d66a358f45469537e236348dd3d8 (CC BY 4.0) — Chapter 4 hallway
+- "Worn leather handbag" by Lassi Kaukonen: https://sketchfab.com/3d-models/worn-leather-handbag-0732e0dfee7747e49cef95f3d179d880 (CC BY 4.0) — Ms. Reyes's handbag (belonging)
+
+The non-commercial models ("Acoustic Guitar", "Horror Game Prop Collection 1", "Key") are fine for a free game; replace them before selling the game.
+
+The Sketchfab Standard models ("Abandoned classroom", "Philippines Flag", "Desk Fan | Rigged | Free", "Realistic Blackboard") may be used inside the game but must not be redistributed as files on their own; keep them out of a public repository if that matters to you.
 
 The models are re-posed, tinted and rendered translucent at runtime. The two CC BY-SA models (and any changes to them) stay under CC BY-SA 4.0.
 

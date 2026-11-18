@@ -70,7 +70,7 @@ export function GhostGirl({ id, position, rotationY = 0, enabled = true, pose = 
   return (
     <ModelCharacter
       ref={ref}
-      model="girl_bob"
+      model="ghost_girl"
       position={position}
       rotationY={rotationY}
       pose={pose}

@@ -158,7 +158,16 @@ export default function Chapter2() {
         {[5.2, 9.6].map((z) => (
           <PropModel key={z} model="env_cafeteria" onlyBox={CANTEEN_TABLE} position={[23.4, 0, z]} rotationY={Math.PI / 2} tint="#8a8070" collide="low" />
         ))}
+        {/* the class's things, still where they were left */}
+        <PropModel model="item_guitar" position={[11.55, 0, 7.35]} height={1.0} rotationY={-0.3} tint="#a08070" collide="low" />
+        <PropModel model="prop_folded_shirt" position={[5.9, 0.01, 2.85]} fit={0.36} rotationY={0.4} tint="#b0a898" shadows={false} />
+        <PropModel model="prop_rugby_jersey" position={[16.45, 0.85, -1.42]} height={0.75} rotationY={0} tint="#9a9890" shadows={false} />
+        <PropModel model="prop_water_bottle" position={[24.3, TABLE_TOP, 9.35]} fit={0.22} rotationY={1.2} shadows={false} />
+        <PropModel model="prop_backpack" position={[21.9, 0, 4.4]} fit={0.46} rotationY={2.6} tint="#7a3a3a" shadows={false} />
+        <PropModel model="prop_blackboard" position={[17.9, 1.55, -1.93]} width={2.2} rotationY={0} anchor="center" tint="#a0a098" shadows={false} />
       </Suspense>
+      <Pickup item="gabriel_cube" position={[22.7, TABLE_TOP, 5.15]} verb="Pick up" />
+      <Pickup item="nicole_phone" position={[9.15, 0.01, 7.15]} verb="Pick up" />
       <GlbLockers x={9.1} z={7.75} r={0} count={9} />
       <GlbLockers x={6.4} z={2.25} r={2} count={3} />
       <GlbLockers x={12.6} z={2.25} r={2} count={3} />

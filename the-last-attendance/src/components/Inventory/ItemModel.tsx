@@ -2,9 +2,21 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ItemModel as ItemModelKind } from '@/types';
 import { textTexture } from '@/components/Environment/textures';
+import { GLB_ITEMS, GlbItem } from './GlbItem';
 
-/** Procedural low-poly models for every collectible. Used both in-world and in the inspect view. */
-export function ItemModel({ kind, label, color }: { kind: ItemModelKind; label?: string; color?: string }) {
+/**
+ * Model for a collectible, used both in-world and in the inspect view: a GLB where one exists
+ * (GLB_ITEMS), otherwise a procedural low-poly stand-in (also shown while the GLB loads).
+ */
+export function ItemModel({ kind, label, color, centered }: { kind: ItemModelKind; label?: string; color?: string; centered?: boolean }) {
+  const proc = <ProceduralItem kind={kind} label={label} color={color} />;
+  return GLB_ITEMS[kind] ? <GlbItem kind={kind} fallback={proc} centered={centered} /> : proc;
+}
+
+export const isGlbItem = (kind: ItemModelKind): boolean => !!GLB_ITEMS[kind];
+export const glbItemSize = (kind: ItemModelKind): number => GLB_ITEMS[kind]?.size ?? 0.2;
+
+function ProceduralItem({ kind, label, color }: { kind: ItemModelKind; label?: string; color?: string }) {
   const labelTex = useMemo(() => (label ? textTexture([label], { w: 256, h: 128, bg: '#e6dcc0', size: 30, color: '#2a2a2a' }) : null), [label]);
   switch (kind) {
     case 'paper':

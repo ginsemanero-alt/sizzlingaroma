@@ -11,6 +11,8 @@ import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment
 import { ROOM_2018, roomAt } from '@/scenes/shared/room13Sets';
 import { EnvModel } from '@/components/Environment/EnvModel';
 import { PropModel } from '@/components/Environment/PropModel';
+import { Memorial, Room13Clutter } from '@/scenes/shared/clutter';
+import { KEEPSAKES } from '@/data/items';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
 import { ModelCharacter } from '@/components/Characters/ModelCharacter';
@@ -39,7 +41,7 @@ function MorningRoom() {
   useEffect(() => { const t = window.setTimeout(() => setGhostsOn(false), 9000); return () => window.clearTimeout(t); }, []);
   return (
     <>
-      <Suspense fallback={null}><EnvModel model="env_classroom" position={[0, 0, 0]} rotationY={ROOM_2018.rotationY} /></Suspense>
+      <Suspense fallback={null}><EnvModel model="env_classroom" position={[0, 0, 0]} rotationY={ROOM_2018.rotationY} /><Room13Clutter room={ROOM_MORNING} fans /></Suspense>
       <ambientLight intensity={0.8} color="#ffe6c4" />
       <hemisphereLight args={['#fff2dc', '#6a5a40', 0.6]} />
       <directionalLight position={[-14, 7, -2]} intensity={3.2} color="#ffd9a0" castShadow />
@@ -108,6 +110,9 @@ function GateScene() {
       <StaticLevel builder={b} />
       <Suspense fallback={null}>
         <PropModel model="env_school_exterior" position={[0, 0, -18]} width={44} rotationY={Math.PI} tint="#c9bfb4" />
+        {/* Mang Tonyo, the guard, and the candles people still leave at the gate */}
+        <ModelCharacter model="guard" position={[2.6, 0, 7.6]} rotationY={Math.PI + 0.5} tint="#d0c8c0" />
+        <Memorial position={[-1.6, 0, 6.55]} />
       </Suspense>
       <Sky />
       <ambientLight intensity={0.45} color="#b8a7c9" />
@@ -156,6 +161,7 @@ export function EndingScreen() {
   const graphics = useGame((s) => s.settings.graphics);
   const [lineIdx, setLineIdx] = useState(-1);
   const [phase, setPhase] = useState<'lines' | 'epilogue'>('lines');
+  const returned = useGame((s) => KEEPSAKES.filter((k) => s.collected.includes(k)).length);
 
   useEffect(() => {
     useGame.getState().unlockEnding(ending.id);
@@ -216,6 +222,13 @@ export function EndingScreen() {
             <h1 className="ending-title">{ending.title}</h1>
             <div className="epilogue">
               {ending.epilogue.map((p, i) => <p key={i} style={{ animationDelay: `${1 + i * 2.2}s` }}>{p}</p>)}
+              {returned > 0 && (
+                <p style={{ animationDelay: `${1 + ending.epilogue.length * 2.2}s`, color: 'var(--muted)' }}>
+                  {returned === KEEPSAKES.length
+                    ? `Belongings returned: ${returned}/${KEEPSAKES.length}. Every one of them went home to their families: the things the school said were never found.`
+                    : `Belongings returned: ${returned}/${KEEPSAKES.length}. Somewhere in Bubog National High School, the rest are still waiting.`}
+                </p>
+              )}
             </div>
             <div className="row interactive" style={{ marginTop: 22, pointerEvents: 'auto', animation: `fadeIn 1s ${2 + ending.epilogue.length * 2.2}s both` }}>
               <button className="btn primary" onClick={() => navigate('/credits')}>Credits</button>

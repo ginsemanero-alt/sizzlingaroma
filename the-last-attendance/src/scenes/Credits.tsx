@@ -64,6 +64,54 @@ export function Credits() {
         <p>"low-poly office" by DarianDS — CC BY 4.0</p>
         <p>"office is old abandoned FREE" by dasy444 — CC BY 4.0</p>
         <p>"Science Lab Table" by Skecthfab — CC BY 4.0</p>
+        <p>"Acoustic Guitar" by Jinhong Jeong — CC BY-NC 4.0</p>
+        <p>"Ballpen" by rustic.orcullo13 — CC BY 4.0</p>
+        <p>"Basketball" by Marek Picheta — CC BY 4.0</p>
+        <p>"Basketball Jersey" by Sev — CC BY 4.0</p>
+        <p>"Beads Lanyard (EMP (SBH) 15-S)" by eeelabvisual — CC BY 4.0</p>
+        <p>"calculator" by Cyril43 — CC BY 4.0</p>
+        <p>"Candles set" by shuvalov.di — CC BY-SA 4.0</p>
+        <p>"Cassette Recorder" by zombitt — CC BY 4.0</p>
+        <p>"China Doll - toy" by Brian Trepanier — CC BY 4.0</p>
+        <p>"Clipboard" by Cookie — CC BY 4.0</p>
+        <p>"Designer Leather Pencil Case" by Eric Augustinowicz — CC BY 4.0</p>
+        <p>"Desk Fan | Rigged | Free" by plazma019 — Sketchfab Standard licence</p>
+        <p>"Electric Fan" by Lillya — CC BY 4.0</p>
+        <p>"Flashlight" by MAR.COS. — CC BY 4.0</p>
+        <p>"Flower Hair Clip" by leman0312 — CC BY 4.0</p>
+        <p>"Folded_shirt_men" by funlab117 — CC BY 4.0</p>
+        <p>"Ghost Girl V2" by Ezau954gamer — CC BY 4.0</p>
+        <p>"Horror Game Prop Collection 1" by AlienKat — CC BY-NC 4.0</p>
+        <p>"Horror mask" by Bulat.Shakirov — CC BY 4.0</p>
+        <p>"Hospital Bed" by loxfear — CC BY 4.0</p>
+        <p>"Jasmine" by SCADL & Co — CC BY 4.0</p>
+        <p>"Key" by eucocker — CC BY-NC-SA 4.0</p>
+        <p>"Mirror" by eucocker — CC BY 4.0</p>
+        <p>"MQTT School Bell Ringer" by digitalurban — CC BY 4.0</p>
+        <p>"Old School Skate Shoe" by f l y i n c a t — CC BY 4.0</p>
+        <p>"PB153 Notebook Low" by Makovetkyi Volodymyr — CC BY 4.0</p>
+        <p>"Pencil case, pencil, sharpener, eraser and ruler" by Mr.Octopus — CC BY 4.0</p>
+        <p>"phone" by AlemanGame — CC BY 4.0</p>
+        <p>"Photo Frame" by pedrohfds — CC BY 4.0</p>
+        <p>"Plastic Water Bottle" by RoutineStudio — CC BY 4.0</p>
+        <p>"Power strip extension lead" by Sousinho — CC BY 4.0</p>
+        <p>"Realistic Blackboard" by ali98hussain — Sketchfab Standard licence</p>
+        <p>"Rosary" by Carlos.Maciel — CC BY 4.0</p>
+        <p>"Rubiks's Cube" by mellais — CC BY 4.0</p>
+        <p>"Ruler" by Artieee — CC BY 4.0</p>
+        <p>"School Backpack" by MadeByYeshe — CC BY 4.0</p>
+        <p>"School in Uniform girl" by Padarozhnik — CC BY 4.0</p>
+        <p>"Security Guard – Rigged 3D Model" by Q.SARDOR — CC BY 4.0</p>
+        <p>"Sketchbook PBR" by RinRainicorn — CC BY 4.0</p>
+        <p>"Sketchpad" by Jeremy E. Grayson — CC BY 4.0</p>
+        <p>"SpringBok - Rugby Jersey" by OmegaRedZA — CC BY 4.0</p>
+        <p>"Stack Of Old Books" by Arjun Perayil — CC BY 4.0</p>
+        <p>"Stylized Eyeglasses Set –  3D Model Pack" by Anka Inoplanetyanka — CC BY 4.0</p>
+        <p>"Teddy Bear" by sergeilihandristov — CC BY 4.0</p>
+        <p>"The Umbrella Corporation's Umbrella" by Erai — CC BY 4.0</p>
+        <p>"Wall Clock" by Mehdi Shahsavan — CC BY 4.0</p>
+        <p>"Wheelchair 3.0" by neverfollow81 — CC BY 4.0</p>
+        <p>"Worn leather handbag" by Lassi Kaukonen — CC BY 4.0</p>
         <p style={{ color: 'var(--muted)', fontSize: 12 }}>Models are re-posed, tinted and rendered as ghosts at runtime.</p>
         <h3>ASSETS</h3>
         <p>The rest of the school, textures, props and all sounds are generated procedurally at runtime.</p>

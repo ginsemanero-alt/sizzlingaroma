@@ -18,6 +18,9 @@ export const CHARACTER_MODELS = {
   boy_stylized: { url: 'models/boy_stylized.glb', height: 1.68, idleAnim: false },
   boy_stylized6: { url: 'models/boy_stylized6.glb', height: 1.7, idleAnim: false },
   boy_animated: { url: 'models/boy_animated.glb', height: 1.68, idleAnim: true },
+  ghost_girl: { url: 'models/ghost_girl.glb', height: 1.5, idleAnim: false },
+  uniform_girl: { url: 'models/uniform_girl.glb', height: 1.6, idleAnim: false },
+  guard: { url: 'models/guard.glb', height: 1.74, idleAnim: true },
 } as const;
 export type ModelId = keyof typeof CHARACTER_MODELS;
 
@@ -181,7 +184,7 @@ const ModelBody = forwardRef<HumanoidHandle, Props>(function ModelBody(
 function relaxArms(obj: THREE.Object3D): void {
   obj.updateMatrixWorld(true);
   const bones: THREE.Object3D[] = [];
-  obj.traverse((o) => { if ((o as THREE.Bone).isBone && /^(left|right)[_ ]?(upper[_ ]?)?arm/i.test(o.name)) bones.push(o); });
+  obj.traverse((o) => { if ((o as THREE.Bone).isBone && /^(left|right)[_ ]?(upper[_ ]?)?arm|^arm\.[lr]_/i.test(o.name)) bones.push(o); });
   const wp = new THREE.Vector3(), child = new THREE.Vector3();
   for (const b of bones) {
     b.getWorldPosition(wp);

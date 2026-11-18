@@ -25,7 +25,7 @@ export function installDebugApi(): void {
         script: scriptHost.ctx ? { aborted: scriptHost.ctx.isAborted } : null,
       };
     },
-    teleport: (x: number, z: number, yaw?: number) => { runtime.player.pos.set(x, 0, z); if (yaw !== undefined) runtime.player.yaw = yaw; },
+    teleport: (x: number, z: number, yaw?: number, pitch?: number) => { runtime.player.pos.set(x, 0, z); if (yaw !== undefined) runtime.player.yaw = yaw; if (pitch !== undefined) runtime.player.pitch = pitch; },
     interactables: () => InteractionSystem.debugList(),
     interact: (id: string) => InteractionSystem.debugTrigger(id),
     solve: (id: PuzzleId) => useGame.getState().solvePuzzle(id),

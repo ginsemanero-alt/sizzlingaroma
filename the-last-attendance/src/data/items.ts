@@ -44,28 +44,32 @@ export const ITEMS: Record<string, ItemDef> = {
   },
   mara_clip: {
     id: 'mara_clip', name: 'Star Hair Clip', category: 'item', chapter: 1, model: 'clip', secret: 'hidden',
-    description: 'A small blue hair clip shaped like a star. It was lying exactly where the girl had been standing.',
-    content: 'A cheap plastic hair clip, blue, shaped like a star. Scratched into the back with a pin: "M.D."\nNo student in Sampaguita had those initials. Not on any list you have seen.',
+    description: 'A small blue flower hair clip with a tiny star painted at its centre. It was lying exactly where the girl had been standing.',
+    content: 'A cheap plastic hair clip: a blue flower with a tiny star painted in the middle. Scratched into the back with a pin: "M.D."\nNo student in Sampaguita had those initials. Not on any list you have seen.',
   },
 
   // ───────────────────────── CHAPTER 2 ─────────────────────────
   hannah_ribbon: {
-    id: 'hannah_ribbon', name: "Hannah's Yellow Ribbon", category: 'item', chapter: 2, model: 'cloth',
+    id: 'hannah_ribbon', name: "Hannah's Yellow Ribbon", category: 'keepsake', chapter: 2, model: 'cloth', owner: 'Lim',
+    memory: { en: 'Lola tied it for me the first day. I never took it off.', fil: 'Si Lola ang nagtali nito noong unang araw. Hindi ko na tinanggal.' },
     description: 'From locker 07, tagged "LIM, H." A faded yellow hair ribbon.',
     content: 'Locker 07 — LIM, HANNAH.\nA yellow hair ribbon, the kind she tied in her hair every single day. Folded inside her notebook cover: "Never without it — Lola\'s gift."',
   },
   carlo_jersey: {
-    id: 'carlo_jersey', name: "Carlo's Jersey", category: 'item', chapter: 2, model: 'cloth',
+    id: 'carlo_jersey', name: "Carlo's Jersey", category: 'keepsake', chapter: 2, model: 'jersey', owner: 'Mendoza',
+    memory: { en: 'Number seven. We were going to win the finals that week.', fil: 'Numero siyete. Mananalo sana kami sa finals nung linggong iyon.' },
     description: 'From locker 11, tagged "MENDOZA, C." A varsity jersey, number 7.',
     content: 'Locker 11 — MENDOZA, CARLO.\nA red varsity basketball jersey, number 7. He wore it under his uniform for every photo, no matter how many times he was told not to.',
   },
   katrina_glasses: {
-    id: 'katrina_glasses', name: "Katrina's Glasses", category: 'item', chapter: 2, model: 'glasses',
+    id: 'katrina_glasses', name: "Katrina's Glasses", category: 'keepsake', chapter: 2, model: 'glasses', owner: 'Flores',
+    memory: { en: 'I couldn\'t see the door through the smoke. Without them, I couldn\'t see anything.', fil: 'Hindi ko makita ang pinto sa usok. Wala akong makita kung wala sila.' },
     description: 'From locker 04, tagged "FLORES, K." Thick round eyeglasses.',
     content: 'Locker 04 — FLORES, KATRINA.\nThick, round tortoiseshell glasses. One lens is cracked. She was the only one in the class who wore glasses.',
   },
   joshua_pick: {
-    id: 'joshua_pick', name: "Joshua's Guitar Pick", category: 'item', chapter: 2, model: 'pick',
+    id: 'joshua_pick', name: "Joshua's Guitar Pick", category: 'keepsake', chapter: 2, model: 'pick', owner: 'Ramos',
+    memory: { en: 'I was going to play for the class after the review. Just one song.', fil: 'Tutugtog sana ako para sa klase pagkatapos ng review. Isang kanta lang.' },
     description: 'From locker 09, tagged "RAMOS, J." A guitar pick on a string necklace.',
     content: 'Locker 09 — RAMOS, JOSHUA.\nA green guitar pick hanging from a black string. He always wore it around his neck, outside the uniform collar.',
   },
@@ -292,6 +296,61 @@ export const ITEMS: Record<string, ItemDef> = {
     content:
       'THE UNRECORDED TIMELINE\n\nNov 20, 2017 — Ms. Reyes reports the overloaded cord (1st).\nJan 22, 2018 — Principal orders the east exit chained after 5 PM.\nFeb 26, 2018 — Mara Dizon enrolls. Her form is never encoded.\nMar 9, 2018, 7:38 PM — The fire.\nMar 9, 2018, 7:52 PM — The guard finds the east exit chained. The key is with the Principal.\nMar 10, 2018, 2:14 AM — The report is rewritten.\nMar 10, 2018 — The East Wing is sealed. No search is ordered.\nMar 12, 2018 — Jasmine Semanero\'s record is changed to "transferred, Feb 2018".\n\nTwelve students. One teacher. One unrecorded name.',
   },
+  // ───────────────────────── BELONGINGS (keepsakes of the missing) ─────────────────────────
+  miguel_ball: {
+    id: 'miguel_ball', name: "Miguel's Basketball", category: 'keepsake', chapter: 1, model: 'basketball', owner: 'Aquino',
+    description: 'A worn basketball. "M. AQUINO — 12 SAMPAGUITA" is written on it in marker.',
+    content: 'A worn leather basketball, almost flat. On the panel, in black marker: "M. AQUINO — 12 SAMPAGUITA. HUWAG GALAWIN." [Don\'t touch.]\nHe kept it under his chair every day. Nobody ever saw him without it after class.',
+    memory: { en: 'I left it under my chair. I was going to play after the review.', fil: 'Iniwan ko sa ilalim ng upuan ko. Maglalaro sana ako pagkatapos ng review.' },
+  },
+  erika_umbrella: {
+    id: 'erika_umbrella', name: "Erika's Umbrella", category: 'keepsake', chapter: 1, model: 'umbrella', owner: 'Santos',
+    description: 'An open umbrella lying upside down. The handle tag reads "E. SANTOS".',
+    content: 'A red-and-white umbrella, opened and left upside down, as if someone had set it down to dry. The handle tag reads "E. SANTOS".\nThe canopy is still wet. It has not rained in weeks.',
+    memory: { en: 'It was raining that night. I left it open by the door to dry.', fil: 'Umuulan noong gabing iyon. Iniwan kong bukas sa may pinto para matuyo.' },
+  },
+  nicole_phone: {
+    id: 'nicole_phone', name: "Nicole's Phone", category: 'keepsake', chapter: 2, model: 'phone', owner: 'Garcia',
+    description: 'An old keypad phone with a cracked case. The screen still glows: "1 missed call".',
+    content: 'An old keypad phone. The battery should have died years ago. The screen reads:\n\n1 MISSED CALL — "Mama"\nMarch 9, 2018 — 7:41 PM\n\nDrafts (1): "ma pauwi na po ako, tapos na review"\n[Ma, I\'m on my way home, the review is done]\n\nIt was never sent.',
+    memory: { en: 'Mama called. I was going to call her back after the review.', fil: 'Tumawag si Mama. Tatawagan ko sana siya pagkatapos ng review.' },
+  },
+  gabriel_cube: {
+    id: 'gabriel_cube', name: "Gabriel's Puzzle Cube", category: 'keepsake', chapter: 2, model: 'rubiks', owner: 'Tan',
+    description: 'A puzzle cube, almost solved. One face is still scrambled.',
+    content: 'A puzzle cube with "G. TAN" scratched on one corner. Five faces are solved. The last one is still scrambled, as if he stopped halfway through a move.\nEvery time you look away, the scrambled face seems different.',
+    memory: { en: 'One more face. I almost had it.', fil: 'Isang mukha na lang. Malapit ko na sanang matapos.' },
+  },
+  andrea_sketchbook: {
+    id: 'andrea_sketchbook', name: "Andrea's Sketchbook", category: 'keepsake', chapter: 3, model: 'sketchbook', owner: 'Bautista',
+    description: 'A sketchbook with "A. BAUTISTA" on the cover. The last page is a drawing of Room 13.',
+    content: 'A sketchbook full of pencil drawings: the canteen, the flag, Ms. Reyes at the blackboard.\nThe last page is dated March 9, 2018. It shows Room 13 during the evening review. Andrea counted and labelled every desk.\n\nThere are thirteen students in the drawing.',
+    memory: { en: 'I drew all of us that night. Everyone. Did you count?', fil: 'Iginuhit ko tayong lahat noong gabing iyon. Lahat. Binilang mo ba?' },
+  },
+  paolo_rosary: {
+    id: 'paolo_rosary', name: "Paolo's Rosary", category: 'keepsake', chapter: 3, model: 'rosary', owner: 'Navarro',
+    description: 'A wooden rosary, one bead scorched black. Tangled in a strip of uniform cloth.',
+    content: 'A wooden rosary with a small cross. One bead is scorched black. A strip of a school uniform is still knotted around it, with a name tag: "NAVARRO, P."\nHis mother gave it to him for graduation. He wore it a month early.',
+    memory: { en: 'I was praying when the lights went out. I didn\'t finish.', fil: 'Nagdarasal ako nang mamatay ang ilaw. Hindi ko natapos.' },
+  },
+  daniel_recorder: {
+    id: 'daniel_recorder', name: "Daniel's Cassette Recorder", category: 'keepsake', chapter: 4, model: 'recorder', owner: 'Cruz',
+    description: 'The recorder Daniel used for every review session. The RECORD button is still pressed down.',
+    content: 'A black cassette recorder with "D. CRUZ" on masking tape. The RECORD button is still pressed down. The tape inside has run to the very end.\nHe recorded every review session so nobody would be left behind.',
+    memory: { en: 'I recorded everything, Jasmine. So nobody would be forgotten.', fil: 'Ni-record ko lahat, Jasmine. Para walang makalimutan.' },
+  },
+  reyes_handbag: {
+    id: 'reyes_handbag', name: "Ms. Reyes's Handbag", category: 'keepsake', chapter: 5, model: 'handbag', owner: 'Reyes',
+    description: 'A worn leather handbag, kept in the principal\'s cabinet. "PERSONAL EFFECTS — E. REYES — DO NOT RELEASE".',
+    content: 'A worn leather handbag with an evidence tag: "PERSONAL EFFECTS — E. REYES — DO NOT RELEASE. — R.V."\nInside: red pens, a roll of chalk, a pack of biscuits, and a class list of Grade 12 – Sampaguita with a small check beside every name.\nThe family was told nothing was recovered.',
+    memory: { en: 'They told my family there was nothing left of me. It was here the whole time.', fil: 'Sinabi nila sa pamilya ko na walang natira sa akin. Nandito lang pala.' },
+  },
+  mara_bear: {
+    id: 'mara_bear', name: 'Small Teddy Bear', category: 'keepsake', chapter: 6, model: 'teddy', owner: 'Dizon',
+    description: 'A small teddy bear with a blue flower clip pinned to its ear. A paper tag: "MARA".',
+    content: 'A small, worn teddy bear. A blue flower clip, the twin of the one you found, is pinned to its ear. Tied to its arm is a paper tag in a child\'s handwriting: "MARA".\nShe was never on any list. But someone kept this for her.',
+    memory: { en: 'You found him. Now they have to call my name too.', fil: 'Nahanap mo siya. Ngayon, kailangan na rin nilang tawagin ang pangalan ko.' },
+  },
 };
 
 export const ITEM_LIST = Object.values(ITEMS);
@@ -302,6 +361,10 @@ export const KEY_EVIDENCE = ITEM_LIST.filter((i) => i.key).map((i) => i.id);
 /** Optional records + hidden student clues required for the secret ending (THE UNRECORDED). */
 export const SECRET_RECORDS = ITEM_LIST.filter((i) => i.secret === 'record' && i.id !== 'secret_timeline').map((i) => i.id);
 export const HIDDEN_CLUES = ITEM_LIST.filter((i) => i.secret === 'hidden').map((i) => i.id);
+
+/** Belongings of the missing: one for each of the 11 students, Mara and Ms. Reyes. */
+export const KEEPSAKES = ITEM_LIST.filter((i) => i.category === 'keepsake').map((i) => i.id);
+export const keepsakeOf = (owner: string): string | undefined => ITEM_LIST.find((i) => i.category === 'keepsake' && i.owner === owner)?.id;
 
 export function itemName(id: string): string {
   return ITEMS[id]?.name ?? id;

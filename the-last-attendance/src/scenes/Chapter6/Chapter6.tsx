@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, ChalkText, Clock, Dust, EmergencyLight, FluoroLight, Sign } from '@/components/Environment/Props';
-import { BatteryPickup, Door, HidingSpot, Trigger } from '@/components/Interactions/WorldObjects';
+import { BatteryPickup, Door, HidingSpot, Pickup, Trigger } from '@/components/Interactions/WorldObjects';
+import { PropModel } from '@/components/Environment/PropModel';
+import { ItemModel } from '@/components/Inventory/ItemModel';
+import { ITEMS, KEEPSAKES, keepsakeOf } from '@/data/items';
+import { Memorial, Room13Clutter, beside } from '@/scenes/shared/clutter';
 import { Interactable } from '@/components/Interactions/Interactable';
 import { Teacher } from '@/components/Enemies/Teacher';
 import { GhostStudent } from '@/components/Characters/Ghosts';
@@ -11,7 +15,7 @@ import { ChapterBase, useFlag, useScript } from '@/scenes/ChapterBase';
 import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { DIALOGUE } from '@/data/dialogue';
 import { ROLL_CALL } from '@/data/characters';
-import { game } from '@/store/gameStore';
+import { game, useGame } from '@/store/gameStore';
 import { bus, runtime } from '@/systems/runtime';
 import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 import { Horror } from '@/systems/HorrorEventSystem/HorrorEventSystem';
@@ -20,6 +24,8 @@ import { resolveEnding, summarizeEvidence, type FinalDecision } from '@/systems/
 import type { ScriptContext } from '@/systems/DialogueSystem/DialogueSystem';
 
 const D = DIALOGUE.c6;
+/** The straw effigy from the horror prop collection. */
+const EFFIGY = /Effigy|Effegy/;
 /** Room 13 (abandoned-classroom model) at the east end, north of the corridor. */
 const RS = ROOM_ABANDONED;
 const R = roomAt(RS, 44 - RS.half[1], -2.5 - RS.half[0]);
@@ -71,6 +77,7 @@ export default function Chapter6() {
   const rollDone = useFlag('c6_roll');
   const [ghosts, setGhosts] = useState(0); // number of students visible
   const [final, setFinal] = useState(false);
+  const collected = useGame((s) => s.collected);
   const seats = useMemo(() => RS.seats.map((l) => R.xz(l)), []);
   // seat index → student; seat 11 (back row, window) is Jasmine's
   const studentSeats = useMemo(() => seats.slice(0, 11), [seats]);
@@ -86,16 +93,23 @@ export default function Chapter6() {
     c.lookAt(TEACHER[0], 1.5, TEACHER[1]);
     await c.wait(1200);
     await c.say(D.enter);
+    if (game().has('reyes_handbag')) await c.line('reyes', 'You brought back my bag. They told my family nothing was left.', 'Ibinalik mo ang bag ko. Sinabi nila sa pamilya ko na walang natira.', 'fil', 3600);
     for (let i = 0; i < ROLL_CALL.length; i++) {
       const r = ROLL_CALL[i];
       await c.line('reyes', `${r.surname}, ${r.first}.`, undefined, undefined, 1700);
       setGhosts(i + 1);
       const s = studentSeats[i];
       AudioSystem.play('whisper', { pos: [s[0], 1.1, s[1]], volume: 0.5 });
-      await c.line('student', 'Present.', 'Present po.', undefined, 1000);
+      const k = keepsakeOf(r.surname);
+      if (k && game().has(k)) await c.line('student', 'Present. Thank you for bringing it back.', 'Present po. Salamat at ibinalik mo.', 'fil', 2200);
+      else await c.line('student', 'Present.', 'Present po.', undefined, 1000);
     }
     await c.wait(600);
     await c.say(D.roll);
+    if (KEEPSAKES.every((k) => game().has(k))) {
+      game().setFlag('all_keepsakes', true);
+      await c.line('reyes', 'Every single thing we left behind, you carried back. Now we are complete.', 'Lahat ng naiwan namin, ibinalik mo. Kumpleto na tayo.', 'fil', 4200);
+    }
     c.lock(false);
     game().setFlag('c6_roll', true);
     game().saveCheckpoint('room13', R.p(RS.entry), R.studentYaw);
@@ -236,7 +250,7 @@ export default function Chapter6() {
       <Sign position={[-3.9, 2.9, 0]} rotation={[0, Math.PI / 2, 0]} size={[1.8, 0.3]} lines={['EXIT — GATE']} bg="#1d6a2a" color="#e8ffe8" emissive={0.5} />
 
       {/* corridor ghosts (harmless) */}
-      <GhostStudent position={[14, 0, 1.2]} rotationY={Math.PI / 2} pose="stand" look={STUDENT_LOOKS.girl} vanishDistance={3} />
+      <GhostStudent position={[14, 0, 1.2]} rotationY={Math.PI / 2} pose="stand" model="uniform_girl" look={STUDENT_LOOKS.girl} vanishDistance={3} />
       <GhostStudent position={[31, 0, -1.0]} rotationY={-Math.PI / 2} pose="stand" model="boy_animated" look={STUDENT_LOOKS.boy} vanishDistance={3} />
 
       {/* Room 13 */}
@@ -244,7 +258,20 @@ export default function Chapter6() {
       {studentSeats.map((s, i) => (
         <GhostStudent key={i} position={[s[0], 0, s[1]]} rotationY={R.studentYaw} pose="stand" look={SEAT_LOOKS[i]} visible={reached && (ghosts > i || rollDone)} color="#9fb0ff" />
       ))}
-      <GhostStudent position={R.p(RS.extraSeat)} rotationY={R.studentYaw} pose="stand" model="girl_bob" look={{ ...STUDENT_LOOKS.girl, hairStyle: 'long' }} visible={final} color="#c0c8ff" />
+      <GhostStudent position={R.p(RS.extraSeat)} rotationY={R.studentYaw} pose="stand" model="ghost_girl" look={{ ...STUDENT_LOOKS.girl, hairStyle: 'long' }} visible={final} color="#c0c8ff" />
+      {/* belongings returned to their owners' seats */}
+      {studentSeats.map((_s, i) => {
+        const k = keepsakeOf(ROLL_CALL[i].surname);
+        if (!k || !collected.includes(k) || !(reached && (ghosts > i || rollDone))) return null;
+        return <group key={k} position={R.p(beside(RS.seats[i], RS.facing))}><ItemModel kind={ITEMS[k].model} /></group>;
+      })}
+      {final && collected.includes('mara_bear') && <group position={R.p([RS.extraSeat[0] + 0.35, RS.extraSeat[1]])}><ItemModel kind="teddy" /></group>}
+      {reached && collected.includes('reyes_handbag') && <group position={R.p([RS.desk[0] - 0.6, RS.desk[1]], RS.deskTop)}><ItemModel kind="handbag" /></group>}
+      <Room13Clutter room={R} worn />
+      <Memorial position={R.p([RS.desk[0] + 0.9, RS.desk[1] + 0.9])} />
+      <Pickup item="mara_bear" position={[24.5, 0.01, 1.95]} verb="Pick up" />
+      <PropModel model="prop_horror_set" only={EFFIGY} position={[40.6, 0, 1.75]} height={1.1} rotationY={-Math.PI / 2} tint="#a08080" />
+      <PropModel model="prop_china_doll" position={R.p([RS.extraSeat[0] - 0.45, RS.extraSeat[1]])} height={0.42} rotationY={R.studentYaw + 0.4} tint="#b0a0a0" />
       <Interactable id="attendance_book" position={R.deskFront(RS.deskTop + 0.04)} radius={0.3} prompt={rollDone && !bookTaken ? 'Take the attendance book' : null} onInteract={() => {
         game().setFlag('c6_book', true);
         AudioSystem.play('paper');

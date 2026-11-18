@@ -21,11 +21,12 @@ export interface DialogueLine {
   d?: number;
 }
 
-export type ItemCategory = 'item' | 'document' | 'photo' | 'recording';
+export type ItemCategory = 'item' | 'document' | 'photo' | 'recording' | 'keepsake';
 
 export type ItemModel =
   | 'paper' | 'card' | 'book' | 'cassette' | 'photo' | 'key' | 'clip' | 'cloth'
-  | 'glasses' | 'pick' | 'flashlight' | 'phone' | 'folder' | 'cord' | 'chain' | 'mirror';
+  | 'glasses' | 'pick' | 'flashlight' | 'phone' | 'folder' | 'cord' | 'chain' | 'mirror'
+  | 'jersey' | 'basketball' | 'sketchbook' | 'recorder' | 'rubiks' | 'umbrella' | 'rosary' | 'teddy' | 'handbag';
 
 export interface PhotoSpec {
   /** Short visual description used by the procedural photo renderer. */
@@ -57,6 +58,10 @@ export interface ItemDef {
   secret?: 'record' | 'hidden';
   /** Not shown as evidence (tools, keys). */
   tool?: boolean;
+  /** Keepsakes: whose belonging this is (roll-call surname, 'Dizon' or 'Reyes'). */
+  owner?: string;
+  /** Keepsakes: what the owner whispers when you pick it up / at roll call once returned. */
+  memory?: { en: string; fil: string };
 }
 
 export type PuzzleId =

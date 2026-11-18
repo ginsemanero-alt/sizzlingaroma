@@ -21,6 +21,8 @@ const D = DIALOGUE.c3;
 
 /** Registrar's desk height (office-cubicle model). */
 const DESK_TOP = 0.76;
+/** The lanyard file comes on a display bust: keep only the lanyard and its ID tag. */
+const LANYARD_STAND = /SHIRLEY|lambert17|pPlane1/;
 /** Archive room: the abandoned-office model, with a doorway cut where the keypad door is. */
 const ARCHIVE: [number, number, number] = [38, 0, 0];
 const ARCHIVE_DOOR: [number, number, number, number, number, number] = [33.9, -0.1, -0.75, 35.1, 2.2, 0.75];
@@ -152,7 +154,14 @@ export default function Chapter3() {
         <PropModel model="env_office" maxPart={8} position={[20.85, 0, -6.3]} rotationY={Math.PI} tint="#8f8a80" />
         <PropModel model="env_lab" position={[4.65, 0.81, 3.4]} width={0.7} animate tint="#b0a898" />
         <EnvModel model="env_old_office" position={ARCHIVE} tint="#9a948c" hole={ARCHIVE_DOOR} collide clear={ARCHIVE_CLEAR} />
+        <PropModel model="prop_books" position={[12.3, 0, 9.0]} fit={0.4} rotationY={0.7} tint="#a09080" shadows={false} />
+        <PropModel model="prop_books" position={[6.2, 0.78, 12.9]} fit={0.32} rotationY={2.1} shadows={false} />
+        <PropModel model="prop_lanyard" position={[21.6, DESK_TOP, -8.0]} fit={0.18} rotationY={0.5} hide={LANYARD_STAND} shadows={false} />
+        <PropModel model="prop_photo_frame" position={[20.2, DESK_TOP, -8.15]} height={0.2} rotationY={Math.PI / 2 + 0.3} tint="#c8b8a8" shadows={false} />
+        <PropModel model="prop_electric_fan" position={[3.7, 0, -9.2]} height={1.2} rotationY={0.6} animate shadows={false} />
       </Suspense>
+      <Pickup item="andrea_sketchbook" position={[13.3, 0.78, 13.1]} verb="Pick up" />
+      <Pickup item="paolo_rosary" position={[31.6, 0.01, -1.35]} verb="Pick up" />
       {[0, 1, 2, 3, 4, 5].map((i) => <GlbCabinet key={i} x={18.2 + i * 1.0} z={-9.65} r={2} w={0.95} h={1.6} d={0.6} />)}
       <GlbCabinet x={28.6} z={-6.2} r={1} w={0.95} h={1.6} d={0.6} />
       <GlbCabinet x={28.6} z={-8.6} r={1} w={0.95} h={1.6} d={0.6} />

@@ -12,6 +12,7 @@ import { GhostStudent, MemoryFigure } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS } from '@/components/Characters/Humanoid';
 import { ChapterBase, useFlag, useFlagEffect, useHas, useScript } from '@/scenes/ChapterBase';
 import { ROOM_2018, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
+import { Room13Clutter } from '@/scenes/shared/clutter';
 import { DIALOGUE } from '@/data/dialogue';
 import { ITEMS } from '@/data/items';
 import { game } from '@/store/gameStore';
@@ -210,7 +211,11 @@ export default function Chapter4() {
       <GlbFire position={[7.4, 0.95, -8.7]} height={3.2} />
       <Suspense fallback={null}>
         <PropModel model="prop_lab_table" position={[17.2, 0, -5.2]} height={1.0} tint="#5a4a44" collide="low" />
+        <Room13Clutter room={R} fans />
+        <PropModel model="prop_wheelchair" position={[33.2, 0, 5.25]} height={0.95} rotationY={-2.2} tint="#7a6a60" collide="low" />
+        <PropModel model="prop_wall_clock" position={[25, 2.45, 5.95]} height={0.34} rotationY={Math.PI} anchor="center" tint="#a09080" shadows={false} />
       </Suspense>
+      <Pickup item="daniel_recorder" position={[16.9, 1.0, -5.0]} verb="Take" />
       <GlbFire position={[19, 0.4, 9.0]} height={3.0} />
 
       <Sign position={[7, 2.45, 2.12]} rotation={[0, Math.PI, 0]} size={[1.3, 0.2]} lines={['SCIENCE LAB']} bg="#2b3a2b" color="#ddd" />
