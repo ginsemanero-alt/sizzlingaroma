@@ -91,7 +91,7 @@ export function GameScene() {
         shadows={graphics !== 'low' ? { type: 2 } : false}
         dpr={dpr}
         gl={{ antialias: graphics !== 'low', powerPreference: 'high-performance' }}
-        onCreated={({ gl }) => { gl.localClippingEnabled = true; }}
+        onCreated={({ gl }) => { gl.localClippingEnabled = true; if (runtime.debug) (window as unknown as { __gl: unknown }).__gl = gl; }}
         camera={{ fov: 70, near: 0.05, far: 160, position: [0, 1.65, 0] }}
       >
         <Exposure />
