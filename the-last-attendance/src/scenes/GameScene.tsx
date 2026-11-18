@@ -14,6 +14,7 @@ import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 import { LoadingScreen } from '@/components/UI/LoadingScreen';
 import { installDebugApi } from '@/utils/debugApi';
 import { preloadCharacterModels } from '@/components/Characters/ModelCharacter';
+import { releaseEnvModels } from '@/components/Environment/EnvModel';
 
 /** Chapter environments are lazy-loaded (code-split) and fully unmounted between chapters. */
 const CHAPTER_SCENES: Record<ChapterId, React.LazyExoticComponent<ComponentType>> = {
@@ -25,10 +26,15 @@ const CHAPTER_SCENES: Record<ChapterId, React.LazyExoticComponent<ComponentType>
   6: lazy(() => import('./Chapter6/Chapter6')),
 };
 
+let lastChapter: ChapterId | null = null;
+
 function ChapterHost({ chapter, nonce }: { chapter: ChapterId; nonce: number }) {
   const Scene = CHAPTER_SCENES[chapter];
   // Reset all per-scene runtime state before mounting a (re)loaded chapter.
   useMemo(() => {
+    // a different chapter (or coming from the menu): free the previous scene's environment models (GPU memory)
+    if (lastChapter !== chapter) releaseEnvModels();
+    lastChapter = chapter;
     resetRuntime();
     InteractionSystem.clear();
     CollisionSystem.clear();

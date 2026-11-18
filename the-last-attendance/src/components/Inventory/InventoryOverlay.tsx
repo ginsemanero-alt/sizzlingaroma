@@ -140,7 +140,7 @@ function Spinner({ kind, flipped }: { kind: ItemDef['model']; flipped: boolean }
       }}
     >
       {isGlbItem(kind) ? (
-        <group scale={0.95 / glbItemSize(kind)}>
+        <group scale={0.85 / glbItemSize(kind)} position={[0, 0.14, 0]}>
           <ItemModel kind={kind} centered />
         </group>
       ) : (

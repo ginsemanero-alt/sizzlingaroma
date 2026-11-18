@@ -4,7 +4,7 @@ import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { DRACO_PATH } from '@/components/Characters/ModelCharacter';
-import { ENV_MODELS, type EnvModelId } from './EnvModel';
+import { ENV_MODELS, trackEnvModel, type EnvModelId } from './EnvModel';
 import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 
 export interface PropModelProps {
@@ -49,6 +49,7 @@ export function PropModel({
   model, position, rotationY = 0, height, width, depth, scale = 1, size, fit, hide, only, onlyBox, maxPart, tint, lift = 0, collide = false, animate = false, animSpeed = 1, shadows = true, anchor = 'floor',
 }: PropModelProps) {
   const gltf = useGLTF(ENV_MODELS[model].url, DRACO_PATH);
+  trackEnvModel(ENV_MODELS[model].url, gltf.scene);
   const ref = useRef<THREE.Group>(null);
 
   const { root, mats, mixer, box } = useMemo(() => {

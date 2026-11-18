@@ -164,7 +164,7 @@ export default function Chapter2() {
         <PropModel model="prop_rugby_jersey" position={[16.45, 0.85, -1.42]} height={0.75} rotationY={0} tint="#9a9890" shadows={false} />
         <PropModel model="prop_water_bottle" position={[24.3, TABLE_TOP, 9.35]} fit={0.22} rotationY={1.2} shadows={false} />
         <PropModel model="prop_backpack" position={[21.9, 0, 4.4]} fit={0.46} rotationY={2.6} tint="#7a3a3a" shadows={false} />
-        <PropModel model="prop_blackboard" position={[17.9, 1.55, -1.93]} width={2.2} rotationY={0} anchor="center" tint="#a0a098" shadows={false} />
+        <PropModel model="prop_blackboard" position={[18.4, 1.55, -1.82]} width={2.2} rotationY={0} anchor="center" tint="#a0a098" shadows={false} />
       </Suspense>
       <Pickup item="gabriel_cube" position={[22.7, TABLE_TOP, 5.15]} verb="Pick up" />
       <Pickup item="nicole_phone" position={[9.15, 0.01, 7.15]} verb="Pick up" />

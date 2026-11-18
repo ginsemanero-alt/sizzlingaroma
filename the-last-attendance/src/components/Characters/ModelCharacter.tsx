@@ -184,7 +184,7 @@ const ModelBody = forwardRef<HumanoidHandle, Props>(function ModelBody(
 function relaxArms(obj: THREE.Object3D): void {
   obj.updateMatrixWorld(true);
   const bones: THREE.Object3D[] = [];
-  obj.traverse((o) => { if ((o as THREE.Bone).isBone && /^(left|right)[_ ]?(upper[_ ]?)?arm|^arm\.[lr]_/i.test(o.name)) bones.push(o); });
+  obj.traverse((o) => { if ((o as THREE.Bone).isBone && /^(left|right)[_ ]?(upper[_ ]?)?arm|^arm\.?[lr]_/i.test(o.name)) bones.push(o); });
   const wp = new THREE.Vector3(), child = new THREE.Vector3();
   for (const b of bones) {
     b.getWorldPosition(wp);

@@ -86,6 +86,33 @@ export const ENV_MODELS = {
 } as const;
 export type EnvModelId = keyof typeof ENV_MODELS;
 
+/** Environment/prop GLBs loaded so far (url → scene), so a chapter change can free them. */
+const loadedScenes = new Map<string, THREE.Object3D>();
+export function trackEnvModel(url: string, scene: THREE.Object3D): void { loadedScenes.set(url, scene); }
+
+/**
+ * Free the GPU memory of every environment/prop GLB loaded by earlier chapters and drop it from the
+ * loader cache (it is fetched again from the browser cache if a later scene needs it). Characters
+ * are not tracked here and stay loaded.
+ */
+export function releaseEnvModels(): void {
+  loadedScenes.forEach((scene, url) => {
+    scene.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.geometry?.dispose();
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      mats.forEach((m) => {
+        if (!m) return;
+        Object.values(m).forEach((v) => { if (v && (v as THREE.Texture).isTexture) (v as THREE.Texture).dispose(); });
+        m.dispose();
+      });
+    });
+    useGLTF.clear(url);
+  });
+  loadedScenes.clear();
+}
+
 export function preloadEnvModels(ids: EnvModelId[]): void {
   ids.forEach((id) => useGLTF.preload(ENV_MODELS[id].url, DRACO_PATH));
 }
@@ -128,6 +155,7 @@ function boxClipPlanes([x0, y0, z0, x1, y1, z1]: [number, number, number, number
 export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift = 0, hide, collide = false, clear, shadows = true, hole, onColliders, onBounds }: EnvModelProps) {
   const def = ENV_MODELS[model];
   const gltf = useGLTF(def.url, DRACO_PATH);
+  trackEnvModel(def.url, gltf.scene);
 
   const { root, mats, size } = useMemo(() => {
     const obj = gltf.scene.clone(true);
