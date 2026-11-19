@@ -63,7 +63,7 @@ Browsers close the tab on **Ctrl+W**, so use **C** to crouch while moving forwar
 
 ## Admin mode (god's eye)
 
-Press **F9** in game and enter the admin PIN (default: `BUBOGADMIN13`). The PIN is asked once per browser tab.
+Press **F9** (on many laptops **Fn + F9**), the **`** key (left of 1), or **Esc → ADMIN** in game and enter the admin PIN (default: `BUBOGADMIN13`). The PIN is asked once per browser tab.
 
 | Key | What it does |
 |---|---|

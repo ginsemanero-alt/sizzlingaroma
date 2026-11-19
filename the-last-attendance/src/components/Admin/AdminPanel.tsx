@@ -48,7 +48,7 @@ export function AdminPanel() {
       <div className="panel interactive admin-panel" onClick={(e) => e.stopPropagation()}>
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <h2 style={{ margin: 0 }}>ADMIN · GOD'S EYE</h2>
-          <button className="btn small" onClick={close}>Close [F9]</button>
+          <button className="btn small" onClick={close}>Close [F9 / `]</button>
         </div>
         <p className="admin-stats">
           Chapter {chapter} · Jasmine ({p.x.toFixed(1)}, {p.z.toFixed(1)}) · Ms. Reyes: {runtime.teacherState}
@@ -85,7 +85,7 @@ export function AdminPanel() {
         </div>
 
         <p className="admin-help">
-          In the game: <b>G</b> fly · <b>M</b> map · <b>L</b> labels · <b>B</b> bright · <b>I</b> invisible · <b>T</b> move Jasmine here · <b>F9</b> this panel
+          In the game: <b>G</b> fly · <b>M</b> map · <b>L</b> labels · <b>B</b> bright · <b>I</b> invisible · <b>T</b> move Jasmine here · <b>F9</b> or <b>`</b> this panel (or Esc → ADMIN)
           <br />Flying: <b>WASD</b> move · <b>Space</b> up · <b>C</b> down · <b>Shift</b> fast · mouse to look. Map: <b>WASD</b> pan · <b>Space/C</b> zoom.
         </p>
         <button className="btn danger" onClick={() => { adminLogout(); close(); }}>Log out of admin</button>
@@ -100,5 +100,5 @@ export function AdminBadge() {
   const a = runtime.admin;
   if (!a.active) return null;
   const tags = [a.top ? 'MAP' : a.fly ? 'FLY' : null, a.invisible ? 'INVISIBLE' : null, a.labels ? 'X-RAY' : null, a.fullbright ? 'BRIGHT' : null].filter(Boolean);
-  return <div className="admin-badge">ADMIN{tags.length ? ' · ' + tags.join(' · ') : ''} · F9</div>;
+  return <div className="admin-badge">ADMIN{tags.length ? ' · ' + tags.join(' · ') : ''} · F9 / `</div>;
 }

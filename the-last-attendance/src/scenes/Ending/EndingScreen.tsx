@@ -10,8 +10,8 @@ import { StaticLevel } from '@/components/Environment/StaticLevel';
 import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment/Props';
 import { ROOM_2018, roomAt } from '@/scenes/shared/room13Sets';
 import { EnvModel } from '@/components/Environment/EnvModel';
-import { PropModel } from '@/components/Environment/PropModel';
 import { Memorial, Room13Clutter } from '@/scenes/shared/clutter';
+import { SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
 import { KEEPSAKES } from '@/data/items';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
@@ -95,31 +95,29 @@ function IdCard({ position }: { position: [number, number, number] }) {
   );
 }
 
+/** ABSENT: walking away from the gate of the same school front as Chapter 1, at dawn. */
 function GateScene() {
   const b = useMemo(() => {
     const lb = new LevelBuilder();
-    lb.floor(-30, -60, 30, 30, 'concrete');
-    lb.box(0, 1.5, 6, 0.15, 3, 0.15, 'rust');
-    for (let i = -10; i <= 10; i++) if (Math.abs(i) > 1) lb.box(i * 0.5, 1.2, 6, 0.06, 2.4, 0.06, 'rust');
-    lb.box(-8, 1.2, 6, 10, 2.4, 0.3, 'concrete');
-    lb.box(8, 1.2, 6, 10, 2.4, 0.3, 'concrete');
+    addSchoolFront(lb);
+    lb.box(0, 3.5, 2.6, 43.6, 6.9, 6.6, 'black'); // the dark school behind the windows and the open door
     return lb;
   }, []);
   return (
     <>
       <StaticLevel builder={b} />
       <Suspense fallback={null}>
-        <PropModel model="env_school_exterior" position={[0, 0, -18]} width={44} rotationY={Math.PI} tint="#c9bfb4" />
+        <SchoolFrontModels tint="#8a8698" />
         {/* Mang Tonyo, the guard, and the candles people still leave at the gate */}
-        <ModelCharacter model="guard" position={[2.6, 0, 7.6]} rotationY={Math.PI + 0.5} tint="#d0c8c0" />
-        <Memorial position={[-1.6, 0, 6.55]} />
+        <ModelCharacter model="guard" position={[2.7, 0, 37.4]} rotationY={Math.PI + 0.4} tint="#d0c8c0" />
+        <Memorial position={[-1.4, 0, 36.6]} />
       </Suspense>
+      <SchoolFrontSigns />
       <Sky />
-      <ambientLight intensity={0.45} color="#b8a7c9" />
-      <directionalLight position={[-10, 4, 20]} intensity={1.4} color="#ffb98a" />
+      <ambientLight intensity={0.5} color="#b8a7c9" />
+      <directionalLight position={[-10, 6, 60]} intensity={1.4} color="#ffb98a" />
       <color attach="background" args={['#5b5468']} />
-      <fogExp2 attach="fog" args={['#5b5468', 0.025]} />
-      <Sign position={[0, 3.0, 5.8]} size={[5, 0.6]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" />
+      <fogExp2 attach="fog" args={['#5b5468', 0.014]} />
     </>
   );
 }
@@ -196,7 +194,7 @@ export function EndingScreen() {
   ) : ending.id === 'new_student' ? (
     <><NewStudentRoom /><CameraRig from={[0, 1.15, 3.35]} to={[0, 1.1, 3.3]} look={[0, 0.75, 1.6]} duration={20} /></>
   ) : ending.id === 'absent' ? (
-    <><GateScene /><CameraRig from={[0, 1.7, 14]} to={[0, 1.8, 24]} look={[0, 2.5, -10]} duration={40} /></>
+    <><GateScene /><CameraRig from={[0, 1.7, 40.5]} to={[0, 1.8, 52]} look={[0, 3.2, 6]} duration={40} /></>
   ) : (
     <><ArchiveScene /><CameraRig from={[0, 1.6, 1]} to={[0, 1.6, -11]} look={[0, 1.3, -14]} duration={45} /></>
   );

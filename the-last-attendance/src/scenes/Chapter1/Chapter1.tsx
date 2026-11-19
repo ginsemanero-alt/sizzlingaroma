@@ -11,6 +11,7 @@ import { Teacher } from '@/components/Enemies/Teacher';
 import { GhostGirl } from '@/components/Characters/Ghosts';
 import { ChapterBase, useFlag, useFlagEffect, useScript } from '@/scenes/ChapterBase';
 import { addClassroom } from '@/scenes/shared/schoolParts';
+import { SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
 import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { Room13Clutter } from '@/scenes/shared/clutter';
 import { DIALOGUE } from '@/data/dialogue';
@@ -34,31 +35,8 @@ const TEACHER_CFG: TeacherConfig = { bounds: [-22, -14, 22, 8], waypoints: [[9, 
 
 function buildLevel(): LevelBuilder {
   const b = new LevelBuilder();
-  // ── exterior ──
-  b.floor(-24, 6, 24, 46, 'concrete');
-  b.box(0, -0.05, 41, 48, 0.1, 6, 'ash');
-  b.wall(-22, 6.2, -22, 36, { h: 2.4, lower: null, upper: 'concrete', t: 0.3 });
-  b.wall(22, 6.2, 22, 36, { h: 2.4, lower: null, upper: 'concrete', t: 0.3 });
-  b.wall(-22, 36, 22, 36, { h: 2.4, lower: null, upper: 'concrete', t: 0.3, openings: [{ at: 22, w: 3.2, h: 2.4 }] });
-  b.block(-24, 44, 24, 45); b.block(-24, 36, -23, 45); b.block(23, 36, 24, 45); // street limits
-  b.box(-1.75, 1.4, 36, 0.3, 2.8, 0.4, 'concrete'); b.box(1.75, 1.4, 36, 0.3, 2.8, 0.4, 'concrete');
-  b.box(0, 2.9, 36, 3.8, 0.25, 0.3, 'rust');
-  // facade (two storeys) with the main entrance
-  b.wall(-22, 6, 22, 6, { h: 7, t: 0.3, openings: [{ at: 22, w: 2.4, h: 2.6 }, { at: 8, w: 1.8, h: 1.3, y: 1.1 }, { at: 14, w: 1.8, h: 1.3, y: 1.1 }, { at: 30, w: 1.8, h: 1.3, y: 1.1 }, { at: 36, w: 1.8, h: 1.3, y: 1.1 }] });
-  for (let i = 0; i < 8; i++) { const x = -18 + i * 5.2; b.box(x, 4.6, 6.17, 1.8, 1.3, 0.05, 'glass'); b.box(x, 3.9, 6.25, 2.0, 0.08, 0.2, 'trim'); }
-  b.box(0, 7.1, 0, 44.6, 0.3, 12.6, 'concrete'); // roof slab
-  b.box(0, 3.4, 6.35, 44, 0.15, 0.4, 'concrete'); // ledge
-  b.box(-22.05, 3.6, 0, 0.3, 7.2, 12, 'plaster'); b.box(22.05, 3.6, 0, 0.3, 7.2, 12, 'plaster');
-  // courtyard props
-  b.block(-8.1, 19.9, -7.9, 20.1); // flagpole (model)
-  b.solid(-8, 0.25, 20, 1.2, 0.5, 1.2, 'concrete');
-  b.solid(10, 1.6, 22, 0.5, 3.2, 0.5, 'darkwood'); // tree trunk
-  [[10, 4.2, 22, 2.6], [9, 3.6, 21, 1.8], [11.2, 3.8, 23, 2]].forEach(([x, y, z, s]) => b.box(x, y, z, s, s * 0.8, s, 'grass'));
-  b.solid(-14, 0.3, 14, 2.4, 0.08, 0.5, 'wood'); b.box(-15, 0.15, 14, 0.1, 0.3, 0.4, 'metal'); b.box(-13, 0.15, 14, 0.1, 0.3, 0.4, 'metal');
-  b.solid(14, 0.3, 12, 2.4, 0.08, 0.5, 'wood');
-  b.solid(-4, 0.35, 10, 4, 0.7, 1, 'concrete'); b.box(-4, 0.72, 10, 3.8, 0.05, 0.8, 'grass');
-  b.solid(4, 0.35, 10, 4, 0.7, 1, 'concrete'); b.box(4, 0.72, 10, 3.8, 0.05, 0.8, 'grass');
-  b.debris(3, 26, 6, 18, 'ash');
+  // ── exterior: the school front, shared with the ABSENT ending ──
+  addSchoolFront(b);
 
   // ── interior ──
   // lobby
@@ -187,14 +165,7 @@ export default function Chapter1() {
       <Rain bounds={{ minX: -30, maxX: 30, minZ: 6.3, maxZ: 50 }} />
       <StaticLevel builder={builder} />
       <Suspense fallback={null}>
-        <PropModel model="prop_flag" position={[-8, 0.5, 20]} height={6} rotationY={-Math.PI / 2} animate />
-        {graphics !== 'low' && (
-          <>
-            {/* the rest of the campus, seen over the fence through the rain */}
-            <PropModel model="env_construction_school" position={[-50, 0, 22]} width={44} rotationY={Math.PI / 2} tint="#59606e" shadows={false} />
-            <PropModel model="env_library" position={[36, 0, 24]} height={11} rotationY={-Math.PI / 2} tint="#5a5a66" shadows={false} />
-          </>
-        )}
+        <SchoolFrontModels backdrop={graphics !== 'low'} />
         <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />
         <PropModel model="prop_fuse_box" position={[-15.5, 1.0, -9.7]} height={0.8} tint="#b0aaa0" />
         <Room13Clutter room={R} worn />
@@ -214,8 +185,7 @@ export default function Chapter1() {
       <mesh position={[4, 4.3, 40]}><boxGeometry args={[0.4, 0.15, 0.25]} /><meshStandardMaterial color="#ffc27a" emissive="#ffa040" emissiveIntensity={3} /></mesh>
       <mesh position={[4, 2.1, 40.2]}><cylinderGeometry args={[0.06, 0.08, 4.3, 8]} /><meshStandardMaterial color="#333" /></mesh>
       <pointLight position={[0, 3.2, 7]} color="#ffb070" intensity={2} distance={7} decay={1.6} />
-      <Sign position={[0, 5.4, 6.2]} size={[6, 0.8]} lines={['BUBOG NATIONAL HIGH SCHOOL']} bg="#cfc6a8" color="#2a2a2a" />
-      <Sign position={[0, 1.4, 36.25]} rotation={[0, Math.PI, 0]} size={[1.4, 0.5]} lines={['CLOSED BY ORDER', 'OF THE DIVISION']} bg="#b9a77a" />
+      <SchoolFrontSigns />
       {shadow && (
         <mesh position={[-7.6, 4.5, 6.1]}>
           <planeGeometry args={[0.7, 1.2]} />

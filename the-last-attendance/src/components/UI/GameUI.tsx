@@ -58,6 +58,7 @@ function PauseMenu() {
           <button className="menu-btn" onClick={() => setView('controls')}>CONTROLS</button>
           <button className="menu-btn" onClick={() => setConfirm('restart')}>RESTART CHECKPOINT</button>
           <button className="menu-btn" onClick={() => setConfirm('menu')}>MAIN MENU</button>
+          <button className="menu-btn admin-link" onClick={() => useGame.getState().openOverlay('admin')}>ADMIN</button>
         </div>
       </div>
       {confirm === 'restart' && (
@@ -150,7 +151,7 @@ export function GameUI() {
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       const s = useGame.getState();
-      if (e.code === 'F9') {
+      if (e.code === 'F9' || e.code === 'Backquote') {
         e.preventDefault();
         if (s.overlay === 'admin') s.closeOverlay();
         else if (s.overlay === 'none' && !s.inventoryOpen && !s.caughtMessage) s.openOverlay('admin');
