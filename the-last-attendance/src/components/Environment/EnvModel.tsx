@@ -137,6 +137,8 @@ export interface EnvModelProps {
   shadows?: boolean;
   /** World-space box [x0, y0, z0, x1, y1, z1] cut out of the model (a doorway through its wall). */
   hole?: [number, number, number, number, number, number];
+  /** Several world-space boxes cut out of the model (up to 4), e.g. the school's interior and its doorway. */
+  cutouts?: [number, number, number, number, number, number][];
   onColliders?: (c: AABB[]) => void;
   /** Reports the placed size in metres (after unit scale). */
   onBounds?: (size: [number, number, number]) => void;
@@ -151,8 +153,29 @@ function boxClipPlanes([x0, y0, z0, x1, y1, z1]: [number, number, number, number
   ];
 }
 
+/** Discard fragments inside any of the given world-space boxes (shader patch; max 4 boxes). */
+function addCutouts(mat: THREE.Material, boxes: [number, number, number, number, number, number][]): void {
+  const n = Math.min(4, boxes.length);
+  const mins = Array.from({ length: 4 }, (_, i) => (i < n ? new THREE.Vector3(boxes[i][0], boxes[i][1], boxes[i][2]) : new THREE.Vector3()));
+  const maxs = Array.from({ length: 4 }, (_, i) => (i < n ? new THREE.Vector3(boxes[i][3], boxes[i][4], boxes[i][5]) : new THREE.Vector3()));
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uCutMin = { value: mins };
+    shader.uniforms.uCutMax = { value: maxs };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vCutWorld;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCutWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `#include <common>\nvarying vec3 vCutWorld;\nuniform vec3 uCutMin[4];\nuniform vec3 uCutMax[4];`)
+      .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
+        for (int i = 0; i < ${n}; i++) {
+          if (all(greaterThan(vCutWorld, uCutMin[i])) && all(lessThan(vCutWorld, uCutMax[i]))) discard;
+        }`);
+  };
+  mat.customProgramCacheKey = () => `cut${n}:${boxes.flat().join(',')}`;
+}
+
 /** A static environment model placed in the world, optionally walkable via mesh-generated colliders. */
-export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift = 0, hide, collide = false, clear, shadows = true, hole, onColliders, onBounds }: EnvModelProps) {
+export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift = 0, hide, collide = false, clear, shadows = true, hole, cutouts, onColliders, onBounds }: EnvModelProps) {
   const def = ENV_MODELS[model];
   const gltf = useGLTF(def.url, DRACO_PATH);
   trackEnvModel(def.url, gltf.scene);
@@ -174,6 +197,7 @@ export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift
         if (tint && c2.color) c2.color.multiply(new THREE.Color(tint));
         if (lift > 0 && c2.emissive && c2.map) { c2.emissive = new THREE.Color('#ffffff'); c2.emissiveMap = c2.map; c2.emissiveIntensity = lift; }
         if (planes) { c2.clippingPlanes = planes; c2.clipIntersection = true; c2.clipShadows = true; }
+        if (cutouts?.length) addCutouts(c2, cutouts);
         list.push(c2);
         return c2;
       };
@@ -196,7 +220,8 @@ export function EnvModel({ model, position, rotationY = 0, scale = 1, tint, lift
     holder.position.set(...position);
     const sz = box.getSize(new THREE.Vector3());
     return { root: holder, mats: list, size: [sz.x, sz.y, sz.z] as [number, number, number] };
-  }, [gltf, def.scale, scale, rotationY, tint, lift, hide, shadows, position, hole]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gltf, def.scale, scale, rotationY, tint, lift, hide, shadows, position, hole, cutouts?.flat().join(',')]);
 
   useEffect(() => {
     if (!collide) return;

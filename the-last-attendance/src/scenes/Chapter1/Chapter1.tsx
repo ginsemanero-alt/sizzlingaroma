@@ -42,6 +42,7 @@ function buildLevel(): LevelBuilder {
   // lobby
   b.floor(-4, 0, 4, 6, 'tile');
   b.ceil(-4, 0, 4, 6);
+  b.wall(-4, 5.75, 4, 5.75, { h: 3.3, t: 0.1, openings: [{ at: 4, w: 2.4, h: 2.6 }] }); // lobby's front wall (inside the model's facade)
   b.wall(-4, 0, -4, 6, {});
   b.wall(4, 0, 4, 6, {});
   // main hallway
@@ -165,7 +166,7 @@ export default function Chapter1() {
       <Rain bounds={{ minX: -30, maxX: 30, minZ: 6.3, maxZ: 50 }} />
       <StaticLevel builder={builder} />
       <Suspense fallback={null}>
-        <SchoolFrontModels backdrop={graphics !== 'low'} />
+        <SchoolFrontModels backdrop={graphics !== 'low'} interior />
         <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />
         <PropModel model="prop_fuse_box" position={[-15.5, 1.0, -9.7]} height={0.8} tint="#b0aaa0" />
         <Room13Clutter room={R} worn />

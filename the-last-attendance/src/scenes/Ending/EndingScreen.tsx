@@ -100,24 +100,25 @@ function GateScene() {
   const b = useMemo(() => {
     const lb = new LevelBuilder();
     addSchoolFront(lb);
-    lb.box(0, 3.5, 2.6, 43.6, 6.9, 6.6, 'black'); // the dark school behind the windows and the open door
+    lb.box(0, 1.3, 6.03, 2.4, 2.6, 0.06, 'black'); // the main door, shut
     return lb;
   }, []);
   return (
     <>
       <StaticLevel builder={b} />
       <Suspense fallback={null}>
-        <SchoolFrontModels tint="#8a8698" />
+        <SchoolFrontModels tint="#d6cec4" />
         {/* Mang Tonyo, the guard, and the candles people still leave at the gate */}
         <ModelCharacter model="guard" position={[2.7, 0, 37.4]} rotationY={Math.PI + 0.4} tint="#d0c8c0" />
         <Memorial position={[-1.4, 0, 36.6]} />
       </Suspense>
       <SchoolFrontSigns />
       <Sky />
-      <ambientLight intensity={0.5} color="#b8a7c9" />
-      <directionalLight position={[-10, 6, 60]} intensity={1.4} color="#ffb98a" />
-      <color attach="background" args={['#5b5468']} />
-      <fogExp2 attach="fog" args={['#5b5468', 0.014]} />
+      <ambientLight intensity={0.85} color="#c8b8d8" />
+      <hemisphereLight args={['#f0c8b0', '#3a3448', 0.7]} />
+      <directionalLight position={[-20, 14, 60]} intensity={2.2} color="#ffb98a" />
+      <color attach="background" args={['#8a7c90']} />
+      <fogExp2 attach="fog" args={['#8a7c90', 0.008]} />
     </>
   );
 }
@@ -194,7 +195,7 @@ export function EndingScreen() {
   ) : ending.id === 'new_student' ? (
     <><NewStudentRoom /><CameraRig from={[0, 1.15, 3.35]} to={[0, 1.1, 3.3]} look={[0, 0.75, 1.6]} duration={20} /></>
   ) : ending.id === 'absent' ? (
-    <><GateScene /><CameraRig from={[0, 1.7, 40.5]} to={[0, 1.8, 52]} look={[0, 3.2, 6]} duration={40} /></>
+    <><GateScene /><CameraRig from={[0, 2.6, 41]} to={[0, 3.0, 54]} look={[0, 5.5, 6]} duration={40} /></>
   ) : (
     <><ArchiveScene /><CameraRig from={[0, 1.6, 1]} to={[0, 1.6, -11]} look={[0, 1.3, -14]} duration={45} /></>
   );
