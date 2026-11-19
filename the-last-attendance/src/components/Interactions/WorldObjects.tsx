@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Interactable } from './Interactable';
@@ -92,16 +92,20 @@ export interface DoorProps {
   double?: boolean;
   metal?: boolean;
   noInteract?: boolean;
+  /** Custom leaf model (e.g. the courtyard gate), drawn instead of the box leaf. */
+  leaf?: (dir: 1 | -1, leafWidth: number) => ReactNode;
 }
 
 /**
  * Hinged door. Open state persists in flags (`door_<id>`). Closed doors register a collider.
  * Listens for bus events `door:<id>` with payload 'open' | 'close' | 'slam' | 'creak'.
  */
-export function Door({ id, position, axis, width = 1.1, height = 2.2, locked = false, lockedText = 'Locked', swing = 1, flag, startOpen = false, onOpen, onLockedTry, color = '#6a4a32', double = false, metal = false, noInteract = false }: DoorProps) {
+export function Door({ id, position, axis, width = 1.1, height = 2.2, locked = false, lockedText = 'Locked', swing = 1, flag, startOpen = false, onOpen, onLockedTry, color = '#6a4a32', double = false, metal = false, noInteract = false, leaf: customLeaf }: DoorProps) {
   const key = flag ?? `door_${id}`;
   const stored = useGame((s) => s.flags[key]);
   const open = stored === undefined ? startOpen : !!stored;
+  /** Rusty hinges: wooden doors creak, metal doors and the gate shriek. */
+  const hinge = metal ? 'gate' : 'door_open';
   const pivot = useRef<THREE.Group>(null);
   const pivot2 = useRef<THREE.Group>(null);
   const angle = useRef(open ? 1 : 0);
@@ -126,15 +130,15 @@ export function Door({ id, position, axis, width = 1.1, height = 2.2, locked = f
     const pos = new THREE.Vector3(...position);
     if (cmd === 'open' || cmd === 'creak') {
       speed.current = cmd === 'creak' ? 0.35 : 2.2;
-      AudioSystem.play(cmd === 'creak' ? 'creak' : 'door_open', { pos, rate: cmd === 'creak' ? 0.8 : 1 });
+      AudioSystem.play(cmd === 'creak' ? 'creak' : hinge, { pos, rate: cmd === 'creak' ? 0.8 : 1 });
       game().setFlag(key, true);
     } else if (cmd === 'close' || cmd === 'slam') {
       speed.current = cmd === 'slam' ? 7 : 2.2;
-      AudioSystem.play(cmd === 'slam' ? 'door_slam' : 'door_open', { pos });
+      AudioSystem.play(cmd === 'slam' ? 'door_slam' : hinge, { pos, rate: 1.15 });
       if (cmd === 'slam') runtime.shake = Math.max(runtime.shake, 0.4);
       game().setFlag(key, false);
     }
-  }), [id, key, position]);
+  }), [id, key, position, hinge]);
 
   useFrame((_, dt) => {
     const target = open ? 1 : 0;
@@ -146,7 +150,7 @@ export function Door({ id, position, axis, width = 1.1, height = 2.2, locked = f
 
   const leafW = double ? width / 2 : width;
   const mat = metal ? <meshStandardMaterial color={color} metalness={0.6} roughness={0.6} /> : <meshStandardMaterial color={color} roughness={0.8} />;
-  const leaf = (dir: 1 | -1) => (
+  const leaf = (dir: 1 | -1) => customLeaf ? <group>{customLeaf(dir, leafW)}</group> : (
     <group>
       <mesh position={[(dir * leafW) / 2, height / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[leafW - 0.02, height - 0.02, 0.06]} />
@@ -190,14 +194,14 @@ export function Door({ id, position, axis, width = 1.1, height = 2.2, locked = f
             return;
           }
           if (!open) {
-            AudioSystem.play('door_open', { pos: new THREE.Vector3(x, 1, z) });
+            AudioSystem.play(hinge, { pos: new THREE.Vector3(x, 1, z), rate: 0.94 + Math.random() * 0.12 });
             game().setFlag(key, true);
             onOpen?.();
           } else {
             // Don't trap the player in the door swing.
             const p = runtime.player.pos;
             if (Math.hypot(p.x - x, p.z - z) < 0.55) return;
-            AudioSystem.play('door_open', { pos: new THREE.Vector3(x, 1, z), rate: 1.2 });
+            AudioSystem.play(hinge, { pos: new THREE.Vector3(x, 1, z), rate: 1.2 });
             game().setFlag(key, false);
           }
         }}

@@ -251,6 +251,8 @@ __tla.solve(puzzleId)  // mark a puzzle solved
 - "Cafetery" by Lucia: https://sketchfab.com/3d-models/cafetery-f019c964444d442f8999ab5f9c0f10fb (CC BY 4.0) — Chapter 2 canteen tables
 - "Construction school" by Stas: https://sketchfab.com/3d-models/construction-school-eb4b7a91e0ad4106a2fe787ac74b0598 (CC BY 4.0) — Chapter 1 campus backdrop
 - "Crenshaw High School - Main Building exterior" by lavarwebb: https://sketchfab.com/3d-models/crenshaw-high-school-main-building-exterior-3775b24251fe405fa1d85b3824dc3d93 (CC BY 4.0) — the Bubog National High School building (Chapter 1 and the ABSENT ending)
+- "Gate_01" by Luca Giardina: https://sketchfab.com/3d-models/gate-01-97ca5ddd1e3b4346a6d3659525dc9263 (CC BY 4.0) — the courtyard gate (Chapter 1 and the ABSENT ending)
+- "Fence_retaining_wall" by Mehdi Shahsavan: https://sketchfab.com/3d-models/fence-retaining-wall-b26ac6fb2f5441e09cc1d66594816bec (CC BY 4.0) — the courtyard fence
 - "library" by Pasha: https://sketchfab.com/3d-models/library-7fc61f0d65ee49d0b2904e85d1fa520e (CC BY 4.0) — Chapter 1 campus backdrop
 - "Low Poly Chemistry Lab" by gabrielmendesm: https://sketchfab.com/3d-models/low-poly-chemistry-lab-e0d270dbef88448d8a191e95a7c31d46 (CC BY 4.0) — Chapter 4 science lab
 - "Private Detective's Office" by Zeps3D: https://sketchfab.com/3d-models/private-detectives-office-2afb913100ac4ca4bb4708fe8183c5b8 (CC BY 4.0) — Chapter 5 principal's office

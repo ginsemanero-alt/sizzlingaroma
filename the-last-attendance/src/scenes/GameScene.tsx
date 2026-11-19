@@ -65,7 +65,7 @@ export function GameScene() {
   useEffect(() => {
     setLoading(true);
     setMinDone(false);
-    AudioSystem.preload(['step1', 'step2', 'step3', 'step4', 'door_open', 'pickup', 'paper', 'click', 'whisper', 'stinger', 'creak', 'breath']);
+    AudioSystem.preload(['step1', 'step2', 'step3', 'step4', 'door_open', 'gate', 'creak', 'pickup', 'paper', 'click', 'whisper', 'stinger', 'creak', 'breath']);
     const t = window.setTimeout(() => setMinDone(true), 3000);
     const cap = window.setTimeout(() => setLoading(false), 25000); // never get stuck on a slow asset
     return () => { window.clearTimeout(t); window.clearTimeout(cap); };

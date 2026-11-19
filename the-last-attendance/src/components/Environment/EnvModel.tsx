@@ -83,6 +83,8 @@ export const ENV_MODELS = {
   prop_wall_clock: { url: 'models/prop_wall_clock.glb', scale: 1, ignore: /^$/ },
   prop_wheelchair: { url: 'models/prop_wheelchair.glb', scale: 1, ignore: /^$/ },
   item_handbag: { url: 'models/item_handbag.glb', scale: 1, ignore: /^$/ },
+  prop_gate: { url: 'models/prop_gate.glb', scale: 1, ignore: /^$/ },
+  prop_fence: { url: 'models/prop_fence.glb', scale: 1, ignore: /^$/ },
 } as const;
 export type EnvModelId = keyof typeof ENV_MODELS;
 

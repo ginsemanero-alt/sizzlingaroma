@@ -64,6 +64,8 @@ export function Credits() {
         <p>"low-poly office" by DarianDS — CC BY 4.0</p>
         <p>"office is old abandoned FREE" by dasy444 — CC BY 4.0</p>
         <p>"Science Lab Table" by Skecthfab — CC BY 4.0</p>
+        <p>"Gate_01" by Luca Giardina — CC BY 4.0</p>
+        <p>"Fence_retaining_wall" by Mehdi Shahsavan — CC BY 4.0</p>
         <p>"Acoustic Guitar" by Jinhong Jeong — CC BY-NC 4.0</p>
         <p>"Ballpen" by rustic.orcullo13 — CC BY 4.0</p>
         <p>"Basketball" by Marek Picheta — CC BY 4.0</p>

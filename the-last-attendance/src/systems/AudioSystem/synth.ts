@@ -185,15 +185,25 @@ const gens: Record<string, () => Buf> = {
   },
   // ─────────────────────────────── sfx ───────────────────────────────
   step1: () => step(1), step2: () => step(2), step3: () => step(3), step4: () => step(4),
+  // slow, drawn-out hinge creak (a door easing open by itself)
   creak: () => {
-    const b = tone(1.1, (t) => 180 + 140 * Math.sin(t * 7) + 60 * Math.sin(t * 23), 'saw', 0.5);
-    return normalize(env(bandpass(b, 700, 3), 0.05, 0.4), 0.7);
+    seed = 4242;
+    const len = 3.4;
+    const b = stickSlip(len, (t) => 8 + 110 * Math.pow(Math.sin((Math.PI * t) / len), 2) + 18 * Math.sin(t * 4.1) + 9 * Math.sin(t * 11.7), WOOD_RES, 0.35);
+    mix(b, groan(len, 0.18), 0.25);
+    return normalize(roomEcho(env(b, 0.15, 0.7), 0.35), 0.8);
   },
+  // a door being opened: rusty hinge stick-slip that whines up, stutters and dies, then the latch knock
   door_open: () => {
-    const b = tone(1.6, (t) => 260 + 180 * Math.sin(t * 3.2) + 40 * Math.sin(t * 31), 'saw', 0.5);
-    const out = env(bandpass(b, 900, 4), 0.05, 0.5);
-    mix(out, decay(lowpass(noise(0.15), 400), 0.1), 0.5, 1.4);
-    return normalize(out, 0.7);
+    seed = 777;
+    const len = 2.3;
+    const b = stickSlip(len, (t) => {
+      const k = t / len;
+      return 12 + 190 * Math.pow(Math.sin(Math.PI * Math.min(1, k * 1.15)), 1.6) + 30 * Math.sin(t * 6.3) + 16 * Math.sin(t * 17.1);
+    }, WOOD_RES, 0.3);
+    mix(b, groan(len, 0.22), 0.22);
+    mix(b, decay(lowpass(noise(0.18), 380), 0.12), 0.55, len - 0.2);
+    return normalize(roomEcho(env(b, 0.03, 0.5), 0.3), 0.8);
   },
   door_slam: () => {
     const b = decay(lowpass(noise(0.9), 300), 0.5);
@@ -371,13 +381,76 @@ const gens: Record<string, () => Buf> = {
     for (let k = 0; k < 9; k++) mix(b, step(k % 4 + 1, 0.3), 0.9, k * 0.26);
     return normalize(lowpass(b, 1000), 0.8);
   },
+  // heavy iron gate: a long metallic shriek from rusted pivots, low rumble, then the clang against the stop
   gate: () => {
-    const b = tone(2.4, (t) => 120 + 60 * Math.sin(t * 2.5) + 15 * Math.sin(t * 41), 'saw', 0.6);
-    const out = env(bandpass(b, 500, 2), 0.1, 0.6);
-    mix(out, decay(bell(0.8, 220, [1, 2.7, 4.5], 0.6), 0.6), 0.4, 2.0);
-    return normalize(out, 0.8);
+    seed = 9001;
+    const len = 3.0;
+    const b = stickSlip(len, (t) => {
+      const k = t / len;
+      return 9 + 140 * Math.pow(Math.sin(Math.PI * Math.min(1, k * 1.1)), 1.3) + 22 * Math.sin(t * 3.7) + 12 * Math.sin(t * 13.3);
+    }, METAL_RES, 0.2);
+    mix(b, groan(len, 0.12, 55), 0.25);
+    mix(b, decay(bell(1.4, 196, [1, 2.76, 5.4, 8.9], 0.8), 0.9), 0.55, len - 0.25);
+    return normalize(roomEcho(env(b, 0.05, 0.6), 0.25, 0.11), 0.85);
   },
 };
+
+/** Resonances (Hz, gain, Q) of an old wooden door and of a rusted iron gate. */
+const WOOD_RES: [number, number, number][] = [[420, 1, 9], [910, 0.8, 11], [1650, 0.55, 13], [2900, 0.25, 15]];
+const METAL_RES: [number, number, number][] = [[780, 0.7, 22], [1530, 1, 28], [2470, 0.8, 30], [3650, 0.5, 34]];
+
+/**
+ * Stick-slip friction, the physics of a creaking hinge: an irregular train of tiny impulses whose
+ * rate (per second) follows `rate(t)`, each one ringing the resonances. Low rates stutter
+ * ("tik-tik-tik"), high rates turn into the long whining creak.
+ */
+function stickSlip(sec: number, rate: (t: number) => number, res: [number, number, number][], jitter: number): Buf {
+  const pulses = make(sec);
+  let phase = 0, wander = 0;
+  for (let i = 0; i < pulses.length; i++) {
+    const t = i / SR;
+    wander += (white() * 0.5 - wander) * 0.0008;
+    const r = Math.max(2, rate(t) * (1 + wander * jitter * 4));
+    phase += r / SR;
+    if (phase >= 1) {
+      phase -= 1 + white() * jitter * 0.5; // irregular spacing
+      const loud = 0.5 + 0.5 * Math.min(1, r / 60);
+      pulses[i] = loud * (0.6 + 0.4 * rnd()) * (rnd() < 0.5 ? -1 : 1);
+    }
+  }
+  const out = make(sec);
+  for (const [f, g, q] of res) mix(out, bandpass(pulses.slice(), f * (0.97 + rnd() * 0.06), q), g);
+  return out;
+}
+
+/** A low groan of the door's weight on its hinges, swelling with the movement. */
+function groan(sec: number, amp: number, base = 70): Buf {
+  const b = tone(sec, (t) => base + 18 * Math.sin(t * 1.9) + 6 * Math.sin(t * 7.3), 'saw', amp);
+  for (let i = 0; i < b.length; i++) b[i] *= Math.pow(Math.sin((Math.PI * i) / b.length), 1.5);
+  return lowpass(b, 260);
+}
+
+/** A short, cold reverb: the empty corridor answering back. */
+function roomEcho(b: Buf, wet: number, room = 0.083): Buf {
+  const tail = Math.floor(1.2 * SR);
+  const out = new Float32Array(b.length + tail);
+  out.set(b);
+  const delays = [room, room * 1.37, room * 1.79, room * 2.31].map((d) => Math.floor(d * SR));
+  const bufs = delays.map((d) => new Float32Array(d));
+  const idx = delays.map(() => 0);
+  for (let i = 0; i < out.length; i++) {
+    const x = i < b.length ? b[i] : 0;
+    let y = 0;
+    for (let k = 0; k < delays.length; k++) {
+      const v = bufs[k][idx[k]];
+      bufs[k][idx[k]] = x + v * 0.62;
+      idx[k] = (idx[k] + 1) % delays[k];
+      y += v;
+    }
+    out[i] += (y / delays.length) * wet;
+  }
+  return lowpass(out, 5200);
+}
 
 function step(v: number, len = 0.22): Buf {
   seed = 1000 + v * 77;

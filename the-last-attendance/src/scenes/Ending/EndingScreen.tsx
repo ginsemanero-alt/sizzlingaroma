@@ -11,7 +11,7 @@ import { Atmosphere, ChalkText, Dust, Sign, Sky } from '@/components/Environment
 import { ROOM_2018, roomAt } from '@/scenes/shared/room13Sets';
 import { EnvModel } from '@/components/Environment/EnvModel';
 import { Memorial, Room13Clutter } from '@/scenes/shared/clutter';
-import { SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
+import { GateOpen, SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
 import { KEEPSAKES } from '@/data/items';
 import { GhostStudent } from '@/components/Characters/Ghosts';
 import { STUDENT_LOOKS, type HumanoidHandle } from '@/components/Characters/Humanoid';
@@ -108,6 +108,7 @@ function GateScene() {
       <StaticLevel builder={b} />
       <Suspense fallback={null}>
         <SchoolFrontModels tint="#d6cec4" />
+        <GateOpen />
         {/* Mang Tonyo, the guard, and the candles people still leave at the gate */}
         <ModelCharacter model="guard" position={[2.7, 0, 37.4]} rotationY={Math.PI + 0.4} tint="#d0c8c0" />
         <Memorial position={[-1.4, 0, 36.6]} />

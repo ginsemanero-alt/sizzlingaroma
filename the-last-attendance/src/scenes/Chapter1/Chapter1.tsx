@@ -11,7 +11,7 @@ import { Teacher } from '@/components/Enemies/Teacher';
 import { GhostGirl } from '@/components/Characters/Ghosts';
 import { ChapterBase, useFlag, useFlagEffect, useScript } from '@/scenes/ChapterBase';
 import { addClassroom } from '@/scenes/shared/schoolParts';
-import { SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
+import { GateLeaf, SchoolFrontModels, SchoolFrontSigns, addSchoolFront } from '@/scenes/shared/schoolFront';
 import { ROOM_ABANDONED, Room13Model, roomAt } from '@/scenes/shared/room13Sets';
 import { Room13Clutter } from '@/scenes/shared/clutter';
 import { DIALOGUE } from '@/data/dialogue';
@@ -24,6 +24,7 @@ import { teacherControl, type TeacherConfig } from '@/systems/EnemyAISystem/Teac
 import type { ScriptContext } from '@/systems/DialogueSystem/DialogueSystem';
 
 const D = DIALOGUE.c1;
+const gateLeaf = (dir: 1 | -1, w: number) => <GateLeaf dir={dir} width={w} />;
 /** Room 13 is the abandoned-classroom model, north of the hallway; its door opens onto z = -3.5. */
 const R = roomAt(ROOM_ABANDONED, 9.42, -3.5 - ROOM_ABANDONED.half[0]);
 const RS = ROOM_ABANDONED;
@@ -195,7 +196,7 @@ export default function Chapter1() {
       )}
 
       {/* doors */}
-      <Door id="gate" position={[0, 0, 36]} axis="x" width={3.2} height={2.4} double metal color="#5a3a26" lockedText="" onOpen={() => { AudioSystem.play('gate', { pos: [0, 1.2, 36] }); ctx.run('gate', (c) => c.say(D.gate)); }} />
+      <Door id="gate" position={[0, 0, 36]} axis="x" width={3.2} height={2.5} double metal leaf={gateLeaf} color="#5a3a26" lockedText="" onOpen={() => ctx.run('gate', (c) => c.say(D.gate))} />
       <Door id="entrance" position={[0, 0, 6]} axis="x" width={2.4} height={2.6} double color="#4b3423" onOpen={() => Horror.around('creak', 3)} />
       <Door id="guard" position={[-15, 0, -3.5]} axis="x" color="#5b4a3a" />
       <Door id="r12" position={[-3, 0, -3.5]} axis="x" startOpen />
