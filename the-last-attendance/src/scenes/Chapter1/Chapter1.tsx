@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { LevelBuilder } from '@/components/Environment/LevelBuilder';
 import { StaticLevel } from '@/components/Environment/StaticLevel';
@@ -25,6 +25,28 @@ import type { ScriptContext } from '@/systems/DialogueSystem/DialogueSystem';
 
 const D = DIALOGUE.c1;
 const gateLeaf = (dir: 1 | -1, w: number) => <GateLeaf dir={dir} width={w} />;
+
+/** Ambience levels outside (courtyard, in the rain) and inside the school (walls shut the rain out). */
+const OUTSIDE = { rain: 1, wind: 0.8, insects: 0.6, roomtone: 0.5 };
+const INSIDE = { rain: 0, wind: 0, insects: 0, roomtone: 1 };
+
+/** Fade the rain, wind and insects out once Jasmine is through the main door (the facade is at z = 6), and back in when she steps outside. */
+function IndoorOutdoorAudio() {
+  const mixLevel = useRef<number | null>(null); // 1 = outside, 0 = inside
+  const t = useRef(0);
+  useFrame((_, dt) => {
+    t.current += dt;
+    if (t.current < 3.2) return; // let ChapterBase fade the ambience in first
+    const target = runtime.player.pos.z < 5.6 ? 0 : 1;
+    if (mixLevel.current === null) mixLevel.current = target;
+    const prev = mixLevel.current;
+    const next = prev + Math.sign(target - prev) * Math.min(Math.abs(target - prev), dt / (target ? 1.4 : 0.9));
+    if (next === prev && t.current > 3.4) return;
+    mixLevel.current = next;
+    (Object.keys(OUTSIDE) as (keyof typeof OUTSIDE)[]).forEach((k) => AudioSystem.setLoopLevel(k, INSIDE[k] + (OUTSIDE[k] - INSIDE[k]) * next));
+  });
+  return null;
+}
 /** Room 13 is the abandoned-classroom model, north of the hallway; its door opens onto z = -3.5. */
 const R = roomAt(ROOM_ABANDONED, 9.42, -3.5 - ROOM_ABANDONED.half[0]);
 const RS = ROOM_ABANDONED;
@@ -150,7 +172,7 @@ export default function Chapter1() {
       ctx={ctx}
       spawn={[0, 40]}
       yaw={0}
-      ambience={[{ name: 'rain', volume: 1 }, { name: 'wind', volume: 0.8 }, { name: 'insects', volume: 0.6 }, { name: 'roomtone', volume: 0.5 }]}
+      ambience={[{ name: 'rain', volume: OUTSIDE.rain }, { name: 'wind', volume: OUTSIDE.wind }, { name: 'insects', volume: OUTSIDE.insects }, { name: 'roomtone', volume: OUTSIDE.roomtone }]}
       events={['footsteps', 'whisper', 'knock', 'creak', 'thunder', 'flicker']}
       intro={async (c) => {
         await c.wait(600);
@@ -166,6 +188,7 @@ export default function Chapter1() {
       <Sky />
       <Rain bounds={{ minX: -30, maxX: 30, minZ: 6.3, maxZ: 50 }} />
       <StaticLevel builder={builder} />
+      <IndoorOutdoorAudio />
       <Suspense fallback={null}>
         <SchoolFrontModels backdrop={graphics !== 'low'} interior />
         <PropModel model="env_staircase" position={[-18.9, 0, -1.8]} height={2.9} rotationY={Math.PI} tint="#9a948a" />

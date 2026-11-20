@@ -144,7 +144,7 @@ export default function Chapter3() {
       ctx={ctx}
       spawn={[1.5, 0]}
       yaw={-Math.PI / 2}
-      ambience={[{ name: 'roomtone', volume: 1 }, { name: 'rain', volume: 0.3 }, { name: 'buzz', volume: 0.35, pos: [16, 3, 0] }]}
+      ambience={[{ name: 'roomtone', volume: 1 }, { name: 'buzz', volume: 0.35, pos: [16, 3, 0] }]}
       events={['footsteps', 'whisper', 'knock', 'creak', 'flicker', 'static', 'breath', 'thunder']}
       intro={async (c) => { await c.wait(500); await c.say(D.intro); }}
     >

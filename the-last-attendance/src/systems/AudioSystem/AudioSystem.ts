@@ -138,6 +138,23 @@ export const AudioSystem = {
     loops.set(name, { id, target: volume });
   },
 
+  /** Set a running loop's level right now (no Howler fade), for per-frame mixing such as indoors/outdoors. */
+  setLoopLevel(name: string, volume: number): void {
+    const cur = loops.get(name);
+    const h = howls.get(name);
+    if (!cur || !h) return;
+    const def = DEFS[name] ?? { category: 'sfx' as SoundCategory };
+    cur.target = volume;
+    h.volume(Math.max(0, volume) * (def.volume ?? 1) * categoryVolume(def.category), cur.id);
+  },
+
+  /** Debug: every running loop with its current volume. */
+  debugLoops(): Record<string, number> {
+    const out: Record<string, number> = {};
+    loops.forEach((l, name) => { const h = getHowl(name); out[name] = h ? +(h.volume(l.id) as number).toFixed(3) : -1; });
+    return out;
+  },
+
   stopAllLoops(fadeMs = 800): void {
     for (const name of [...loops.keys()]) AudioSystem.loop(name, 0, fadeMs);
   },

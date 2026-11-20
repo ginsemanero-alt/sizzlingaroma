@@ -5,6 +5,7 @@ import { teacherControl } from '@/systems/EnemyAISystem/TeacherBrain';
 import { CollisionSystem } from '@/systems/CollisionSystem/CollisionSystem';
 import { NavGrid } from '@/systems/EnemyAISystem/NavGrid';
 import { scriptHost } from '@/systems/DialogueSystem/DialogueSystem';
+import { AudioSystem } from '@/systems/AudioSystem/AudioSystem';
 import type { ChapterId, EndingId, PuzzleId } from '@/types';
 
 /**
@@ -42,6 +43,8 @@ export function installDebugApi(): void {
       const p = g.findPath(x0, z0, x1, z1, 400000);
       return p ? p.length : null;
     },
+    loops: () => AudioSystem.debugLoops(),
+    loop: (n: string, v: number, ms = 500) => AudioSystem.loop(n, v, ms),
     colliderCount: () => [...CollisionSystem.all()].length,
     collidersAt: (x: number, z: number) => [...CollisionSystem.all()].filter((b) => x >= b.minX - 0.3 && x <= b.maxX + 0.3 && z >= b.minZ - 0.3 && z <= b.maxZ + 0.3 && b.maxY > 0.25 && b.minY < 1.7)
       .map((b) => [b.minX, b.maxX, b.minZ, b.maxZ, b.minY, b.maxY].map((v) => +v.toFixed(2))),
